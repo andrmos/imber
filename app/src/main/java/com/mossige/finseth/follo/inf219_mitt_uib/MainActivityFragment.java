@@ -1,14 +1,25 @@
 package com.mossige.finseth.follo.inf219_mitt_uib;
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -21,14 +32,55 @@ public class MainActivityFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private View rootView;
+    private ArrayList<String> titles;
+
     public MainActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        RequestQueue rq = Volley.newRequestQueue(getActivity());
+
+        titles = new ArrayList<>();
+
+        String access_token = "s144usYRrSLV35kyGLwdsSwnfb5bDqjll4eK0JCYFQNADR7PsT9442W3TZvQOAWG"; // TODO Add access token
+        String url = "https://mitt.uib.no/api/v1/courses?access_token=" + access_token;
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+                JSONObject resp = null;
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        resp = response.getJSONObject(i);
+                        titles.add(resp.getString("name"));
+                        Log.i("VolleyTest", titles.get(i));
+                    } catch (JSONException e) {
+                        e.getStackTrace();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // TODO Auto-generated method stub
+            }
+
+        });
+
+        rq.add(jsonArrayRequest);
+
+        while(!jsonArrayRequest.hasHadResponseDelivered()) {
+            SystemClock.sleep(200);
+        }
 
         initRecycleView(rootView);
+
 
         return rootView;
     }
