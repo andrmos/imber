@@ -30,7 +30,14 @@
                 android:id="@+id/nav_manage"
                 android:icon="@android:drawable/ic_menu_manage"
                 android:title="Innstillinger" />
+
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@android:drawable/ic_menu_help"
+                android:title="Om"
+                />
         </menu>
     </item>
+
 
 </menu>

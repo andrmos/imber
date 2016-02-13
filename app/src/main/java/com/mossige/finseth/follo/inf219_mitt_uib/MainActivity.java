@@ -8,14 +8,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements OnNavigationItemSelectedListener{
-
-    private ArrayList<String> courses = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +30,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        init_courses();
-    }
-
-    public void init_courses(){
-        courses.add("INF121");
-        courses.add("INF142");
-        courses.add("INF237");
     }
 
         @Override
@@ -72,6 +62,10 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         int id = item.getItemId();
+
+        if(id == R.id.nav_course){
+            Log.i("click","halleluja");
+        }
 
         return false;
     }
