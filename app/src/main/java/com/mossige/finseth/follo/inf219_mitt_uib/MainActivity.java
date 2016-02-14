@@ -3,6 +3,9 @@ package com.mossige.finseth.follo.inf219_mitt_uib;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,9 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
-public class MainActivity extends AppCompatActivity
-        implements OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-        @Override
+    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -67,6 +71,24 @@ public class MainActivity extends AppCompatActivity
             Log.i("click","halleluja");
         }
 
+        if (id == R.id.nav_about) {
+            Log.i("main", "about click");
+
+
+            AboutFragment aboutFragment = new AboutFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, aboutFragment);
+            transaction.commit();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            drawer.closeDrawer(navigationView);
+
+            // TODO return true?
+            //return true;
+        }
+
         return false;
     }
+
 }
