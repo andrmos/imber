@@ -5,9 +5,25 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
  */
 public class Announcement {
 
-    private int id;
+    private String title;
+    private String userName;
+    private String message;
 
-    public Announcement(int id){
-        this.id = id;
+    public Announcement(String title, String userName, String message){
+        this.title = title;
+        this.userName = userName;
+        this.message = message;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }
