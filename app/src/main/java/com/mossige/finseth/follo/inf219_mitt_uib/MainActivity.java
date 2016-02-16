@@ -3,6 +3,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -65,6 +66,15 @@ public class MainActivity extends AppCompatActivity
 
         if(id == R.id.nav_course){
             Log.i("click","halleluja");
+
+            CourseFragment courseFragment = new CourseFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, courseFragment);
+            transaction.commit();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            drawer.closeDrawer(navigationView);
         }
 
         return false;

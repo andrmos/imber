@@ -8,6 +8,12 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+    <!-- Main content view. Fragments are put inside this view -->
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <include
         layout="@layout/app_bar_main"
         android:layout_width="match_parent"
