@@ -10,4 +10,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_login">Logg inn</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Brukernavn</string>
+    <string name="prompt_password">Passord</string>
+    <string name="action_sign_in">Logg inn</string>
+    <string name="action_sign_in_short">Logg inn</string>
+    <string name="error_invalid_email">Ugyldig email-adresse</string>
+    <string name="error_incorrect_password">Ugyldig passord</string>
+    <string name="error_field_required">Dette feltet må fylles ut</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 </resources>

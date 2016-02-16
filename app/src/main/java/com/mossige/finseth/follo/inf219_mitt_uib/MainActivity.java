@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -95,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
             // TODO return true?
             //return true;
+        }
+
+        if(id == R.id.nav_signin){
+            Intent intent = new Intent(this,LoginActivity.class);
+            startActivity(intent);
         }
 
         return false;

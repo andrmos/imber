@@ -36,6 +36,13 @@
                 android:icon="@android:drawable/ic_menu_help"
                 android:title="Om"
                 />
+
+            <item
+                android:id="@+id/nav_signin"
+                android:icon="@android:drawable/ic_menu_upload"
+                android:title="Logg inn"
+                />
+
         </menu>
     </item>
 
