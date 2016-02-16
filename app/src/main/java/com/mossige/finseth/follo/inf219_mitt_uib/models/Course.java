@@ -1,6 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -11,13 +10,13 @@ public class Course {
     private int id;
     private String name;
     private String calender;
-    private ArrayList<Announcement> announcements;
+//    private ArrayList<Announcement> announcements;
 
     public Course(int id, String name, String calender){
         this.id = id;
         this.name = name;
         this.calender = calender;
-        announcements = new ArrayList<Announcement>(id);
+//        announcements = new ArrayList<Announcement>(id);
     }
 
     public int getId(){
@@ -31,9 +30,9 @@ public class Course {
     public String getCalenderUrl(){
         return calender;
     }
-
-    public ArrayList<Announcement> getAnnouncement(){
-        return announcements;
-    }
+//
+//    public ArrayList<Announcement> getAnnouncement(){
+//        return announcements;
+//    }
 
 }
