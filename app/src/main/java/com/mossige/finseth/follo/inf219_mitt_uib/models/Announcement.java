@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib;
+package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
 /**
  * Created by PatrickFinseth on 16.02.16.
