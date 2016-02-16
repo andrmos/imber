@@ -69,6 +69,15 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         if(id == R.id.nav_course){
             Log.i("click","halleluja");
+
+            CourseFragment courseFragment = new CourseFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame, courseFragment);
+            transaction.commit();
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            drawer.closeDrawer(navigationView);
         }
 
         if (id == R.id.nav_about) {
