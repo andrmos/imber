@@ -9,13 +9,11 @@ public class Message {
 
     private ArrayList<String> participants;
     private String date;
-    private String time;
     private String message;
 
-    public Message(ArrayList<String> participants, String date, String time, String message) {
+    public Message(ArrayList<String> participants, String date, String message) {
         this.participants = participants;
         this.date = date;
-        this.time = time;
         this.message = message;
     }
 
@@ -33,15 +31,6 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getTime() {
-
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public String getDate() {
