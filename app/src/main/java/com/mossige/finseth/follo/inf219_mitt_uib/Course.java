@@ -32,8 +32,8 @@ public class Course {
         return calender;
     }
 
-    public Announcement getAnnouncement(){
-        return announcement;
+    public ArrayList<Announcement> getAnnouncement(){
+        return announcements;
     }
 
 }
