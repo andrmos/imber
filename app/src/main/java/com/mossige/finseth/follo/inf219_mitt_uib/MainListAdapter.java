@@ -11,16 +11,38 @@ import java.util.ArrayList;
 /**
  * Created by André on 12.02.2016.
  */
-public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHolder> {
+public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.GeneralViewHolder> {
 
     private ArrayList<String> data;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class GeneralViewHolder extends RecyclerView.ViewHolder {
+        public GeneralViewHolder(View view) {
+            super(view);
+        }
+    }
+
+    public static class CardViewHolder extends GeneralViewHolder {
         // each data item is just a string
-        public TextView mTextView;
-        public ViewHolder(View v) {
+        public TextView course_id;
+        public TextView course_title;
+        public TextView course_calendar_url;
+        public CardViewHolder(View v) {
             super(v);
-            mTextView = (TextView) v.findViewById(R.id.title);
+            course_id = (TextView) v.findViewById(R.id.course_id);
+            course_title = (TextView) v.findViewById(R.id.course_title);
+            course_calendar_url = (TextView) v.findViewById(R.id.course_calendar_url);
+        }
+    }
+
+    public static class AgendaViewHolder extends GeneralViewHolder {
+        // each data item is just a string
+        public TextView agenda_title;
+        public TextView agenda_next_agenda;
+
+        public AgendaViewHolder(View v) {
+            super(v);
+            agenda_title = (TextView) v.findViewById(R.id.agenda_title);
+            agenda_next_agenda = (TextView) v.findViewById(R.id.agenda_next_agenda);
         }
     }
 
@@ -29,22 +51,47 @@ public class MainListAdapter extends RecyclerView.Adapter<MainListAdapter.ViewHo
     }
 
     @Override
-    public MainListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public int getItemViewType(int position) {
+        // TODO Implement logic deciding what card will come next
+        // Return either 1 or 100, 1: course card, 100: agenda card
+        if (position == 1) {
+            return 1;
+        } else {
+            return 100;
+        }
+    }
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_view, parent, false);
+    @Override
+    public GeneralViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        // TODO set padding, size, margins etc
-//        v.setPadding(10, 5, 5, 10);
+        GeneralViewHolder holder;
+        View v;
 
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        if (viewType == 1) { // course card
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_card, parent, false);
+            holder = new CardViewHolder(v);
+
+        } else { // agenda card
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agenda_card, parent, false);
+            holder = new AgendaViewHolder(v);
+        }
+
+        return holder;
     }
 
 
     @Override
-    public void onBindViewHolder(MainListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
-        holder.mTextView.setText(data.get(position));
+        if(getItemViewType(position) == 1) {
+            CardViewHolder holder1 = (CardViewHolder) holder;
+            //Example: holder1.course_id.setText(data.get(position));
+            // Set information for course card via getViewById()
+        } else {
+            AgendaViewHolder holder1 = (AgendaViewHolder) holder;
+            //Example: holder1.agenda_title.setText(data.get(position));
+            // Set information for agenda card via getViewById()
+        }
     }
 
     @Override
