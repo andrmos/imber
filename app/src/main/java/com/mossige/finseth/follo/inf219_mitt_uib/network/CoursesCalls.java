@@ -12,6 +12,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
@@ -33,8 +34,7 @@ public class CoursesCalls {
 
         courses = new ArrayList<>();
 
-        String access_token = "VlnlJJOuvVjFMIP2vsmucYXcKOVZrjFhLxzZjRsDX6S1BdQmmviW8OPGu2VBDHpl"; // TODO Add access token
-        String url = "https://mitt.uib.no/api/v1/courses?access_token=" + access_token;
+        String url = "https://mitt.uib.no/api/v1/courses?access_token=" + PrivateConstants.ACCESS_TOKEN;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
 

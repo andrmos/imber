@@ -30,8 +30,7 @@ public class ConversationsCalls {
 
         conversations = new ArrayList<>();
 
-        String access_token = "VlnlJJOuvVjFMIP2vsmucYXcKOVZrjFhLxzZjRsDX6S1BdQmmviW8OPGu2VBDHpl"; // TODO Add access token
-        String url = "https://mitt.uib.no/api/v1/conversations?access_token=" + access_token;
+        String url = "https://mitt.uib.no/api/v1/conversations?access_token=" + PrivateConstants.ACCESS_TOKEN;
 
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
 
