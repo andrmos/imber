@@ -65,9 +65,9 @@ public class ConversationsCalls {
                         messageDate = resp.getString("last_message_at");
                         messageLastMessage = resp.getString("last_message");
 
-                        message = new Message(participants, messageDate, messageLastMessage);
+                        //message = new Message(participants, messageDate, messageLastMessage);
 
-                        conversations.add(new Conversation(id, subject, participants, messageLastMessage));
+                        //conversations.add(new Conversation(id, subject, participants, messageLastMessage));
 
 
                     } catch (JSONException e) {

@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendaViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.CourseViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 
 import java.util.ArrayList;
 
@@ -20,9 +22,9 @@ import java.util.ArrayList;
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
-    private ArrayList<String> data;
+    private ArrayList<Course> data;
 
-    public RecyclerViewAdapter(ArrayList<String> data) {
+    public RecyclerViewAdapter(ArrayList<Course> data) {
         this.data = data;
     }
 
@@ -30,10 +32,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder>
     public int getItemViewType(int position) {
         // TODO Implement logic deciding what card will come next
         // Return either 1 or 100, 1: course card, 100: agenda card
+        // Log.i("adapter", "position in list: " + position);
         if (position == 1) {
             return 1;
         } else {
-            return 100;
+            return 1;
         }
     }
 
@@ -60,7 +63,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder>
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
         if(getItemViewType(position) == 1) {
-            CourseViewHolder holder1 = (CourseViewHolder) holder;
+            CourseViewHolder courseHolder = (CourseViewHolder) holder;
+            courseHolder.course_id.setText(data.get(position).getId());
+            courseHolder.course_title.setText(data.get(position).getName());
+
             //Example: holder1.course_id.setText(data.get(position));
             // Set information for course card via getViewById()
         } else {

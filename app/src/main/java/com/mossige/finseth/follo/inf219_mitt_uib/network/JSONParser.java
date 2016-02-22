@@ -36,7 +36,7 @@ public class JSONParser {
      * @return An ArrayList containing the latest {@link Message messages} in previous {@link Conversation conversations}
      * @throws JSONException
      */
-    public ArrayList<Conversation> parseAllConversations(JSONArray unParsed) throws JSONException {
+    public static ArrayList<Conversation> parseAllConversations(JSONArray unParsed) throws JSONException {
         ArrayList<Conversation> parsed = new ArrayList<>();
 
         for (int i = 0; i < unParsed.length(); i++) {
@@ -54,7 +54,7 @@ public class JSONParser {
      * @return The requested {@link Conversation conversation}
      * @throws JSONException
      */
-    public Conversation parseSingleConversation(JSONObject unParsed) throws JSONException {
+    public static Conversation parseSingleConversation(JSONObject unParsed) throws JSONException {
         String id = unParsed.getString("id");
         String subject = unParsed.getString("subject");
         ArrayList<Participant> participants = getParticipants(unParsed.getJSONArray("participants"));
@@ -71,7 +71,7 @@ public class JSONParser {
      * @return An ArrayList containing all the users {@link Course courses}
      * @throws JSONException
      */
-    public ArrayList<Course> parseAllCourses(JSONArray unParsed) throws JSONException {
+    public static ArrayList<Course> parseAllCourses(JSONArray unParsed) throws JSONException {
 
         ArrayList<Course> parsed = new ArrayList<>();
 
@@ -92,7 +92,7 @@ public class JSONParser {
      * @return An ArrayList containing all the users {@link Announcement announcements}
      * @throws JSONException
      */
-    public ArrayList<Announcement> parseAllAnouncements(JSONArray unParsed) throws JSONException {
+    public static ArrayList<Announcement> parseAllAnouncements(JSONArray unParsed) throws JSONException {
         ArrayList<Announcement> parsed = new ArrayList<>();
 
         for (int i = 0; i < unParsed.length(); i++) {
@@ -104,7 +104,7 @@ public class JSONParser {
         return parsed;
     }
 
-    private Conversation getLastMessage(JSONObject obj) throws JSONException {
+    private static Conversation getLastMessage(JSONObject obj) throws JSONException {
         String id = obj.getString("id");
         String subject = obj.getString("subject");
         ArrayList<Participant> participants = getParticipants(obj.getJSONArray("participants"));
@@ -113,7 +113,7 @@ public class JSONParser {
         return new Conversation(id,subject, participants, lastMessage);
     }
 
-    private ArrayList<Message> getMessages(JSONArray unParsed) throws JSONException {
+    private static ArrayList<Message> getMessages(JSONArray unParsed) throws JSONException {
         ArrayList<Message> parsed = new ArrayList<>();
 
         for (int i = 0; i < unParsed.length(); i++) {
@@ -123,7 +123,7 @@ public class JSONParser {
         return parsed;
     }
 
-    private Message getSingleMessage(JSONObject obj) throws JSONException {
+    private static Message getSingleMessage(JSONObject obj) throws JSONException {
         String authorID = obj.getString("author_id");
         String date = obj.getString("created_at");
         String message = obj.getString("body");
@@ -131,7 +131,7 @@ public class JSONParser {
         return new Message(authorID, date, message);
     }
 
-    private ArrayList<Participant> getParticipants(JSONArray unParsed) throws JSONException {
+    private static ArrayList<Participant> getParticipants(JSONArray unParsed) throws JSONException {
         ArrayList<Participant> participants = new ArrayList<>();
 
         for (int i = 0; i < unParsed.length(); i++) {
@@ -141,14 +141,14 @@ public class JSONParser {
         return participants;
     }
 
-    private Participant getSingleParticipant(JSONObject obj) throws JSONException {
+    private static Participant getSingleParticipant(JSONObject obj) throws JSONException {
         String id = obj.getString("id");
         String name = obj.getString("name");
 
         return new Participant(id, name);
     }
 
-    private Announcement getSingleAnnouncement(JSONObject obj) throws JSONException {
+    private static Announcement getSingleAnnouncement(JSONObject obj) throws JSONException {
         String id = obj.getString("id");
         String title = obj.getString("title");
         String userName = obj.getString("user_name");
@@ -160,7 +160,7 @@ public class JSONParser {
 
     }
 
-    private Course getSingleCourse(JSONObject obj) throws JSONException {
+    private static Course getSingleCourse(JSONObject obj) throws JSONException {
         String id = obj.getString("id");
         String name = obj.getString("name");
         String cal = obj.getString("calendar");
