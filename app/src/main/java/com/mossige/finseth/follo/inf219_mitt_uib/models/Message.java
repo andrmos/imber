@@ -7,22 +7,14 @@ import java.util.ArrayList;
  */
 public class Message {
 
-    private ArrayList<String> participants;
+    private String authorID;
     private String date;
     private String message;
 
-    public Message(ArrayList<String> participants, String date, String message) {
-        this.participants = participants;
+    public Message(String authorID, String date, String message) {
+        this.authorID = authorID;
         this.date = date;
         this.message = message;
-    }
-
-    public ArrayList<String> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(ArrayList<String> participants) {
-        this.participants = participants;
     }
 
     public String getMessage() {
@@ -34,7 +26,6 @@ public class Message {
     }
 
     public String getDate() {
-
         return date;
     }
 
