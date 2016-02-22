@@ -64,7 +64,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder>
         // set text of text view in card
         if(getItemViewType(position) == 1) {
             CourseViewHolder courseHolder = (CourseViewHolder) holder;
-            courseHolder.course_id.setText(data.get(position).getId());
+            courseHolder.course_code.setText(data.get(position).getCourseCode());
             courseHolder.course_title.setText(data.get(position).getName());
 
             //Example: holder1.course_id.setText(data.get(position));

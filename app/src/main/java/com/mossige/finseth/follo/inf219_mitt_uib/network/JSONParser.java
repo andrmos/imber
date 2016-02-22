@@ -77,6 +77,7 @@ public class JSONParser {
 
         for (int i = 0; i < unParsed.length(); i++) {
             parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
+
             Log.i(TAG, "parseAllCourses: " + "Course with id: " + parsed.get(i).getId() + " is parsed");
         }
 
@@ -161,11 +162,12 @@ public class JSONParser {
     }
 
     private static Course getSingleCourse(JSONObject obj) throws JSONException {
-        String id = obj.getString("id");
+        int id = obj.getInt("id");
         String name = obj.getString("name");
         String cal = obj.getString("calendar");
+        String code = obj.getString("course_code");
 
-        return new Course(id, name, cal);
+        return new Course(id, name, cal, code);
     }
 
 }

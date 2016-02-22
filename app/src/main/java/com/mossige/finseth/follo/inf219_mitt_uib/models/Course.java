@@ -7,19 +7,21 @@ import java.util.ArrayList;
  */
 public class Course {
 
-    private String id;
+    private int id;
     private String name;
     private String calender;
+    private String courseCode;
 //    private ArrayList<Announcement> announcements;
 
-    public Course(String id, String name, String calender){
+    public Course(int id, String name, String calender, String courseCode){
         this.id = id;
         this.name = name;
         this.calender = calender;
+        this.courseCode = courseCode;
 //        announcements = new ArrayList<Announcementmcmd>(id);
     }
 
-    public String getId(){
+    public int getId(){
         return id;
     }
 
@@ -29,6 +31,10 @@ public class Course {
 
     public String getCalenderUrl(){
         return calender;
+    }
+
+    public String getCourseCode(){
+        return courseCode;
     }
 //
 //    public ArrayList<Announcement> getAnnouncement(){
