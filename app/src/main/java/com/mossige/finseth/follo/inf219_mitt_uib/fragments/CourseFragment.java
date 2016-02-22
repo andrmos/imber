@@ -1,25 +1,15 @@
-package com.mossige.finseth.follo.inf219_mitt_uib;
+package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.R;
 
 import java.util.ArrayList;
 
@@ -27,6 +17,8 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class CourseFragment extends Fragment {
+
+    private static final String TAG = "CourseFragment";
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
@@ -64,7 +56,7 @@ public class CourseFragment extends Fragment {
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new MainListAdapter(titles);
+        mAdapter = new RecyclerViewAdapter(titles);
         mainList.setAdapter(mAdapter);
     }
 

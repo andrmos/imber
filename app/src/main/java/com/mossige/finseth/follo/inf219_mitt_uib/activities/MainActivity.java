@@ -1,11 +1,9 @@
-package com.mossige.finseth.follo.inf219_mitt_uib;
+package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,18 +13,26 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+
+import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener{
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Set main layout
         setContentView(R.layout.activity_main);
+
+        // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Setup navigation drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -68,39 +74,41 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         int id = item.getItemId();
 
+        // Setup fragment transaction for replacing fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         if(id == R.id.nav_course){
-            Log.i("click","halleluja");
+            Log.i(TAG,"Course nav click");
 
             CourseFragment courseFragment = new CourseFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, courseFragment);
             transaction.commit();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             drawer.closeDrawer(navigationView);
+            return true;
         }
 
         if (id == R.id.nav_about) {
-            Log.i("main", "about click");
-
+            Log.i(TAG, "About nav click");
 
             AboutFragment aboutFragment = new AboutFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.content_frame, aboutFragment);
             transaction.commit();
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
             drawer.closeDrawer(navigationView);
-
-            // TODO return true?
-            //return true;
+            return true;
         }
 
+
         if(id == R.id.nav_signin){
+            Log.i(TAG, "Sign in nav click");
+
             Intent intent = new Intent(this,LoginActivity.class);
             startActivity(intent);
+            return true;
         }
 
         return false;
