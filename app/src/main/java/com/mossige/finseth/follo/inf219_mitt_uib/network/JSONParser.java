@@ -7,6 +7,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +28,23 @@ public class JSONParser {
 
     public JSONParser() {
         Log.i(TAG, "JSONParser: " + "JSONParser created");
+    }
+
+
+    /**
+     * Parses a user profile
+     * @param unParsed JSONObject you get onResponse with the request
+     * @return A {@link User user}
+     * @throws JSONException
+     */
+    public static User parseUserProfile(JSONObject unParsed) throws JSONException {
+        String id = unParsed.getString("id");
+        String name = unParsed.getString("name");
+        String email = unParsed.getString("primary_email");
+        String loginID = unParsed.getString("ofo002");
+        String calendar = unParsed.getJSONObject("calendar").getString("ics");
+
+        return new User(id, name, email, loginID, calendar);
     }
 
     /**
@@ -74,7 +92,7 @@ public class JSONParser {
     public static ArrayList<Course> parseAllCourses(JSONArray unParsed) throws JSONException {
 
         ArrayList<Course> parsed = new ArrayList<>();
-
+        
         for (int i = 0; i < unParsed.length(); i++) {
             parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
 
