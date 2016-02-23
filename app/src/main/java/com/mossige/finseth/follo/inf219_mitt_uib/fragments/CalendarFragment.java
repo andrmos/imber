@@ -38,36 +38,6 @@ public class CalendarFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.i(TAG, "created about view");
 
-        FileInputStream fin = null;
-        try {
-            fin = new FileInputStream("@drawable/cal.ics");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        CalendarBuilder builder = new CalendarBuilder();
-        Calendar calendar = null;
-        try {
-            calendar = builder.build(fin);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParserException e) {
-            e.printStackTrace();
-        }
-
-
-
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
-            System.out.println("Component [" + component.getName() + "]");
-
-            for (Iterator j = component.getProperties().iterator(); j.hasNext();) {
-                Property property = (Property) j.next();
-                System.out.println("Property [" + property.getName() + ", " + property.getValue() + "]");
-            }
-        }
-
-
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         return view;
