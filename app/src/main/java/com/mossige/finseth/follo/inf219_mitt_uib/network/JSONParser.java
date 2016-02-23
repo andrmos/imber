@@ -24,6 +24,7 @@ import java.util.Arrays;
 public class JSONParser {
 
     private static final String TAG = "JSONParser";
+    private static boolean courseFilter = true;
 
     public JSONParser() {
         Log.i(TAG, "JSONParser: " + "JSONParser created");
@@ -76,9 +77,19 @@ public class JSONParser {
         ArrayList<Course> parsed = new ArrayList<>();
 
         for (int i = 0; i < unParsed.length(); i++) {
-            parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
 
-            Log.i(TAG, "parseAllCourses: " + "Course with id: " + parsed.get(i).getId() + " is parsed");
+            if(courseFilter){
+                if(unParsed.getJSONObject(i).getString("course_code").matches(".*\\d.*")) {
+                    parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
+
+                    Log.i(TAG, "parseAllCourses: " + "Course with id: " + parsed.get(i).getId() + " is parsed");
+                }
+            }else {
+                parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
+
+                Log.i(TAG, "parseAllCourses: " + "Course with id: " + parsed.get(i).getId() + " is parsed");
+            }
+
         }
 
         Log.i(TAG, "parseAllCourses: " + "All courses parsed");
