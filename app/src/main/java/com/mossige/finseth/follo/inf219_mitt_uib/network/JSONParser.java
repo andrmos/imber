@@ -81,13 +81,9 @@ public class JSONParser {
             if(courseFilter){
                 if(unParsed.getJSONObject(i).getString("course_code").matches(".*\\d.*")) {
                     parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
-
-                    Log.i(TAG, "parseAllCourses: " + "Course with id: " + parsed.get(i).getId() + " is parsed");
                 }
             }else {
                 parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
-
-                Log.i(TAG, "parseAllCourses: " + "Course with id: " + parsed.get(i).getId() + " is parsed");
             }
 
         }
