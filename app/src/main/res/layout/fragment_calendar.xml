@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment">
+
+    <!-- Calendar content view. Calendar is put inside this view -->
+    <LinearLayout
+        android:id="@+id/calendar_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize" >
+    </LinearLayout>
+
+    <!-- Agenda content view. Fragments with a days agendas are put inside this view -->
+    <LinearLayout
+        android:id="@+id/agenda_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" > <!-- Lower view fills rest of screen -->
+
+        <!-- TODO add recycler view -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Agenda fragment"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
