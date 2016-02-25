@@ -1,49 +1,36 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * Created by PatrickFinseth on 23.02.16.
  */
 public class CalendarEvent {
 
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private Date startDate;
+    private Date endDate;
     private String name;
 
-    public CalendarEvent(String name,LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime){
+    public CalendarEvent(String name, Date startDate,Date endDate){
         this.name = name;
         this.startDate = startDate;
-        this.startTime = startTime;
         this.endDate = endDate;
-        this.endTime = endTime;
     }
 
     public String getName(){
         return name;
     }
 
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public LocalDate getEndDate(){
+    public Date getEndDate(){
         return endDate;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
     }
 
     @Override
     public String toString(){
-        return   name + ": " + startDate + "\t" + startTime + "\t" + endDate + "\t" + endTime;
+        return   name + ": " + startDate + "\t" + endDate;
     }
 }

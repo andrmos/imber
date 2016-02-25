@@ -8,13 +8,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by PatrickFinseth on 23.02.16.
  */
 public class CalendarParser {
 
-    public ArrayList<CalendarEvent> parseCalendar(String url) throws IOException {
+    public static ArrayList<CalendarEvent> parseCalendar(String url) throws IOException {
 
         InputStream fil = new URL(url).openStream();
 
@@ -57,12 +58,16 @@ public class CalendarParser {
                 monthStart = Integer.parseInt(tid[1].substring(4, 6));
                 dayStart = Integer.parseInt(tid[1].substring(6,8));
 
-                events.add(new CalendarEvent(courseName,LocalDate.of(yearStart,monthStart,dayStart),LocalTime.of(hourStart,minuteStart).plusHours(1),LocalDate.of(yearEnd,monthEnd,dayEnd),LocalTime.of(hourEnd,minuteEnd).plusHours(1)));
+                events.add(new CalendarEvent(courseName,new Date(yearStart-1900,monthStart-1,dayStart,hourStart,minuteStart),new Date(yearEnd-1900,monthEnd-1,dayEnd,hourEnd,minuteEnd)));
 
             }
 
         }
         in.close();
+
+        for(CalendarEvent c : events){
+            System.out.println(c);
+        }
 
         return events;
     }
