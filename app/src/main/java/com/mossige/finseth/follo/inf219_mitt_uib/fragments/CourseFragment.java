@@ -14,7 +14,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseMenuRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -67,7 +67,7 @@ public class CourseFragment extends Fragment {
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new RecyclerViewAdapter(courses);
+        mAdapter = new CourseMenuRecyclerViewAdapter(courses);
         mainList.setAdapter(mAdapter);
     }
 

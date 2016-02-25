@@ -1,7 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,12 @@ import java.util.ArrayList;
  *
  * Created by André on 12.02.2016.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
+public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
     private ArrayList<Course> data;
+    // private ArrayList<String/Agenda> agendaData;
 
-    public RecyclerViewAdapter(ArrayList<Course> data) {
+    public CourseRecyclerViewAdapter(ArrayList<Course> data) {
         this.data = data;
     }
 
