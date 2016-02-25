@@ -20,6 +20,15 @@ public class UrlEndpoints {
     public static final String DISCUSSION_TOPICS = "discussion_topics";
     public static final String USERS = "users/";
     public static final String ENROLLMENTS = "enrollments";
+    public static final String SELF = "self";
+    public static final String PROFILE = "profile";
+
+    /**
+     * @return Request URL for getting the users profile
+     */
+    public static String getUserProfileURL() {
+        return BASE_URL + USERS + SELF + "/" + PROFILE + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    }
 
     /**
      * @return Request URL for a getting list of active courses for current user.
