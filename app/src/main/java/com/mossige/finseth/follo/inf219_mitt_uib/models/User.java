@@ -42,8 +42,4 @@ public class User {
         return name;
     }
 
-    public String getSisID() {
-        return loginID;
-    }
-
 }
