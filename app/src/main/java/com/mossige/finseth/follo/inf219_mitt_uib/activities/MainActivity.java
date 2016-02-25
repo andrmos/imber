@@ -16,7 +16,11 @@ import android.view.MenuItem;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
+import com.roomorama.caldroid.CaldroidFragment;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener{
 
@@ -91,6 +95,17 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             return true;
         }
 
+        if(id == R.id.nav_calendar){
+            Log.i(TAG,"Calendar nav click");
+
+            CalendarFragment calendarFragment = new CalendarFragment();
+            transaction.replace(R.id.content_frame, calendarFragment);
+            transaction.commit();
+
+            drawer.closeDrawer(navigationView);
+            return true;
+        }
+
         if (id == R.id.nav_about) {
             Log.i(TAG, "About nav click");
 
@@ -113,5 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         return false;
     }
+
+
 
 }
