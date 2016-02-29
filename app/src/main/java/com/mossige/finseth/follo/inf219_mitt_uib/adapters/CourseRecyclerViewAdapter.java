@@ -71,7 +71,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
             // Set information for course card via getViewById()
         } else {
             AgendaViewHolder holder1 = (AgendaViewHolder) holder;
-            //Example: holder1.agenda_title.setText(data.get(position));
+            //Example: holder1.title.setText(data.get(position));
             // Set information for agenda card via getViewById()
         }
     }

@@ -23,12 +23,6 @@ public class CalendarFragment extends Fragment {
 
     private static final String TAG = "CalendarFragment";
 
-    private RecyclerView mainList;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private ArrayList<String> agendas;
-
     public CalendarFragment() {}
 
 
@@ -36,21 +30,15 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        agendas = new ArrayList<>();
-        agendas.add("Agenda 1");
-        agendas.add("Agenda 2");
-        agendas.add("Agenda 3");
-
         CaldroidFragment caldroidFragment = initCalendarFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.calendar_container, caldroidFragment);
 
-        // TODO
-        // - Create recycler view fragment with agendas
-        // - replace R.id.agenda_container
+        // TODO bundle current day with the agenda fragment, so that it can show todays agendas
+        AgendaFragment agendaFragment = new AgendaFragment();
+        ft.replace(R.id.agenda_container, agendaFragment);
 
         ft.commit();
-
         return rootView;
     }
 
@@ -87,24 +75,10 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onSelectDate(Date date, View view) {
                 Log.i(TAG, "Clicked date " + date.getDate() + "/" + (date.getMonth() + 1));
-
+                // TODO notify agenda fragment for showing agenda
             }
         };
 
         return listener;
-    }
-
-    private void initRecycleView(View rootView) {
-        // Create RecycleView
-        // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-        mainList = (RecyclerView) rootView.findViewById(R.id.mainList);
-
-        // Create the LayoutManager that holds all the views
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mainList.setLayoutManager(mLayoutManager);
-
-        // Create adapter that binds the views with some content
-       // mAdapter = new CourseMenuRecyclerViewAdapter(agendas);
-        mainList.setAdapter(mAdapter);
     }
 }

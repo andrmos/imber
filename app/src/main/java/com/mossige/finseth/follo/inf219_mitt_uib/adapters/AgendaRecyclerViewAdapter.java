@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.CourseViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendaViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 
 import java.util.ArrayList;
 
@@ -20,28 +20,30 @@ import java.util.ArrayList;
  */
 public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
-    private ArrayList<Course> data;
+    private ArrayList<CalendarEvent> data;
 
-    public AgendaRecyclerViewAdapter(ArrayList<Course> data) {
+    public AgendaRecyclerViewAdapter(ArrayList<CalendarEvent> data) {
         this.data = data;
     }
 
     @Override
     public GeneralViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // course card
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_card, parent, false);
-        GeneralViewHolder holder = new CourseViewHolder(v);
+        // agenda card
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agenda_card, parent, false);
+        GeneralViewHolder holder = new AgendaViewHolder(v);
 
         return holder;
     }
 
-
     @Override
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
-        CourseViewHolder courseHolder = (CourseViewHolder) holder;
-        courseHolder.course_code.setText(data.get(position).getCourseCode());
-        courseHolder.course_title.setText(data.get(position).getName());
+        AgendaViewHolder agendaHolder = (AgendaViewHolder) holder;
+        agendaHolder.title.setText(data.get(position).getName());
+        agendaHolder.start.setText(data.get(position).getStartDate().toString());
+        agendaHolder.end.setText(data.get(position).getEndDate().toString());
+        // TODO set summary
+        //agendaHolder.summary.setText(data.get(position).getName());
     }
 
     @Override
