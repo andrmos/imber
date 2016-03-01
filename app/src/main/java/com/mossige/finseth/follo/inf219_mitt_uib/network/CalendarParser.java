@@ -58,7 +58,11 @@ public class CalendarParser {
                 monthStart = Integer.parseInt(tid[1].substring(4, 6));
                 dayStart = Integer.parseInt(tid[1].substring(6,8));
 
-                events.add(new CalendarEvent(courseName,new Date(yearStart-1900,monthStart-1,dayStart,hourStart,minuteStart),new Date(yearEnd-1900,monthEnd-1,dayEnd,hourEnd,minuteEnd)));
+            } else if(inputLine.startsWith("SUMMARY:")){
+                String[] sum = inputLine.split(" ");
+                String summary = sum[1];
+
+                events.add(new CalendarEvent(courseName,summary,new Date(yearStart-1900,monthStart-1,dayStart,hourStart,minuteStart),new Date(yearEnd-1900,monthEnd-1,dayEnd,hourEnd,minuteEnd)));
 
             }
 

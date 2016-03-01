@@ -10,15 +10,21 @@ public class CalendarEvent {
     private Date startDate;
     private Date endDate;
     private String name;
+    private String summary;
 
-    public CalendarEvent(String name, Date startDate,Date endDate){
+    public CalendarEvent(String name, String summary, Date startDate,Date endDate){
         this.name = name;
+        this.summary = summary;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
     public String getName(){
         return name;
+    }
+
+    public String getSummary(){
+        return summary;
     }
 
     public Date getStartDate() {
@@ -31,6 +37,6 @@ public class CalendarEvent {
 
     @Override
     public String toString(){
-        return   name + ": " + startDate + "\t" + endDate;
+        return   name + ": " + summary + "\t" + startDate + "\t" + endDate;
     }
 }
