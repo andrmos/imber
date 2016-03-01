@@ -41,13 +41,13 @@ public class AgendaFragment extends Fragment {
         Log.i(TAG, "Created agenda fragment");
 
         agendas = new ArrayList<>();
-        agendas.add(new CalendarEvent("Agenda1", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda2", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda3", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda4", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda5", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda6", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda7", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
+        agendas.add(new CalendarEvent("Agenda1", "summary 1", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
+        agendas.add(new CalendarEvent("Agenda2", "summary 2",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
+        agendas.add(new CalendarEvent("Agenda3", "summary 3",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
+        agendas.add(new CalendarEvent("Agenda4", "summary 4",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
+        agendas.add(new CalendarEvent("Agenda5", "summary 5",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
+        agendas.add(new CalendarEvent("Agenda6", "summary 6",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
+        agendas.add(new CalendarEvent("Agenda7", "summary 7",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
 
         initRecycleView(rootView);
 
