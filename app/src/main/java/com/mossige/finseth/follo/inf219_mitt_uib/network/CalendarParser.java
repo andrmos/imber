@@ -15,9 +15,9 @@ import java.util.Date;
  */
 public class CalendarParser {
 
-    public static ArrayList<CalendarEvent> parseCalendar(String url) throws IOException {
+    public static ArrayList<CalendarEvent> parseCalendar(URL url) throws IOException {
 
-        InputStream fil = new URL(url).openStream();
+        InputStream fil = url.openStream();
 
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(fil));
@@ -64,10 +64,6 @@ public class CalendarParser {
 
         }
         in.close();
-
-        for(CalendarEvent c : events){
-            System.out.println(c);
-        }
 
         return events;
     }
