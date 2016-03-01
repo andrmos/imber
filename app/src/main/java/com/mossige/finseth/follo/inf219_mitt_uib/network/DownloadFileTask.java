@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
+package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
 import android.os.AsyncTask;
 
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-class DownloadFilesTask extends AsyncTask<URL, Integer, ArrayList<CalendarEvent>> {
+public class DownloadFileTask extends AsyncTask<URL, Integer, ArrayList<CalendarEvent>> {
 
     protected ArrayList<CalendarEvent> cal;
 
