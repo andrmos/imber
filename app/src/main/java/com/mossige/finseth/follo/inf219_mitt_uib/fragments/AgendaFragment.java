@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,10 +14,14 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadFileTask;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,26 +38,34 @@ public class AgendaFragment extends Fragment {
 
     public AgendaFragment() {}
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_agenda, container, false);
 
         Log.i(TAG, "Created agenda fragment");
 
+        URL url = null;
         agendas = new ArrayList<>();
-        agendas.add(new CalendarEvent("Agenda1", "summary 1", new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda2", "summary 2",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda3", "summary 3",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda4", "summary 4",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda5", "summary 5",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda6", "summary 6",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
-        agendas.add(new CalendarEvent("Agenda7", "summary 7",new Date(1000, 10, 10, 10, 10), new Date(2000, 20, 20, 20, 20)));
+
+        try {
+            url = new URL("https://mitt.uib.no/feeds/calendars/user_IhGpmKpXABBs97wcCxzOF9lJ1sUBQOKBhZ6i0Qbk.ics");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
         initRecycleView(rootView);
+        DownloadFileTask dft = new DownloadFileTask(mAdapter);
+        try {
+            agendas.addAll(dft.execute(url).get());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e1) {
+            e1.printStackTrace();
+        }
 
         return rootView;
     }
+
 
     private void initRecycleView(View rootView) {
         // Create RecycleView
