@@ -1,7 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 
-import android.os.AsyncTask;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +16,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdap
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadFileTask;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -63,9 +62,10 @@ public class AgendaFragment extends Fragment {
         try {
 
             calendar = new MyCal(dft.execute(url).get());
-            agendas.clear();
 
+            agendas.clear();
             Calendar cal = Calendar.getInstance();
+            // Add calendar events for current date (adapter notified in DownloadFileTask)
             agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
 
         } catch (InterruptedException e) {
@@ -75,6 +75,16 @@ public class AgendaFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    /**
+     * Update calendar events for a specified date.
+     * @param date The date of the calendar events to be shown
+     */
+    public void updateAgendaCards(Date date) {
+        agendas.clear();
+        agendas.addAll(calendar.getEventsForDate(date.getDate(), date.getMonth()+1, date.getYear()+1900));
+        mAdapter.notifyDataSetChanged();
     }
 
 

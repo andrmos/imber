@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -28,8 +29,24 @@ public class CalendarFragment extends Fragment {
 
     private static final String TAG = "CalendarFragment";
 
+    OnDateClickListener mCallback;
+
+    public interface OnDateClickListener {
+        void onDateSelected(Date date);
+    }
+
     public CalendarFragment() {}
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (OnDateClickListener) context;
+        } catch (ClassCastException e) {
+            Log.i(TAG, "Class cast exception");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,7 +86,6 @@ public class CalendarFragment extends Fragment {
         // Set listeners
         caldroidFragment.setCaldroidListener(initCaldroidListener());
 
-
         return caldroidFragment;
     }
 
@@ -79,10 +95,13 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onSelectDate(Date date, View view) {
                 Log.i(TAG, "Clicked date " + date.getDate() + "/" + (date.getMonth() + 1));
-                // TODO notify agenda fragment for showing agenda
+                // Callback to main activity to notify agenda fragment to update its calendar events
+                mCallback.onDateSelected(date);
             }
         };
 
         return listener;
     }
+
+
 }

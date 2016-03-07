@@ -13,16 +13,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
 import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.Calendar;
+import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
 
     private static final String TAG = "MainActivity";
 
@@ -130,5 +134,20 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
 
+    /**
+     * Notify agenda fragment to update its calendar event cards to the specified date.
+     * @param date The date clicked
+     */
+    @Override
+    public void onDateSelected(Date date) {
+        AgendaFragment agendaFragment = (AgendaFragment) getSupportFragmentManager().findFragmentById(R.id.agenda_container);
 
+        if (agendaFragment != null) {
+
+            agendaFragment.updateAgendaCards(date);
+
+        } else {
+            Log.i(TAG, "Error: agendaFragment is null");
+        }
+    }
 }
