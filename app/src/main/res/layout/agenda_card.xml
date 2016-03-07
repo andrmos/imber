@@ -15,23 +15,23 @@
 
         <TextView
             android:id="@+id/agenda_title"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Dummy agenda title"/>
 
         <TextView
-            android:id="@+id/agenda_start"
-            android:layout_width="wrap_content"
+            android:id="@+id/agenda_time"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dummy start"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/agenda_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dummy end"
-            android:visibility="gone"/>
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:gravity="right"
+            android:textAlignment="gravity"
+            android:text="Dummy start" />
 
         <TextView
             android:id="@+id/agenda_summary"

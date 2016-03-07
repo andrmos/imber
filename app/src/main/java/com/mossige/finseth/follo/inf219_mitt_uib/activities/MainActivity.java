@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -87,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
 
         if(id == R.id.nav_course){
             Log.i(TAG,"Course nav click");

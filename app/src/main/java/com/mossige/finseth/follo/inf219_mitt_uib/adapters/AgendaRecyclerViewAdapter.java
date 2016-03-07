@@ -43,10 +43,18 @@ public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
         // set text of text view in card
         AgendaViewHolder agendaHolder = (AgendaViewHolder) holder;
         agendaHolder.title.setText(data.get(position).getSummary());
-        agendaHolder.start.setText(data.get(position).getStartDate().toString());
-        agendaHolder.end.setText(data.get(position).getEndDate().toString());
+        agendaHolder.time.setText(getFormatDate(position));
         // TODO set summary
         //agendaHolder.summary.setText(data.get(position).getName());
+    }
+
+    private String getFormatDate(int position){
+        String date = String.format("%02d",data.get(position).getStartDate().getHours()+1) + ":";
+        date += String.format("%02d",data.get(position).getStartDate().getMinutes()) + "-";
+        date += String.format("%02d",data.get(position).getEndDate().getHours()+1) + ":";
+        date += String.format("%02d",data.get(position).getEndDate().getMinutes());
+
+        return date;
     }
 
     @Override
