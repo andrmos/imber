@@ -167,8 +167,8 @@ public class CalendarParser {
         }
 
         public Date toDate() {
-            int year = this.year - 1900;
-            int month = this.month - 1;
+            int year = this.year;
+            int month = this.month;
             int day = this.day;
             int hour = this.hour;
             int min = this.minute;

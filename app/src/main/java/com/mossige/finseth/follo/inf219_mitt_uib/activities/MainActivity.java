@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
 
         if(id == R.id.nav_calendar){
-            Log.i(TAG,"Calendar nav click");
+            Log.i(TAG,"MyCal nav click");
 
             CalendarFragment calendarFragment = new CalendarFragment();
             transaction.replace(R.id.content_frame, calendarFragment);

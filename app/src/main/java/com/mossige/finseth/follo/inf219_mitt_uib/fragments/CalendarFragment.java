@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseMenuRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -37,8 +38,7 @@ public class CalendarFragment extends Fragment {
         CaldroidFragment caldroidFragment = initCalendarFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.calendar_container, caldroidFragment);
-
-        // TODO bundle current day with the agenda fragment, so that it can show todays agendas
+        
         AgendaFragment agendaFragment = new AgendaFragment();
         ft.replace(R.id.agenda_container, agendaFragment);
 

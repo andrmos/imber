@@ -23,9 +23,7 @@ public class CalendarEvent {
         return name;
     }
 
-    public String getSummary(){
-        return summary;
-    }
+    public String getSummary() { return summary; }
 
     public Date getStartDate() {
         return startDate;

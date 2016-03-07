@@ -14,12 +14,14 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadFileTask;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -34,6 +36,7 @@ public class AgendaFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private MyCal calendar;
     private ArrayList<CalendarEvent> agendas;
 
     public AgendaFragment() {}
@@ -45,18 +48,26 @@ public class AgendaFragment extends Fragment {
         Log.i(TAG, "Created agenda fragment");
 
         URL url = null;
-        agendas = new ArrayList<>();
 
         try {
-            url = new URL("https://mitt.uib.no/feeds/calendars/user_IhGpmKpXABBs97wcCxzOF9lJ1sUBQOKBhZ6i0Qbk.ics");
+            url = new URL("https://mitt.uib.no/feeds/calendars/course_3Nxpys2eXawRFLYR8aDN3sJ55dnwH00yEZlkPDwa.ics");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
+        agendas = new ArrayList<>();
         initRecycleView(rootView);
+
         DownloadFileTask dft = new DownloadFileTask(mAdapter);
+
         try {
-            agendas.addAll(dft.execute(url).get());
+
+            calendar = new MyCal(dft.execute(url).get());
+            agendas.clear();
+
+            Calendar cal = Calendar.getInstance();
+            agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e1) {

@@ -1,8 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +9,9 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendaViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.CalendarParser;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Adapter for the RecyclerView which will hold the cards with titles of the different courses.
