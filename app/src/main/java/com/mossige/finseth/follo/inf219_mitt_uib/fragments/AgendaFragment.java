@@ -49,7 +49,7 @@ public class AgendaFragment extends Fragment {
         URL url = null;
 
         try {
-            url = new URL("https://mitt.uib.no/feeds/calendars/course_3Nxpys2eXawRFLYR8aDN3sJ55dnwH00yEZlkPDwa.ics");
+            url = new URL(getArguments().get("calendarURL").toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

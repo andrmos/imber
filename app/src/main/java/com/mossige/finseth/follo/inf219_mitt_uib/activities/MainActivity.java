@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -14,27 +15,50 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
 
     private static final String TAG = "MainActivity";
+
+    private User profile;
+    private Bundle url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set main layout
         setContentView(R.layout.activity_main);
+
+        requestProfile();
 
         // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
     @Override
@@ -107,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             Log.i(TAG,"MyCal nav click");
 
             CalendarFragment calendarFragment = new CalendarFragment();
+            calendarFragment.setArguments(url);
             transaction.replace(R.id.content_frame, calendarFragment);
             transaction.commit();
 
@@ -153,5 +180,59 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         } else {
             Log.i(TAG, "Error: agendaFragment is null");
         }
+    }
+
+    private void requestProfile() {
+
+        JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(), (String) null, new Response.Listener<JSONObject>() {
+
+            String name;
+            String email;
+            String id;
+            String login_id;
+            String calendar;
+
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i(TAG, "Got response");
+
+                try {
+
+                    id = response.getString("id");
+                    name = response.getString("name");
+                    email = response.getString("primary_email");
+                    login_id = response.getString("login_id");
+                    calendar = response.getJSONObject("calendar").get("ics").toString();
+
+                    //Set name on navigation header
+                    TextView nameTV = (TextView) findViewById(R.id.name);
+                    nameTV.setText(name);
+
+                    //Set email on navigation header
+                    TextView emailTV = (TextView) findViewById(R.id.email);
+                    emailTV.setText(email);
+
+                    //Bundles calendarURL for later accessing
+                    url = new Bundle();
+                    url.putString("calendarURL",calendar);
+
+
+                    //Creating user object
+                    profile = new User(id,name,email,login_id,calendar);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, error.toString());
+
+            }
+        });
+
+        RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
     }
 }

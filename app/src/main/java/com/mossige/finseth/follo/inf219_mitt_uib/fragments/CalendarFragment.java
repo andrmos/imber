@@ -55,8 +55,9 @@ public class CalendarFragment extends Fragment {
         CaldroidFragment caldroidFragment = initCalendarFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.calendar_container, caldroidFragment);
-        
+
         AgendaFragment agendaFragment = new AgendaFragment();
+        agendaFragment.setArguments(getArguments());
         ft.replace(R.id.agenda_container, agendaFragment);
 
         ft.commit();
@@ -85,6 +86,8 @@ public class CalendarFragment extends Fragment {
 
         // Set listeners
         caldroidFragment.setCaldroidListener(initCaldroidListener());
+
+
 
         return caldroidFragment;
     }
