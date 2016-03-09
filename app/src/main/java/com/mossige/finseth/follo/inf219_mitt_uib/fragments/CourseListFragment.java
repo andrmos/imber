@@ -74,14 +74,17 @@ public class CourseListFragment extends Fragment {
         mAdapter = new CourseMenuRecyclerViewAdapter(courses);
         mainList.setAdapter(mAdapter);
 
+        initOnClickListener();
+    }
+
+    private void initOnClickListener() {
         ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                // TODO add new course fragment
-                //FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                // CourseFragment courseFragment = new CourseFragment();
-                // transaction.add(courseFragment, "tag");
-                // transaction.commit();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                CourseFragment courseFragment = new CourseFragment();
+                transaction.replace(R.id.content_frame, courseFragment);
+                transaction.commit();
             }
         });
     }
