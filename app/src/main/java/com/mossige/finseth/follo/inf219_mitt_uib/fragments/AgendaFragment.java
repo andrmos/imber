@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadFileTask;
@@ -100,6 +101,13 @@ public class AgendaFragment extends Fragment {
         // Create adapter that binds the views with some content
         mAdapter = new AgendaRecyclerViewAdapter(agendas);
         mainList.setAdapter(mAdapter);
+
+        ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                Log.i(TAG, "Clicked item " + position);
+            }
+        });
     }
 
 }

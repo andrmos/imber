@@ -41,6 +41,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
+
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -121,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if(id == R.id.nav_course){
             Log.i(TAG,"Course nav click");
 
-            CourseFragment courseFragment = new CourseFragment();
-            transaction.replace(R.id.content_frame, courseFragment);
+            CourseListFragment courseListFragment = new CourseListFragment();
+            transaction.replace(R.id.content_frame, courseListFragment);
             transaction.commit();
 
             drawer.closeDrawer(navigationView);

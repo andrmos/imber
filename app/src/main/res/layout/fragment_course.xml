@@ -1,15 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:showIn="@layout/activity_main">
+    tools:context="com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/mainList"
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:paddingTop="?attr/actionBarSize">
-    </android.support.v7.widget.RecyclerView>
+        android:text="@string/hello_blank_fragment"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
-</RelativeLayout>
+</FrameLayout>
