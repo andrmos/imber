@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendaViewHolder;
@@ -45,6 +46,8 @@ public class CourseMenuRecyclerViewAdapter extends RecyclerView.Adapter<GeneralV
         CourseViewHolder courseHolder = (CourseViewHolder) holder;
         courseHolder.course_code.setText(data.get(position).getCourseCode());
         courseHolder.course_title.setText(data.get(position).getName());
+
+        courseHolder.course_id.setText("" + data.get(position).getId());
     }
 
     @Override

@@ -109,5 +109,4 @@ public class AgendaFragment extends Fragment {
             }
         });
     }
-
 }

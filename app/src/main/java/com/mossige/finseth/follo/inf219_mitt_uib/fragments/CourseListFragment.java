@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -84,6 +85,14 @@ public class CourseListFragment extends Fragment {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 CourseFragment courseFragment = new CourseFragment();
                 transaction.replace(R.id.content_frame, courseFragment);
+
+                TextView tv = (TextView) v.findViewById(R.id.course_id);
+
+                Bundle args = new Bundle();
+                args.putString("id", "" + tv.getText());
+                courseFragment.setArguments(args);
+
+
                 transaction.commit();
             }
         });

@@ -14,9 +14,12 @@ public class CourseViewHolder extends GeneralViewHolder {
     // each data item is just a string
     public TextView course_code;
     public TextView course_title;
+    public TextView course_id;
+
     public CourseViewHolder(View v) {
         super(v);
         course_code = (TextView) v.findViewById(R.id.course_code);
         course_title = (TextView) v.findViewById(R.id.course_title);
+        course_id = (TextView) v.findViewById(R.id.course_id);
     }
 }
