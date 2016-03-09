@@ -4,11 +4,7 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.CalendarParser;
 
 import java.io.IOException;
 import java.net.URL;

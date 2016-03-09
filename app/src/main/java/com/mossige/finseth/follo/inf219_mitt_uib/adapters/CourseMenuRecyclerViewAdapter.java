@@ -10,6 +10,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendaViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.CourseViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 
 import java.util.ArrayList;

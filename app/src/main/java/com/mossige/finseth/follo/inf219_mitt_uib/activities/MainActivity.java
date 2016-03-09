@@ -13,17 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
-import com.roomorama.caldroid.CaldroidFragment;
-import com.roomorama.caldroid.CaldroidListener;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
@@ -95,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if(id == R.id.nav_course){
             Log.i(TAG,"Course nav click");
 
-            CourseFragment courseFragment = new CourseFragment();
+            CourseListFragment courseFragment = new CourseListFragment();
             transaction.replace(R.id.content_frame, courseFragment);
             transaction.commit();
 
