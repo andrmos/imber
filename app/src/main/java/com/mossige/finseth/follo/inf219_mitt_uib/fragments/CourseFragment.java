@@ -22,6 +22,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdap
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
@@ -105,12 +106,9 @@ public class CourseFragment extends Fragment {
                 Log.i(TAG, "Got response");
 
                 try {
-
-                    Log.i(TAG, "" + response.get(0).toString());
-                    //String text = response.getJSONObject(0).getString("message");
-                    //Log.i(TAG, "message " + text);
-
-
+                    announcements.clear();
+                    announcements.addAll(JSONParser.parseAllAnouncements(response));
+                    mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
