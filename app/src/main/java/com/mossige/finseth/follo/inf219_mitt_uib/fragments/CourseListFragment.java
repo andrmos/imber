@@ -88,10 +88,12 @@ public class CourseListFragment extends Fragment {
 
                 TextView course_id_tv = (TextView) v.findViewById(R.id.course_id);
                 TextView course_name_tv = (TextView) v.findViewById(R.id.course_title);
+                TextView course_url_tv = (TextView) v.findViewById(R.id.calendar_url);
 
                 Bundle args = new Bundle();
                 args.putString("id", "" + course_id_tv.getText());
                 args.putString("name", "" + course_name_tv.getText());
+                args.putString("calendarurl", "" + course_url_tv.getText());
                 courseFragment.setArguments(args);
 
 

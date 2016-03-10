@@ -8,21 +8,20 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 
-public class DownloadFileTask extends AsyncTask<URL, Integer, ArrayList<CalendarEvent>> {
+public class DownloadCourseCalFileTask extends AsyncTask<URL, Integer, ArrayList<CalendarEvent>> {
 
-    private static final String TAG = "DownloadFileTask";
+    private static final String TAG = "DownloadCourseCalFileTa";
 
     protected ArrayList<CalendarEvent> cal;
 
     RecyclerView.Adapter adapter;
 
-    public DownloadFileTask(RecyclerView.Adapter adapter) {
+    public DownloadCourseCalFileTask(RecyclerView.Adapter adapter) {
         this.adapter = adapter;
     }
 
@@ -36,37 +35,16 @@ public class DownloadFileTask extends AsyncTask<URL, Integer, ArrayList<Calendar
             e.printStackTrace();
         }
 
-        return cal;
+        MyCal cal2 = new MyCal(cal);
+
+
+        return cal2.getEventsForDate(16, 3, 2016);
     }
-
-    public ArrayList<CalendarEvent> nextAgendas(URL... urls) {
-        ArrayList<CalendarEvent> agendas = null;
-        try {
-            agendas = this.execute(urls).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-        MyCal cal = new MyCal(agendas);
-        Log.i(TAG, "nextagenda calendar size: " + cal.getCalendar().size());
-
-        ArrayList<CalendarEvent> ret = cal.getEventsForDate(16, 3, 2016);
-        Log.i(TAG, "nextAgendas: ret " + ret.size());
-        onPostExecute(ret);
-        Log.i(TAG, "nextAgendas: onpostexecute");
-
-        return ret;
-    }
-
-
 
     @Override
     protected void onPostExecute(ArrayList<CalendarEvent> calendarEvents) {
         super.onPostExecute(calendarEvents);
         this.adapter.notifyDataSetChanged();
-
         Log.i(TAG, "onPostExecute: " + calendarEvents.size());
     }
 }

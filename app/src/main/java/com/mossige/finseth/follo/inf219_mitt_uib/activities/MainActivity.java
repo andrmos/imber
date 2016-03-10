@@ -102,8 +102,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -186,13 +184,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private void requestProfile() {
 
-        JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(), (String) null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(), (String) null, new Response.Listener<JSONObject>() {
 
-            String name;
-            String email;
-            String id;
-            String login_id;
-            String calendar;
 
             @Override
             public void onResponse(JSONObject response) {
@@ -200,27 +193,20 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
                 try {
 
-                    id = response.getString("id");
-                    name = response.getString("name");
-                    email = response.getString("primary_email");
-                    login_id = response.getString("login_id");
-                    calendar = response.getJSONObject("calendar").get("ics").toString();
+                    profile = JSONParser.parseUserProfile(response);
 
                     //Set name on navigation header
                     TextView nameTV = (TextView) findViewById(R.id.name);
-                    nameTV.setText(name);
+                    nameTV.setText(profile.getName());
 
                     //Set email on navigation header
                     TextView emailTV = (TextView) findViewById(R.id.email);
-                    emailTV.setText(email);
+                    emailTV.setText(profile.getEmail());
 
                     //Bundles calendarURL for later accessing
                     url = new Bundle();
-                    url.putString("calendarURL",calendar);
+                    url.putString("calendarURL", profile.getCalendar());
 
-
-                    //Creating user object
-                    profile = new User(id,name,email,login_id,calendar);
 
                 } catch (JSONException e) {
                     e.printStackTrace();

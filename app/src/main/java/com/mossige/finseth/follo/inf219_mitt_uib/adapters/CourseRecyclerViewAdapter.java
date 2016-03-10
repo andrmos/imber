@@ -91,15 +91,15 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
             AgendasViewHolder agendasViewHolder = (AgendasViewHolder) holder;
 
             if (agendas.size() >= 1) {
-                agendasViewHolder.agenda1.setText(agendas.get(0).getName());
+                agendasViewHolder.agenda1.setText(agendas.get(0).getSummary() + "   " + agendas.get(0).getStartDate().toString() + " - " + agendas.get(0).getEndDate().toString());
             }
 
             if (agendas.size() >= 2) {
-                agendasViewHolder.agenda2.setText(agendas.get(1).getName());
+                agendasViewHolder.agenda2.setText(agendas.get(1).getSummary() + "   " + agendas.get(1).getStartDate().toString() + " - " + agendas.get(1).getEndDate().toString());
             }
 
             if (agendas.size() >= 3) {
-                agendasViewHolder.agenda3.setText(agendas.get(2).getName());
+                agendasViewHolder.agenda3.setText(agendas.get(2).getSummary() + "   " + agendas.get(2).getStartDate().toString() + " - " + agendas.get(2).getEndDate().toString());
             }
 
         } else if (getItemViewType(position) == 2) {

@@ -21,7 +21,10 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseMenuRecyclerView
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadCourseCalFileTask;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadFileTask;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
@@ -30,7 +33,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +53,8 @@ public class CourseFragment extends Fragment {
     private ArrayList<CalendarEvent> agendas;
     private ArrayList<String> grades;
 
+    private MyCal calendar;
+
     public CourseFragment() {}
 
 
@@ -56,6 +64,8 @@ public class CourseFragment extends Fragment {
 
         String course_id = getArguments().getString("id");
         //requestAnnouncements(course_id);
+
+        String calendar_url = getArguments().getString("calendarurl");
 
         // Set toolbar title to course name
         //String course_name = getArguments().getString("name");
@@ -79,6 +89,9 @@ public class CourseFragment extends Fragment {
         grades.add("E");
 
         initRecycleView(rootView);
+
+        requestAnnouncements(course_id);
+        requestAgendas(calendar_url);
 
         return rootView;
     }
@@ -110,6 +123,7 @@ public class CourseFragment extends Fragment {
                     announcements.addAll(JSONParser.parseAllAnouncements(response));
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
+                    Log.i(TAG, "JSONException requesting announcements");
                     e.printStackTrace();
                 }
 
@@ -123,6 +137,28 @@ public class CourseFragment extends Fragment {
         });
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(announcementsRequest);
+    }
+
+    private void requestAgendas(String url) {
+
+        Log.i(TAG, "url: " + url);
+
+        DownloadCourseCalFileTask dft = new DownloadCourseCalFileTask(mAdapter);
+        try {
+            calendar = new MyCal(dft.execute(new URL(url)).get());
+            agendas.clear();
+            agendas.addAll(calendar.getCalendar());
+
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

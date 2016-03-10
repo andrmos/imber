@@ -42,7 +42,7 @@ public class JSONParser {
         String id = unParsed.getString("id");
         String name = unParsed.getString("name");
         String email = unParsed.getString("primary_email");
-        String loginID = unParsed.getString("ofo002");
+        String loginID = unParsed.getString("login_id");
         String calendar = unParsed.getJSONObject("calendar").getString("ics");
 
         return new User(id, name, email, loginID, calendar);
@@ -123,10 +123,8 @@ public class JSONParser {
 
         for (int i = 0; i < unParsed.length(); i++) {
             parsed.add(getSingleAnnouncement(unParsed.getJSONObject(i)));
-            Log.i(TAG, "parseAllAnnouncements: " + "Announcement with id: " + parsed.get(i).getId() + " is parsed");
         }
 
-        Log.i(TAG, "parseAllAnouncements: " + "All announcements parsed");
         return parsed;
     }
 
@@ -180,7 +178,7 @@ public class JSONParser {
         String userName = obj.getString("user_name");
         String postedAt = obj.getString("posted_at");
         String message = obj.getString("message");
-        boolean unread = obj.getString("unread").equals("true");
+        boolean unread = obj.getString("read_state").equals("true");
 
         return new Announcement(id, title, userName, postedAt, message, unread);
 
@@ -189,7 +187,7 @@ public class JSONParser {
     private static Course getSingleCourse(JSONObject obj) throws JSONException {
         int id = obj.getInt("id");
         String name = obj.getString("name");
-        String cal = obj.getString("calendar");
+        String cal = obj.getJSONObject("calendar").getString("ics");
         String code = obj.getString("course_code");
 
         return new Course(id, name, cal, code);

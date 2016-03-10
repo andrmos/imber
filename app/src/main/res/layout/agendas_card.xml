@@ -27,20 +27,17 @@
             <TextView
                 android:id="@+id/agenda1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Agenda 1"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/agenda2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Agenda 2"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/agenda3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Agenda 3"/>
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
