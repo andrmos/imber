@@ -1,15 +1,19 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendaViewHolder;
-import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.CourseViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendasViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GradesViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.SingleAgendaViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AnnouncementsViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 
 import java.util.ArrayList;
 
@@ -21,38 +25,40 @@ import java.util.ArrayList;
  */
 public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
-    private ArrayList<Course> data;
-    // private ArrayList<String/Agenda> agendaData;
+    private static final String TAG = "CourseAdapter";
 
-    public CourseRecyclerViewAdapter(ArrayList<Course> data) {
-        this.data = data;
+    private ArrayList<Announcement> announcements;
+    private ArrayList<CalendarEvent> agendas;
+    private ArrayList<String> grades;
+
+    public CourseRecyclerViewAdapter(ArrayList<Announcement> announcements, ArrayList<CalendarEvent> agendas, ArrayList<String> grades) {
+        this.announcements = announcements;
+        this.agendas = agendas;
+        this.grades = grades;
     }
 
     @Override
     public int getItemViewType(int position) {
-        // TODO Implement logic deciding what card will come next
-        // Return either 1 or 100, 1: course card, 100: agenda card
-        // Log.i("adapter", "position in list: " + position);
-        if (position == 1) {
-            return 1;
-        } else {
-            return 1;
-        }
+        return position;
     }
 
     @Override
     public GeneralViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        GeneralViewHolder holder;
+        GeneralViewHolder holder = null;
         View v;
 
-        if (viewType == 1) { // course card
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_card, parent, false);
-            holder = new CourseViewHolder(v);
+        if (viewType == 0) { // Announcements card
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.announcements_card, parent, false);
+            holder = new AnnouncementsViewHolder(v);
 
-        } else { // agenda card
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agenda_card, parent, false);
-            holder = new AgendaViewHolder(v);
+        } else if (viewType == 1) { // agendas card
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agendas_card, parent, false);
+            holder = new AgendasViewHolder(v);
+
+        } else { // grades card
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.grades_card, parent, false);
+            holder = new GradesViewHolder(v);
         }
 
         return holder;
@@ -62,22 +68,60 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
     @Override
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
-        if(getItemViewType(position) == 1) {
-            CourseViewHolder courseHolder = (CourseViewHolder) holder;
-            courseHolder.course_code.setText(data.get(position).getCourseCode());
-            courseHolder.course_title.setText(data.get(position).getName());
+        if(getItemViewType(position) == 0) {
+            // Announcements
+            AnnouncementsViewHolder announcementsViewHolder = (AnnouncementsViewHolder) holder;
 
-            //Example: holder1.course_id.setText(data.get(position));
-            // Set information for course card via getViewById()
-        } else {
-            AgendaViewHolder holder1 = (AgendaViewHolder) holder;
-            //Example: holder1.title.setText(data.get(position));
-            // Set information for agenda card via getViewById()
+            // TODO // FIXME: 10/03/2016 ugle code, maybe fix with ArrayList<Announcemnt> or data model in view holder
+            if (announcements.size() >= 1) {
+                announcementsViewHolder.announcements1.setText(announcements.get(0).getTitle());
+            }
+
+            if (announcements.size() >= 2) {
+                announcementsViewHolder.announcements2.setText(announcements.get(1).getTitle());
+            }
+
+            if (announcements.size() >= 3) {
+                announcementsViewHolder.announcements3.setText(announcements.get(2).getTitle());
+            }
+
+
+        } else if (getItemViewType(position) == 1){
+            // Agendas
+            AgendasViewHolder agendasViewHolder = (AgendasViewHolder) holder;
+
+            if (agendas.size() >= 1) {
+                agendasViewHolder.agenda1.setText(agendas.get(0).getName());
+            }
+
+            if (agendas.size() >= 2) {
+                agendasViewHolder.agenda2.setText(agendas.get(1).getName());
+            }
+
+            if (agendas.size() >= 3) {
+                agendasViewHolder.agenda3.setText(agendas.get(2).getName());
+            }
+
+        } else if (getItemViewType(position) == 2) {
+            // Grades
+            GradesViewHolder gradesViewHolder = (GradesViewHolder) holder;
+
+            if (grades.size() >= 1) {
+                gradesViewHolder.grade1.setText(grades.get(0));
+            }
+
+            if (grades.size() >= 2) {
+                gradesViewHolder.grade2.setText(grades.get(1));
+            }
+
+            if (grades.size() >= 3) {
+                gradesViewHolder.grade3.setText(grades.get(2));
+            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return 3;
     }
 }

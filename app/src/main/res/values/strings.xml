@@ -23,4 +23,9 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
+    <string name="announcements_card_title">Kunngjøringer</string>
+    <string name="agenda_card_title">Agenda</string>
+    <string name="grades_card_title">Karakterer</string>
+
 </resources>

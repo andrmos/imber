@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/announcements_card"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        card_view:cardBackgroundColor="@color/cardview_light_background"
+        card_view:cardElevation="6dp"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/agendas_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/agenda_card_title"/>
+
+            <TextView
+                android:id="@+id/agenda1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agenda 1"/>
+
+            <TextView
+                android:id="@+id/agenda2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agenda 2"/>
+
+            <TextView
+                android:id="@+id/agenda3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Agenda 3"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

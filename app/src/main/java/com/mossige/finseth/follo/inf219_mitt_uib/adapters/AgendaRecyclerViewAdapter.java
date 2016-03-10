@@ -6,10 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendaViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.SingleAgendaViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
 
 import java.util.ArrayList;
 
@@ -33,7 +32,7 @@ public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
     public GeneralViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // agenda card
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agenda_card, parent, false);
-        GeneralViewHolder holder = new AgendaViewHolder(v);
+        GeneralViewHolder holder = new SingleAgendaViewHolder(v);
 
         return holder;
     }
@@ -41,7 +40,7 @@ public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
     @Override
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
-        AgendaViewHolder agendaHolder = (AgendaViewHolder) holder;
+        SingleAgendaViewHolder agendaHolder = (SingleAgendaViewHolder) holder;
         agendaHolder.title.setText(data.get(position).getSummary());
         agendaHolder.time.setText(getFormatDate(position));
         // TODO set summary
