@@ -9,29 +9,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseMenuRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadCourseCalFileTask;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadFileTask;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.downloads.DownloadCourseCalFileTask;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -76,13 +70,6 @@ public class CourseFragment extends Fragment {
         grades = new ArrayList<>();
 
         // Add dummy announcements, agendas and grades
-        announcements.add(new Announcement("id", "Tittel 1", "Brukernavn", "kl 2", "Dette er en fin melding!", false));
-        announcements.add(new Announcement("id", "Tittel 2", "Brukernavn", "kl 2", "Dette er en fin melding!", false));
-        announcements.add(new Announcement("id", "Tittel 3", "Brukernavn", "kl 2", "Dette er en fin melding!", false));
-
-        agendas.add(new CalendarEvent("Forelesning 1", "Beksrivelse", null, null));
-        agendas.add(new CalendarEvent("Forelesning 2", "Beksrivelse", null, null));
-        agendas.add(new CalendarEvent("Gruppe", "Beksrivelse", null, null));
 
         grades.add("A");
         grades.add("B");

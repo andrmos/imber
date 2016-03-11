@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib.network;
+package com.mossige.finseth.follo.inf219_mitt_uib.network.downloads;
 
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.CalendarParser;
 
 import java.io.IOException;
 import java.lang.reflect.Array;

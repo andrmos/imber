@@ -2,7 +2,9 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Calendar class holding CalendarEvents for a user.
@@ -31,6 +33,26 @@ public class MyCal {
         }
 
         return retCalendar;
+    }
+
+    public ArrayList<CalendarEvent> getNextEvents(Date curDate) {
+        ArrayList<CalendarEvent> ret = new ArrayList<>();
+
+        Log.i(TAG, "getNextEvents: before start" + curDate);
+
+        for (CalendarEvent e : calendar) {
+            if(e.getStartDate().before(curDate)) {
+                continue;
+            }
+
+            ret.add(e);
+
+            if(ret.size() == 3) {
+                break;
+            }
+        }
+
+        return ret;
     }
 
     public CalendarEvent getEvent(int position){

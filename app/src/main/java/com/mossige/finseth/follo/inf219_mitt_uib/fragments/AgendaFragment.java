@@ -1,7 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +15,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdap
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.DownloadFileTask;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.downloads.DownloadFileTask;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -84,7 +83,7 @@ public class AgendaFragment extends Fragment {
      */
     public void updateAgendaCards(Date date) {
         agendas.clear();
-        agendas.addAll(calendar.getEventsForDate(date.getDate(), date.getMonth()+1, date.getYear()+1900));
+        agendas.addAll(calendar.getEventsForDate(date.getDate(), date.getMonth()+1, date.getYear()));
         mAdapter.notifyDataSetChanged();
     }
 

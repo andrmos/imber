@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib.network;
+package com.mossige.finseth.follo.inf219_mitt_uib.network.downloads;
 
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
@@ -6,10 +6,12 @@ import android.util.Log;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.CalendarParser;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 
@@ -38,7 +40,10 @@ public class DownloadCourseCalFileTask extends AsyncTask<URL, Integer, ArrayList
         MyCal cal2 = new MyCal(cal);
 
 
-        return cal2.getEventsForDate(16, 3, 2016);
+        Log.i(TAG, "doInBackground: " + new Date());
+        Date curDate = new Date();
+
+        return cal2.getNextEvents(curDate);
     }
 
     @Override

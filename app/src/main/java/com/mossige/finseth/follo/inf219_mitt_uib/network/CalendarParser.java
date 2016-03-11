@@ -159,10 +159,10 @@ public class CalendarParser {
         int year, month, day, hour, minute;
 
         public Times(int year, int month, int day, int hour, int min) {
-            this.year = year;
+            this.year = year-1900;
             this.month = month;
             this.day = day;
-            this.hour = hour;
+            this.hour = hour+1;
             this.minute = min;
         }
 
