@@ -16,6 +16,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Adapter for the RecyclerView.
@@ -69,54 +70,76 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
         if(getItemViewType(position) == 0) {
-            // Announcements
-            AnnouncementsViewHolder announcementsViewHolder = (AnnouncementsViewHolder) holder;
-
-            // TODO // FIXME: 10/03/2016 ugle code, maybe fix with ArrayList<Announcemnt> or data model in view holder
-            if (announcements.size() >= 1) {
-                announcementsViewHolder.announcements1.setText(announcements.get(0).getTitle());
-            }
-
-            if (announcements.size() >= 2) {
-                announcementsViewHolder.announcements2.setText(announcements.get(1).getTitle());
-            }
-
-            if (announcements.size() >= 3) {
-                announcementsViewHolder.announcements3.setText(announcements.get(2).getTitle());
-            }
-
-
+            setAnnouncements(holder);
         } else if (getItemViewType(position) == 1){
-            // Agendas
-            AgendasViewHolder agendasViewHolder = (AgendasViewHolder) holder;
-
-            if (agendas.size() >= 1) {
-                agendasViewHolder.agenda1.setText(agendas.get(0).getSummary() + "   " + agendas.get(0).getStartDate().toString() + " - " + agendas.get(0).getEndDate().toString());
-            }
-
-            if (agendas.size() >= 2) {
-                agendasViewHolder.agenda2.setText(agendas.get(1).getSummary() + "   " + agendas.get(1).getStartDate().toString() + " - " + agendas.get(1).getEndDate().toString());
-            }
-
-            if (agendas.size() >= 3) {
-                agendasViewHolder.agenda3.setText(agendas.get(2).getSummary() + "   " + agendas.get(2).getStartDate().toString() + " - " + agendas.get(2).getEndDate().toString());
-            }
-
+            setAgendas(holder);
         } else if (getItemViewType(position) == 2) {
-            // Grades
-            GradesViewHolder gradesViewHolder = (GradesViewHolder) holder;
+            setGrades(holder);
+        }
+    }
 
-            if (grades.size() >= 1) {
-                gradesViewHolder.grade1.setText(grades.get(0));
-            }
+    private void setGrades(GeneralViewHolder holder) {
+        GradesViewHolder gradesViewHolder = (GradesViewHolder) holder;
 
-            if (grades.size() >= 2) {
-                gradesViewHolder.grade2.setText(grades.get(1));
-            }
+        if (grades.size() >= 1) {
+            gradesViewHolder.grade1.setText(grades.get(0));
+        }
 
-            if (grades.size() >= 3) {
-                gradesViewHolder.grade3.setText(grades.get(2));
-            }
+        if (grades.size() >= 2) {
+            gradesViewHolder.grade2.setText(grades.get(1));
+        }
+
+        if (grades.size() >= 3) {
+            gradesViewHolder.grade3.setText(grades.get(2));
+        }
+    }
+
+    private void setAgendas(GeneralViewHolder holder) {
+        AgendasViewHolder agendasViewHolder = (AgendasViewHolder) holder;
+
+        if (agendas.size() >= 1) {
+            agendasViewHolder.agenda1.setText(getEvent(0));
+        }
+
+        if (agendas.size() >= 2) {
+            agendasViewHolder.agenda2.setText(getEvent(1));
+        }
+
+        if (agendas.size() >= 3) {
+            agendasViewHolder.agenda3.setText(getEvent(2));
+        }
+    }
+
+    private String getEvent(int i) {
+        Date s = agendas.get(i).getStartDate();
+        Date e = agendas.get(i).getEndDate();
+        int day = s.getDate();
+        int month = s.getMonth()+1;
+        int startHour = s.getHours();
+        int startMin = s.getMinutes();
+        int endHour = e.getHours();
+        String endMin = String.valueOf(e.getMinutes());
+        if(endMin.equals("0")) {
+            endMin = "00";
+        }
+
+        String summary = agendas.get(i).getSummary();
+        return "" + summary + day + "." + month + " " + startHour + ":" + startMin + "-" + endHour + ":" + endMin;
+    }
+
+    private void setAnnouncements(GeneralViewHolder holder) {
+        AnnouncementsViewHolder announcementsViewHolder = (AnnouncementsViewHolder) holder;
+
+        if (announcements.size() >= 1) {
+            announcementsViewHolder.announcements1.setText(announcements.get(0).getTitle());
+        }
+
+        if (announcements.size() >= 2) {
+            announcementsViewHolder.announcements2.setText(announcements.get(1).getTitle());
+        }
+
+        if (announcements.size() >= 3) {
+            announcementsViewHolder.announcements3.setText(announcements.get(2).getTitle());
         }
     }
 
