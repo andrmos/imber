@@ -11,13 +11,13 @@ import java.util.Date;
  *
  * Created by PatrickFinseth on 07.03.16.
  */
-public class MyCal {
+public class MyCalendar {
 
     private final String TAG = "MyCal";
 
     private ArrayList<CalendarEvent> calendar;
 
-    public MyCal(ArrayList<CalendarEvent> calendar){
+    public MyCalendar(ArrayList<CalendarEvent> calendar){
         this.calendar = calendar;
     }
 
