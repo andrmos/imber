@@ -12,10 +12,7 @@
             android:id="@+id/nav_calendar"
             android:icon="@android:drawable/ic_menu_my_calendar"
             android:title="Kalender" />
-        <item
-            android:id="@+id/nav_announcements"
-            android:icon="@android:drawable/ic_menu_info_details"
-            android:title="Kunngjøringer" />
+
         <item
             android:id="@+id/nav_inbox"
             android:icon="@android:drawable/ic_menu_send"
@@ -45,6 +42,4 @@
 
         </menu>
     </item>
-
-
 </menu>

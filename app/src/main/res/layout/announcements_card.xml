@@ -8,7 +8,7 @@
         android:id="@+id/announcements_card"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/card_height_course"
         card_view:cardBackgroundColor="@color/cardview_light_background"
         card_view:cardElevation="6dp"
         card_view:cardUseCompatPadding="true">
@@ -22,24 +22,36 @@
                 android:id="@+id/announcements_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
                 android:text="@string/announcements_card_title"/>
 
             <TextView
                 android:id="@+id/announcement1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
                 android:text="Dummy 1"/>
 
             <TextView
                 android:id="@+id/announcement2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
                 android:text="Dummy 2"/>
 
             <TextView
                 android:id="@+id/announcement3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textStyle="bold"
                 android:text="Dummy 3"/>
 
         </LinearLayout>

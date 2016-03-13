@@ -71,9 +71,9 @@ public class CourseFragment extends Fragment {
 
         // Add dummy announcements, agendas and grades
 
-        grades.add("A");
-        grades.add("B");
-        grades.add("E");
+        grades.add("A - Compulsory 1 INF115");
+        grades.add("B - Compulsory 2 INF115");
+        grades.add("E - Compulsory 1 MAT101");
 
         initRecycleView(rootView);
 

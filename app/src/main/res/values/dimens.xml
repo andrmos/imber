@@ -14,4 +14,6 @@
     <dimen name="uib_logo_width">80dp</dimen>
     <dimen name="uib_logo_height">80dp</dimen>
 
+    <dimen name="card_height_course">170dp</dimen>
+
 </resources>
