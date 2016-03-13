@@ -22,8 +22,8 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdap
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.downloads.DownloadCourseCalFileTask;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.downloads.DownloadCourseCalendarTask;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
@@ -34,7 +34,6 @@ import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +50,7 @@ public class CourseFragment extends Fragment {
     private ArrayList<CalendarEvent> agendas;
     private ArrayList<String> grades;
 
-    private MyCal calendar;
+    private MyCalendar calendar;
 
     public CourseFragment() {}
 
@@ -156,24 +155,23 @@ public class CourseFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(announcementsRequest);
     }
 
-    private void requestAgendas(String url) {
-
-        Log.i(TAG, "url: " + url);
-
-        DownloadCourseCalFileTask dft = new DownloadCourseCalFileTask(mAdapter);
+    private void requestAgendas(String string_url) {
+        URL url = null;
         try {
-            calendar = new MyCal(dft.execute(new URL(url)).get());
-            agendas.clear();
-            agendas.addAll(calendar.getCalendar());
-
+            url = new URL(string_url);
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
+        DownloadCourseCalendarTask dft = new DownloadCourseCalendarTask(this);
+        dft.execute(url);
+    }
+
+    public void setAgendas(ArrayList<CalendarEvent> calendarEvents) {
+        calendar = new MyCalendar(calendarEvents);
+        agendas.clear();
+        agendas.addAll(calendar.getAllEvents());
+        mAdapter.notifyDataSetChanged();
     }
 
 }

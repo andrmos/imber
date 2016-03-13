@@ -119,8 +119,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
 
         if(id == R.id.nav_course){
-            Log.i(TAG,"Course nav click");
-
             CourseListFragment courseListFragment = new CourseListFragment();
             transaction.replace(R.id.content_frame, courseListFragment);
             transaction.commit();
@@ -130,8 +128,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
 
         if(id == R.id.nav_calendar){
-            Log.i(TAG,"MyCal nav click");
-
             CalendarFragment calendarFragment = new CalendarFragment();
             calendarFragment.setArguments(url);
             transaction.replace(R.id.content_frame, calendarFragment);
@@ -142,8 +138,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
 
         if (id == R.id.nav_about) {
-            Log.i(TAG, "About nav click");
-
             AboutFragment aboutFragment = new AboutFragment();
             transaction.replace(R.id.content_frame, aboutFragment);
             transaction.commit();
@@ -154,8 +148,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
 
         if(id == R.id.nav_signin){
-            Log.i(TAG, "Sign in nav click");
-
             Intent intent = new Intent(this,LoginActivity.class);
             startActivity(intent);
             return true;
@@ -189,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
             @Override
             public void onResponse(JSONObject response) {
-                Log.i(TAG, "Got response");
 
                 try {
 

@@ -59,9 +59,6 @@ public class CourseListFragment extends Fragment {
         return rootView;
     }
 
-
-
-
     private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
@@ -112,13 +109,9 @@ public class CourseListFragment extends Fragment {
         JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                Log.i(TAG, "Got response");
-
                 try {
                     courses.clear();
-
                     ArrayList<Course> temp = JSONParser.parseAllCourses(response);
-
                     for (Course c: temp) {
                         courses.add(c);
                     }
@@ -130,14 +123,13 @@ public class CourseListFragment extends Fragment {
                     Log.i(TAG, "JSONException");
                 }
 
-                progressDialog.hide();
+                progressDialog.dismiss();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "Error response");
-
-                progressDialog.hide();
+                progressDialog.dismiss();
             }
         });
 

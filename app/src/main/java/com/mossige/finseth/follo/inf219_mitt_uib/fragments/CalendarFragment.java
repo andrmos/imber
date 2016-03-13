@@ -1,6 +1,8 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -52,12 +54,13 @@ public class CalendarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        CaldroidFragment caldroidFragment = initCalendarFragment();
         FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+        CaldroidFragment caldroidFragment = initCalendarFragment();
         ft.replace(R.id.calendar_container, caldroidFragment);
 
         AgendaFragment agendaFragment = new AgendaFragment();
-        agendaFragment.setArguments(getArguments());
+        agendaFragment.setArguments(getArguments()); // Bundle with url from main activity
         ft.replace(R.id.agenda_container, agendaFragment);
 
         ft.commit();
@@ -87,8 +90,6 @@ public class CalendarFragment extends Fragment {
         // Set listeners
         caldroidFragment.setCaldroidListener(initCaldroidListener());
 
-
-
         return caldroidFragment;
     }
 
@@ -97,12 +98,10 @@ public class CalendarFragment extends Fragment {
         final CaldroidListener listener = new CaldroidListener() {
             @Override
             public void onSelectDate(Date date, View view) {
-                Log.i(TAG, "Clicked date " + date.getDate() + "/" + (date.getMonth() + 1));
                 // Callback to main activity to notify agenda fragment to update its calendar events
                 mCallback.onDateSelected(date);
             }
         };
-
         return listener;
     }
 

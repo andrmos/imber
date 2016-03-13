@@ -11,13 +11,13 @@ import java.util.Date;
  *
  * Created by PatrickFinseth on 07.03.16.
  */
-public class MyCal {
+public class MyCalendar {
 
-    private final String TAG = "MyCal";
+    private static final String TAG = "Calendar";
 
     private ArrayList<CalendarEvent> calendar;
 
-    public MyCal(ArrayList<CalendarEvent> calendar){
+    public MyCalendar(ArrayList<CalendarEvent> calendar){
         this.calendar = calendar;
     }
 
@@ -35,10 +35,8 @@ public class MyCal {
         return retCalendar;
     }
 
-    public ArrayList<CalendarEvent> getNextEvents(Date curDate) {
+    public ArrayList<CalendarEvent> getThreeNextEvents(Date curDate) {
         ArrayList<CalendarEvent> ret = new ArrayList<>();
-
-        Log.i(TAG, "getNextEvents: before start" + curDate);
 
         for (CalendarEvent e : calendar) {
             if(e.getStartDate().before(curDate)) {
@@ -59,7 +57,7 @@ public class MyCal {
         return calendar.get(position);
     }
 
-    public ArrayList<CalendarEvent> getCalendar(){
+    public ArrayList<CalendarEvent> getAllEvents(){
         return calendar;
     }
 }
