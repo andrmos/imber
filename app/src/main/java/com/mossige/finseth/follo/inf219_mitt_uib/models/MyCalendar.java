@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class MyCalendar {
 
-    private final String TAG = "MyCal";
+    private static final String TAG = "Calendar";
 
     private ArrayList<CalendarEvent> calendar;
 
@@ -35,10 +35,8 @@ public class MyCalendar {
         return retCalendar;
     }
 
-    public ArrayList<CalendarEvent> getNextEvents(Date curDate) {
+    public ArrayList<CalendarEvent> getThreeNextEvents(Date curDate) {
         ArrayList<CalendarEvent> ret = new ArrayList<>();
-
-        Log.i(TAG, "getNextEvents: before start" + curDate);
 
         for (CalendarEvent e : calendar) {
             if(e.getStartDate().before(curDate)) {
@@ -59,7 +57,7 @@ public class MyCalendar {
         return calendar.get(position);
     }
 
-    public ArrayList<CalendarEvent> getCalendar(){
+    public ArrayList<CalendarEvent> getAllEvents(){
         return calendar;
     }
 }
