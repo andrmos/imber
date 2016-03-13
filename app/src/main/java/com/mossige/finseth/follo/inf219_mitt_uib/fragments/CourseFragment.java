@@ -3,19 +3,23 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCal;
@@ -95,6 +99,32 @@ public class CourseFragment extends Fragment {
         // Create adapter that binds the views with some content
         mAdapter = new CourseRecyclerViewAdapter(announcements, agendas, grades);
         mainList.setAdapter(mAdapter);
+
+        initOnClickListener();
+    }
+
+    private void initOnClickListener() {
+        ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                AnnouncementFragment announcementFragment = new AnnouncementFragment();
+                transaction.replace(R.id.content_frame, announcementFragment);
+
+                ArrayList<String> announcementTitles = new ArrayList<String>();
+
+                //Make list with all announcement titles
+                for(Announcement a : announcements){
+                    announcementTitles.add(a.getTitle());
+                }
+
+                Bundle args = new Bundle();
+                args.putStringArrayList("announcements", announcementTitles);
+                announcementFragment.setArguments(args);
+
+                transaction.commit();
+            }
+        });
     }
 
     private void requestAnnouncements(String course_id) {
@@ -135,8 +165,6 @@ public class CourseFragment extends Fragment {
             calendar = new MyCal(dft.execute(new URL(url)).get());
             agendas.clear();
             agendas.addAll(calendar.getCalendar());
-
-
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
