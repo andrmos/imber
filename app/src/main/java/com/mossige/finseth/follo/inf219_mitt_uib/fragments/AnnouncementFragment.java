@@ -51,6 +51,8 @@ public class AnnouncementFragment extends Fragment {
 
         initRecycleView(rootView);
 
+        initOnClickListener();
+
         return rootView;
 
     }
@@ -68,6 +70,22 @@ public class AnnouncementFragment extends Fragment {
         mAdapter = new AnnouncementRecyclerViewAdapter(announcements);
         mainList.setAdapter(mAdapter);
 
+    }
+
+    private void initOnClickListener() {
+        ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                SingleAnnouncementFragment singleAnnouncementFragment = new SingleAnnouncementFragment();
+                transaction.replace(R.id.content_frame, singleAnnouncementFragment);
+
+                Bundle args = new Bundle();
+                singleAnnouncementFragment.setArguments(args);
+
+                transaction.commit();
+            }
+        });
     }
 
 }
