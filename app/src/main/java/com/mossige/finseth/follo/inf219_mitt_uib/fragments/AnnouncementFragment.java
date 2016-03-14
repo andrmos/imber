@@ -35,7 +35,10 @@ public class AnnouncementFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private View rootView;
-    private ArrayList<String> announcements;
+    private ArrayList<String> announcementTitles;
+    private ArrayList<String> announcementMessages;
+    private ArrayList<String> announcementSender;
+    private ArrayList<String> announcementDates;
 
     public AnnouncementFragment() { }
 
@@ -43,11 +46,18 @@ public class AnnouncementFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_course_list, container, false);
 
-        announcements = new ArrayList<>();
+        announcementTitles = new ArrayList<>();
+        announcementMessages = new ArrayList<>();
+        announcementSender = new ArrayList<>();
+        announcementDates = new ArrayList<>();
 
+        // Set label for toolbar
         getActivity().setTitle("Kunngjøringer");
 
-        announcements = getArguments().getStringArrayList("announcements");
+        announcementTitles = getArguments().getStringArrayList("announcementTitles");
+        announcementMessages = getArguments().getStringArrayList("announcementMessages");
+        announcementSender = getArguments().getStringArrayList("announcementSender");
+        announcementDates = getArguments().getStringArrayList("announcementDates");
 
         initRecycleView(rootView);
 
@@ -67,7 +77,7 @@ public class AnnouncementFragment extends Fragment {
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new AnnouncementRecyclerViewAdapter(announcements);
+        mAdapter = new AnnouncementRecyclerViewAdapter(announcementTitles);
         mainList.setAdapter(mAdapter);
 
     }
@@ -80,7 +90,12 @@ public class AnnouncementFragment extends Fragment {
                 SingleAnnouncementFragment singleAnnouncementFragment = new SingleAnnouncementFragment();
                 transaction.replace(R.id.content_frame, singleAnnouncementFragment);
 
+                //Bundles all parameters needed for showing one announcement
                 Bundle args = new Bundle();
+                args.putString("title", getArguments().getStringArrayList("announcementTitles").get(position));
+                args.putString("message", getArguments().getStringArrayList("announcementMessages").get(position));
+                args.putString("sender", getArguments().getStringArrayList("announcementSender").get(position));
+                args.putString("date", getArguments().getStringArrayList("announcementDates").get(position));
                 singleAnnouncementFragment.setArguments(args);
 
                 transaction.commit();

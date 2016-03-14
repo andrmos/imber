@@ -16,4 +16,8 @@
 
     <dimen name="card_height_course">170dp</dimen>
 
+    <dimen name="announcement_title_height">70dp</dimen>
+    <dimen name="announcement_date_height">90dp</dimen>
+    <dimen name="announcement_date_width">25dp</dimen>
+
 </resources>

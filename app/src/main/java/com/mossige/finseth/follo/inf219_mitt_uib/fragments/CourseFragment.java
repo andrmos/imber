@@ -111,20 +111,31 @@ public class CourseFragment extends Fragment {
                 transaction.replace(R.id.content_frame, announcementFragment);
 
                 ArrayList<String> announcementTitles = new ArrayList<String>();
+                ArrayList<String> announcementMessages = new ArrayList<String>();
+                ArrayList<String> announcementSender =  new ArrayList<String>();
+                ArrayList<String> announcementDates =  new ArrayList<String>();
 
                 //Make list with all announcement titles
                 for(Announcement a : announcements){
                     announcementTitles.add(a.getTitle());
+                    announcementMessages.add(android.text.Html.fromHtml(a.getMessage()).toString());
+                    announcementSender.add(a.getUserName());
+                    announcementDates.add(a.getPostedAt());
                 }
 
                 Bundle args = new Bundle();
-                args.putStringArrayList("announcements", announcementTitles);
+                args.putStringArrayList("announcementTitles", announcementTitles);
+                args.putStringArrayList("announcementMessages", announcementMessages);
+                args.putStringArrayList("announcementSender", announcementSender);
+                args.putStringArrayList("announcementDates", announcementDates);
                 announcementFragment.setArguments(args);
 
                 transaction.commit();
             }
         });
     }
+
+
 
     private void requestAnnouncements(String course_id) {
 
