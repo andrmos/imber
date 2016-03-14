@@ -31,7 +31,7 @@ public class DownloadCourseCalendarTask extends AsyncTask<URL, Integer, ArrayLis
     protected void onPreExecute() {
         super.onPreExecute();
         progressDialog.setMessage("Laster faginformasjon...");
-        progressDialog.show();
+        //progressDialog.show();
     }
 
     protected ArrayList<CalendarEvent> doInBackground(URL... urls) {

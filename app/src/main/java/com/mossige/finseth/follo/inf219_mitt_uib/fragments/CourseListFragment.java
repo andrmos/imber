@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -42,30 +43,31 @@ public class CourseListFragment extends Fragment {
 
     private View rootView;
     private ArrayList<Course> courses;
+    private ProgressBar spinner;
 
-    public CourseListFragment() {
-    }
+    public CourseListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_course_list, container, false);
-
         courses = new ArrayList<>();
 
-        requestCourses();
+        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
 
-        initRecycleView(rootView);
+        initRecycleView();
+        requestCourses();
 
         return rootView;
     }
 
-    private void initRecycleView(View rootView) {
+    private void initRecycleView() {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         mainList = (RecyclerView) rootView.findViewById(R.id.mainList);
 
         // Create the LayoutManager that holds all the views
         mLayoutManager = new LinearLayoutManager(getActivity());
+
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
@@ -93,18 +95,13 @@ public class CourseListFragment extends Fragment {
                 args.putString("calendarurl", "" + course_url_tv.getText());
                 courseFragment.setArguments(args);
 
-
                 transaction.commit();
             }
         });
     }
 
     private void requestCourses() {
-        final ProgressDialog progressDialog = new ProgressDialog(getContext());
-
-        // Show progress bar
-        progressDialog.setMessage("Laster fag...");
-        progressDialog.show();
+        spinner.setVisibility(View.VISIBLE);
 
         JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
@@ -123,13 +120,13 @@ public class CourseListFragment extends Fragment {
                     Log.i(TAG, "JSONException");
                 }
 
-                progressDialog.dismiss();
+                spinner.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "Error response");
-                progressDialog.dismiss();
+                spinner.setVisibility(View.GONE);
             }
         });
 
