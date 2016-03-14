@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -74,9 +75,9 @@ public class CourseFragment extends Fragment {
 
         // Add dummy announcements, agendas and grades
 
-        grades.add("A - Compulsory 1 INF115");
-        grades.add("B - Compulsory 2 INF115");
-        grades.add("E - Compulsory 1 MAT101");
+//        grades.add("A - Compulsory 1 INF115");
+//        grades.add("B - Compulsory 2 INF115");
+//        grades.add("E - Compulsory 1 MAT101");
 
         initRecycleView(rootView);
 
