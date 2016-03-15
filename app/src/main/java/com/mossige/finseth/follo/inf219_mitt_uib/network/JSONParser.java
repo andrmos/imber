@@ -25,7 +25,6 @@ import java.util.Arrays;
 public class JSONParser {
 
     private static final String TAG = "JSONParser";
-    private static boolean courseFilter = true;
 
     public JSONParser() {
         Log.i(TAG, "JSONParser: " + "JSONParser created");
@@ -90,7 +89,7 @@ public class JSONParser {
      * @return An ArrayList containing all the users {@link Course courses}
      * @throws JSONException
      */
-    public static ArrayList<Course> parseAllCourses(JSONArray unParsed) throws JSONException {
+    public static ArrayList<Course> parseAllCourses(JSONArray unParsed,boolean courseFilter) throws JSONException {
 
         ArrayList<Course> parsed = new ArrayList<>();
         

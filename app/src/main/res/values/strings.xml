@@ -28,4 +28,6 @@
     <string name="agenda_card_title">Agenda</string>
     <string name="grades_card_title">Karakterer</string>
 
+    <string name="preference_file_key">preference_file_key</string>
+
 </resources>

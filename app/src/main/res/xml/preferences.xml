@@ -1,0 +1,18 @@
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="Fag">
+
+        <android.support.v7.preference.CheckBoxPreference
+            android:id="@+id/filter_checkBox"
+            android:key="checkbox_preference"
+            android:title="Filter"
+            android:onClick="onPreferenceClick"
+            android:summary="filtrere vekk fag på insituttnivå" />
+
+    </android.support.v7.preference.PreferenceCategory>
+
+</android.support.v7.preference.PreferenceScreen>

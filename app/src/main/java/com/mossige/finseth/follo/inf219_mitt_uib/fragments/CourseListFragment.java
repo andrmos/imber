@@ -1,7 +1,11 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,6 +49,8 @@ public class CourseListFragment extends Fragment {
     private ArrayList<Course> courses;
     private ProgressBar spinner;
 
+    private boolean courseFilter;
+
     public CourseListFragment() {}
 
     @Override
@@ -53,6 +59,16 @@ public class CourseListFragment extends Fragment {
         courses = new ArrayList<>();
 
         spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
+
+        //Checks settings before intitializing courses
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("checkbox_preference", true)){
+            courseFilter = true;
+        }else{
+            courseFilter = false;
+        }
+
+        Log.i(TAG, "" + courseFilter);
 
         initRecycleView();
         requestCourses();
@@ -108,7 +124,7 @@ public class CourseListFragment extends Fragment {
             public void onResponse(JSONArray response) {
                 try {
                     courses.clear();
-                    ArrayList<Course> temp = JSONParser.parseAllCourses(response);
+                    ArrayList<Course> temp = JSONParser.parseAllCourses(response,courseFilter);
                     for (Course c: temp) {
                         courses.add(c);
                     }
