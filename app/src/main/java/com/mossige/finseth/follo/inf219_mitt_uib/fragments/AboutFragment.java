@@ -32,6 +32,8 @@ public class AboutFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.i(TAG, "created about view");
 
+        getActivity().setTitle(R.string.about_title);
+
         View view = inflater.inflate(R.layout.fragment_about, container, false);
 
         return view;

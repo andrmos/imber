@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendasViewHolder;
-import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GradesViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.SingleAgendaViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AnnouncementsViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
@@ -30,12 +29,10 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
     private ArrayList<Announcement> announcements;
     private ArrayList<CalendarEvent> agendas;
-    private ArrayList<String> grades;
 
-    public CourseRecyclerViewAdapter(ArrayList<Announcement> announcements, ArrayList<CalendarEvent> agendas, ArrayList<String> grades) {
+    public CourseRecyclerViewAdapter(ArrayList<Announcement> announcements, ArrayList<CalendarEvent> agendas) {
         this.announcements = announcements;
         this.agendas = agendas;
-        this.grades = grades;
     }
 
     @Override
@@ -56,10 +53,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
         } else if (viewType == 1) { // agendas card
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agendas_card, parent, false);
             holder = new AgendasViewHolder(v);
-
-        } else { // grades card
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.grades_card, parent, false);
-            holder = new GradesViewHolder(v);
         }
 
         return holder;
@@ -73,24 +66,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
             setAnnouncements(holder);
         } else if (getItemViewType(position) == 1){
             setAgendas(holder);
-        } else if (getItemViewType(position) == 2) {
-            setGrades(holder);
-        }
-    }
-
-    private void setGrades(GeneralViewHolder holder) {
-        GradesViewHolder gradesViewHolder = (GradesViewHolder) holder;
-
-        if (grades.size() >= 1) {
-            gradesViewHolder.grade1.setText(grades.get(0));
-        }
-
-        if (grades.size() >= 2) {
-            gradesViewHolder.grade2.setText(grades.get(1));
-        }
-
-        if (grades.size() >= 3) {
-            gradesViewHolder.grade3.setText(grades.get(2));
         }
     }
 
@@ -145,6 +120,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 2;
     }
 }

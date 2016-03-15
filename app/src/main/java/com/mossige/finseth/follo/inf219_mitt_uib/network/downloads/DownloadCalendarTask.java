@@ -1,8 +1,10 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network.downloads;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
+import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.CalendarParser;
@@ -18,18 +20,17 @@ public class DownloadCalendarTask extends AsyncTask<URL, Integer, ArrayList<Cale
 
     private ArrayList<CalendarEvent> calendarEvents;
     private AgendaFragment agendaFragment;
-    private ProgressDialog progressDialog;
+    private ProgressBar spinner;
 
-    public DownloadCalendarTask(AgendaFragment agendaFragment) {
+    public DownloadCalendarTask(AgendaFragment agendaFragment, View rootView) {
         this.agendaFragment = agendaFragment;
-        progressDialog = new ProgressDialog(agendaFragment.getContext());
+        spinner = (ProgressBar) rootView.findViewById(R.id.progressBar);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog.setMessage("Laster kalender...");
-        progressDialog.show();
+        spinner.setVisibility(View.VISIBLE);
     }
 
     protected ArrayList<CalendarEvent> doInBackground(URL... urls) {
@@ -46,6 +47,6 @@ public class DownloadCalendarTask extends AsyncTask<URL, Integer, ArrayList<Cale
     protected void onPostExecute(ArrayList<CalendarEvent> calendarEvents) {
         super.onPostExecute(calendarEvents);
         agendaFragment.setAgendas(calendarEvents);
-        progressDialog.dismiss();
+        spinner.setVisibility(View.GONE);
     }
 }

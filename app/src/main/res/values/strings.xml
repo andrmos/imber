@@ -28,4 +28,10 @@
     <string name="agenda_card_title">Agenda</string>
     <string name="grades_card_title">Karakterer</string>
 
+    <string name="about_title">Om</string>
+    <string name="calendar_title">Kalender</string>
+    <string name="course_list_title">Fag</string>
+    <string name="announcements_title">Kunngjøringer</string>
+
+
 </resources>
