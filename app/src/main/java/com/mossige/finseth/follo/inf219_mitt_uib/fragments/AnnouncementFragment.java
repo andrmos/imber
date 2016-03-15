@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,6 +85,8 @@ public class AnnouncementFragment extends Fragment {
                 SingleAnnouncementFragment singleAnnouncementFragment = new SingleAnnouncementFragment();
                 transaction.replace(R.id.content_frame, singleAnnouncementFragment);
 
+                transaction.addToBackStack(null);
+
                 //Bundles all parameters needed for showing one announcement
                 Bundle args = new Bundle();
                 args.putString("title", getArguments().getStringArrayList("announcementTitles").get(position));
@@ -95,6 +98,22 @@ public class AnnouncementFragment extends Fragment {
                 transaction.commit();
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 
 }

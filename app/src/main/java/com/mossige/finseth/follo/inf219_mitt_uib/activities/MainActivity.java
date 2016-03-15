@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -108,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
         int id = item.getItemId();
 
         // Setup fragment transaction for replacing fragment
@@ -117,7 +118,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-
+        // Reset back stack when navigating to a new fragment from the nav bar
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         if(id == R.id.nav_course){
             CourseListFragment courseListFragment = new CourseListFragment();

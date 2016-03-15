@@ -3,6 +3,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,10 +62,10 @@ public class CourseFragment extends Fragment {
 
     public CourseFragment() {}
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_course, container, false);
+
         announcements = new ArrayList<>();
         agendas = new ArrayList<>();
         loaded = new boolean[2];
@@ -112,11 +113,12 @@ public class CourseFragment extends Fragment {
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     AnnouncementFragment announcementFragment = new AnnouncementFragment();
                     transaction.replace(R.id.content_frame, announcementFragment);
+                    transaction.addToBackStack(null);
 
-                    ArrayList<String> announcementTitles = new ArrayList<String>();
-                    ArrayList<String> announcementMessages = new ArrayList<String>();
-                    ArrayList<String> announcementSender =  new ArrayList<String>();
-                    ArrayList<String> announcementDates =  new ArrayList<String>();
+                    ArrayList<String> announcementTitles = new ArrayList<>();
+                    ArrayList<String> announcementMessages = new ArrayList<>();
+                    ArrayList<String> announcementSender =  new ArrayList<>();
+                    ArrayList<String> announcementDates =  new ArrayList<>();
 
                     //Make list with all announcement titles
                     for(Announcement a : announcements){
@@ -155,10 +157,6 @@ public class CourseFragment extends Fragment {
                 try {
                     announcements.clear();
                     announcements.addAll(JSONParser.parseAllAnouncements(response));
-                    //ArrayList<Announcement> temp = JSONParser.parseAllAnouncements(response);
-                    //for (Announcement a : temp) {
-                    //    announcements.add(a);
-                    //}
 
                     loaded[0] = true;
 
@@ -168,14 +166,10 @@ public class CourseFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                for (int i = 0; i < loaded.length; i++) {
-                    if (!loaded[i]) break;
+                if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);
                     spinner.setVisibility(View.GONE);
                 }
-
-
-                Log.i(TAG, "onResponse: yes");
 
             }
         }, new Response.ErrorListener() {
@@ -211,11 +205,20 @@ public class CourseFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
 
         loaded[1] = true;
-        for (int i = 0; i < loaded.length; i++) {
-            if (!loaded[i]) break;
+
+        if (isLoaded()) {
             mainList.setVisibility(View.VISIBLE);
             spinner.setVisibility(View.GONE);
         }
     }
 
+    /**
+     * @return Returns true if all data is loaded
+     */
+    private boolean isLoaded() {
+        for (int i = 0; i < loaded.length; i++) {
+            if (!loaded[i]) return false;
+        }
+        return true;
+    }
 }

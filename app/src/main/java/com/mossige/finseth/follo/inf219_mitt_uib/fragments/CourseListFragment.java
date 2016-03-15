@@ -99,6 +99,8 @@ public class CourseListFragment extends Fragment {
                 CourseFragment courseFragment = new CourseFragment();
                 transaction.replace(R.id.content_frame, courseFragment);
 
+                transaction.addToBackStack(null);
+
                 TextView course_id_tv = (TextView) v.findViewById(R.id.course_id);
                 TextView course_name_tv = (TextView) v.findViewById(R.id.course_title);
                 TextView course_url_tv = (TextView) v.findViewById(R.id.calendar_url);
