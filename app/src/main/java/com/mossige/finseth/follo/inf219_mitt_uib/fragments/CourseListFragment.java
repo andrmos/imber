@@ -21,7 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseMenuRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
@@ -45,7 +45,6 @@ public class CourseListFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private View rootView;
     private ArrayList<Course> courses;
     private ProgressBar spinner;
 
@@ -55,7 +54,9 @@ public class CourseListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_course_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_course_list, container, false);
+        getActivity().setTitle(R.string.course_list_title);
+
         courses = new ArrayList<>();
 
         spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
@@ -68,26 +69,23 @@ public class CourseListFragment extends Fragment {
             courseFilter = false;
         }
 
-        Log.i(TAG, "" + courseFilter);
-
-        initRecycleView();
+        initRecycleView(rootView);
         requestCourses();
 
         return rootView;
     }
 
-    private void initRecycleView() {
+    private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         mainList = (RecyclerView) rootView.findViewById(R.id.mainList);
 
         // Create the LayoutManager that holds all the views
         mLayoutManager = new LinearLayoutManager(getActivity());
-
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new CourseMenuRecyclerViewAdapter(courses);
+        mAdapter = new CourseListRecyclerViewAdapter(courses);
         mainList.setAdapter(mAdapter);
 
         initOnClickListener();

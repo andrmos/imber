@@ -30,4 +30,9 @@
 
     <string name="preference_file_key">preference_file_key</string>
 
+    <string name="about_title">Om</string>
+    <string name="calendar_title">Kalender</string>
+    <string name="course_list_title">Fag</string>
+    <string name="announcements_title">Kunngjøringer</string>
+
 </resources>

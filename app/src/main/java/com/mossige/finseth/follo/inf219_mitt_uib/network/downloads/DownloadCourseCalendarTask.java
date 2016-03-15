@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network.downloads;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
@@ -20,17 +21,17 @@ public class DownloadCourseCalendarTask extends AsyncTask<URL, Integer, ArrayLis
 
     private CourseFragment courseFragment;
     private ArrayList<CalendarEvent> events;
-    private ProgressDialog progressDialog;
+    //private ProgressDialog progressDialog;
 
     public DownloadCourseCalendarTask(CourseFragment courseFragment) {
         this.courseFragment = courseFragment;
-        this.progressDialog = new ProgressDialog(courseFragment.getContext());
+        //this.progressDialog = new ProgressDialog(courseFragment.getContext());
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        progressDialog.setMessage("Laster faginformasjon...");
+        //progressDialog.setMessage("Laster faginformasjon...");
         //progressDialog.show();
     }
 
@@ -43,14 +44,16 @@ public class DownloadCourseCalendarTask extends AsyncTask<URL, Integer, ArrayLis
 
         MyCalendar calendar = new MyCalendar(events);
         Date curDate = new Date();
-        return calendar.getThreeNextEvents(curDate);
+        ArrayList<CalendarEvent> ret = calendar.getThreeNextEvents(curDate);
+        Log.i(TAG, "doInBackground: ret size " + ret.size());
+        return ret;
     }
 
     @Override
     protected void onPostExecute(ArrayList<CalendarEvent> calendarEvents) {
         super.onPostExecute(calendarEvents);
         courseFragment.setAgendas(calendarEvents);
-        progressDialog.dismiss();
+        //progressDialog.dismiss();
     }
 
 

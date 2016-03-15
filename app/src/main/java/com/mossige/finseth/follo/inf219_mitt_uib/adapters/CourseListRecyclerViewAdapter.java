@@ -18,11 +18,11 @@ import java.util.ArrayList;
  *
  * Created by André on 12.02.2016.
  */
-public class CourseMenuRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
+public class CourseListRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
     private ArrayList<Course> data;
 
-    public CourseMenuRecyclerViewAdapter(ArrayList<Course> data) {
+    public CourseListRecyclerViewAdapter(ArrayList<Course> data) {
         this.data = data;
     }
 

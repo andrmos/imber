@@ -13,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -32,6 +34,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,9 +52,12 @@ public class CourseFragment extends Fragment {
 
     private ArrayList<Announcement> announcements;
     private ArrayList<CalendarEvent> agendas;
-    private ArrayList<String> grades;
 
     private MyCalendar calendar;
+    private ProgressBar spinner;
+
+    /* If data is loaded */
+    private boolean[] loaded;
 
     public CourseFragment() {}
 
@@ -59,25 +65,19 @@ public class CourseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_course, container, false);
+        announcements = new ArrayList<>();
+        agendas = new ArrayList<>();
+        loaded = new boolean[2];
 
+        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
+
+        // Get arguments from course list
         String course_id = getArguments().getString("id");
-        //requestAnnouncements(course_id);
-
         String calendar_url = getArguments().getString("calendarurl");
 
         // Set toolbar title to course name
-        //String course_name = getArguments().getString("name");
-        //getActivity().setTitle(course_name);
-
-        announcements = new ArrayList<>();
-        agendas = new ArrayList<>();
-        grades = new ArrayList<>();
-
-        // Add dummy announcements, agendas and grades
-
-//        grades.add("A - Compulsory 1 INF115");
-//        grades.add("B - Compulsory 2 INF115");
-//        grades.add("E - Compulsory 1 MAT101");
+        String course_name = getArguments().getString("name");
+        getActivity().setTitle(course_name);
 
         initRecycleView(rootView);
 
@@ -97,7 +97,7 @@ public class CourseFragment extends Fragment {
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new CourseRecyclerViewAdapter(announcements, agendas, grades);
+        mAdapter = new CourseRecyclerViewAdapter(announcements, agendas);
         mainList.setAdapter(mAdapter);
 
         initOnClickListener();
@@ -107,31 +107,36 @@ public class CourseFragment extends Fragment {
         ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                AnnouncementFragment announcementFragment = new AnnouncementFragment();
-                transaction.replace(R.id.content_frame, announcementFragment);
+                if (position == 0) {
 
-                ArrayList<String> announcementTitles = new ArrayList<String>();
-                ArrayList<String> announcementMessages = new ArrayList<String>();
-                ArrayList<String> announcementSender =  new ArrayList<String>();
-                ArrayList<String> announcementDates =  new ArrayList<String>();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    AnnouncementFragment announcementFragment = new AnnouncementFragment();
+                    transaction.replace(R.id.content_frame, announcementFragment);
 
-                //Make list with all announcement titles
-                for(Announcement a : announcements){
-                    announcementTitles.add(a.getTitle());
-                    announcementMessages.add(android.text.Html.fromHtml(a.getMessage()).toString());
-                    announcementSender.add(a.getUserName());
-                    announcementDates.add(a.getPostedAt());
+                    ArrayList<String> announcementTitles = new ArrayList<String>();
+                    ArrayList<String> announcementMessages = new ArrayList<String>();
+                    ArrayList<String> announcementSender =  new ArrayList<String>();
+                    ArrayList<String> announcementDates =  new ArrayList<String>();
+
+                    //Make list with all announcement titles
+                    for(Announcement a : announcements){
+                        announcementTitles.add(a.getTitle());
+                        announcementMessages.add(android.text.Html.fromHtml(a.getMessage()).toString());
+                        announcementSender.add(a.getUserName());
+                        announcementDates.add(a.getPostedAt());
+                    }
+
+                    Bundle args = new Bundle();
+                    args.putStringArrayList("announcementTitles", announcementTitles);
+                    args.putStringArrayList("announcementMessages", announcementMessages);
+                    args.putStringArrayList("announcementSender", announcementSender);
+                    args.putStringArrayList("announcementDates", announcementDates);
+                    announcementFragment.setArguments(args);
+
+                    transaction.commit();
+                } else {
+                    Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");
                 }
-
-                Bundle args = new Bundle();
-                args.putStringArrayList("announcementTitles", announcementTitles);
-                args.putStringArrayList("announcementMessages", announcementMessages);
-                args.putStringArrayList("announcementSender", announcementSender);
-                args.putStringArrayList("announcementDates", announcementDates);
-                announcementFragment.setArguments(args);
-
-                transaction.commit();
             }
         });
     }
@@ -139,8 +144,9 @@ public class CourseFragment extends Fragment {
 
 
     private void requestAnnouncements(String course_id) {
+        spinner.setVisibility(View.VISIBLE);
 
-        JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -149,11 +155,27 @@ public class CourseFragment extends Fragment {
                 try {
                     announcements.clear();
                     announcements.addAll(JSONParser.parseAllAnouncements(response));
+                    //ArrayList<Announcement> temp = JSONParser.parseAllAnouncements(response);
+                    //for (Announcement a : temp) {
+                    //    announcements.add(a);
+                    //}
+
+                    loaded[0] = true;
+
                     mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.i(TAG, "JSONException requesting announcements");
                     e.printStackTrace();
                 }
+
+                for (int i = 0; i < loaded.length; i++) {
+                    if (!loaded[i]) break;
+                    mainList.setVisibility(View.VISIBLE);
+                    spinner.setVisibility(View.GONE);
+                }
+
+
+                Log.i(TAG, "onResponse: yes");
 
             }
         }, new Response.ErrorListener() {
@@ -164,6 +186,9 @@ public class CourseFragment extends Fragment {
             }
         });
 
+        announcementsRequest.setRetryPolicy(new DefaultRetryPolicy(5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(announcementsRequest);
     }
 
@@ -184,6 +209,13 @@ public class CourseFragment extends Fragment {
         agendas.clear();
         agendas.addAll(calendar.getAllEvents());
         mAdapter.notifyDataSetChanged();
+
+        loaded[1] = true;
+        for (int i = 0; i < loaded.length; i++) {
+            if (!loaded[i]) break;
+            mainList.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.GONE);
+        }
     }
 
 }

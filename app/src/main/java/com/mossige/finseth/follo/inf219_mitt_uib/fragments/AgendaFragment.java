@@ -50,7 +50,7 @@ public class AgendaFragment extends Fragment {
             e.printStackTrace();
         }
 
-        DownloadCalendarTask dft = new DownloadCalendarTask(this);
+        DownloadCalendarTask dft = new DownloadCalendarTask(this, rootView);
         dft.execute(url);
 
         initRecycleView(rootView);

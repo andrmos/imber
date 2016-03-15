@@ -1,7 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,14 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AnnouncementRecyclerViewAdapter;
-import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseMenuRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 
 import java.util.ArrayList;
 
@@ -52,7 +46,7 @@ public class AnnouncementFragment extends Fragment {
         announcementDates = new ArrayList<>();
 
         // Set label for toolbar
-        getActivity().setTitle("Kunngjøringer");
+        getActivity().setTitle(R.string.announcements_title);
 
         announcementTitles = getArguments().getStringArrayList("announcementTitles");
         announcementMessages = getArguments().getStringArrayList("announcementMessages");
