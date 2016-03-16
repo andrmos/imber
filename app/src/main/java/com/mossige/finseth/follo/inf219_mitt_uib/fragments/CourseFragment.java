@@ -64,7 +64,7 @@ public class CourseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_course, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         announcements = new ArrayList<>();
         agendas = new ArrayList<>();
@@ -91,7 +91,9 @@ public class CourseFragment extends Fragment {
     private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-        mainList = (RecyclerView) rootView.findViewById(R.id.course_list);
+        mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        // Hide content before everything is loaded
+        mainList.setVisibility(View.GONE);
 
         // Create the LayoutManager that holds all the views
         mLayoutManager = new LinearLayoutManager(getActivity());

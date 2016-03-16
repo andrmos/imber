@@ -40,7 +40,7 @@ public class AgendaFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_agenda, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         agendas = new ArrayList<>();
 
         URL url = null;
@@ -71,7 +71,7 @@ public class AgendaFragment extends Fragment {
     private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-        mainList = (RecyclerView) rootView.findViewById(R.id.agenda_list);
+        mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
         mLayoutManager = new LinearLayoutManager(getActivity());

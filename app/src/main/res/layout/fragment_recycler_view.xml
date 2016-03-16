@@ -1,8 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment">
+    android:id="@+id/recycler_view_layout">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -14,11 +13,10 @@
         android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/course_list"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:visibility="gone">
+        android:scrollbars="vertical" >
     </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>
