@@ -10,8 +10,7 @@
         android:id="@+id/calendar_container"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize" >
+        android:layout_height="wrap_content">
     </LinearLayout>
 
     <!-- Agenda content view. Fragments with a days agendas are put inside this view -->

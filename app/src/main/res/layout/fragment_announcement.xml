@@ -11,7 +11,7 @@
                 android:id="@+id/single_announcement_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/announcement_title_height"
+                android:layout_marginTop="@dimen/fab_margin"
                 android:layout_marginLeft="@dimen/fab_margin"
                 android:textSize="18dp"
                 android:textStyle="bold"/>
