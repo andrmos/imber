@@ -75,7 +75,9 @@ public class JSONParser {
      */
     public static Conversation parseSingleConversation(JSONObject unParsed) throws JSONException {
         String id = unParsed.getString("id");
+        Log.i(TAG, "parseSingleConversation: id is parsed " + id);
         String subject = unParsed.getString("subject");
+        Log.i(TAG, "parseSingleConversation: subject is parsed " + subject);
         ArrayList<Participant> participants = getParticipants(unParsed.getJSONArray("participants"));
         ArrayList<Message> messages = getMessages(unParsed.getJSONArray("messages"));
 
@@ -152,6 +154,8 @@ public class JSONParser {
         String date = obj.getString("created_at");
         String message = obj.getString("body");
 
+        Log.i(TAG, "getSingleMessage: message is parsed" + authorID);
+
         return new Message(authorID, date, message);
     }
 
@@ -168,6 +172,8 @@ public class JSONParser {
     private static Participant getSingleParticipant(JSONObject obj) throws JSONException {
         String id = obj.getString("id");
         String name = obj.getString("name");
+
+        Log.i(TAG, "getSingleParticipant: participant is parsed " + name);
 
         return new Participant(id, name);
     }
