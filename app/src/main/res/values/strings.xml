@@ -35,4 +35,10 @@
     <string name="course_list_title">Fag</string>
     <string name="announcements_title">Kunngjøringer</string>
 
+    <!-- Error messages -->
+    <string name="error_profile">Feil ved lasting av profil…</string>
+    <string name="error_course_list">Feil ved lasting av fag…</string>
+    <string name="error_course_info">Feil ved lasting av faginfo…</string>
+    <string name="error_conversation">Feil ved lasting av samtaler…</string>
+
 </resources>

@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -92,14 +94,21 @@ public class ConversationFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "Error response");
                 spinner.setVisibility(View.GONE);
+                showToast();
             }
         });
+
+        coursesReq.setRetryPolicy(new DefaultRetryPolicy(5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
     }
 
+    private void showToast() {
+        Toast.makeText(getContext(), R.string.error_conversation, Toast.LENGTH_SHORT).show();
+    }
 
 
     private void initRecycleView() {

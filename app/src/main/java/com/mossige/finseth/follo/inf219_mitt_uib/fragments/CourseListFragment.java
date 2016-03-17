@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -141,11 +142,16 @@ public class CourseListFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "Error response");
                 spinner.setVisibility(View.GONE);
+                showToast();
             }
+
         });
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
+    }
+
+    private void showToast() {
+        Toast.makeText(getContext(), R.string.error_course_list, Toast.LENGTH_SHORT).show();
     }
 }

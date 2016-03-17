@@ -15,7 +15,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -68,6 +70,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        CourseListFragment courseListFragment = new CourseListFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, courseListFragment);
+        transaction.commit();
     }
 
     @Override
@@ -173,13 +180,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public void onDateSelected(Date date) {
         AgendaFragment agendaFragment = (AgendaFragment) getSupportFragmentManager().findFragmentById(R.id.agenda_container);
-
         if (agendaFragment != null) {
-
             agendaFragment.updateAgendaCards(date);
-
-        } else {
-            Log.i(TAG, "Error: agendaFragment is null");
         }
     }
 
@@ -187,12 +189,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(), (String) null, new Response.Listener<JSONObject>() {
 
-
             @Override
             public void onResponse(JSONObject response) {
 
                 try {
-
                     profile = JSONParser.parseUserProfile(response);
 
                     //Set name on navigation header
@@ -207,7 +207,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     url = new Bundle();
                     url.putString("calendarURL", profile.getCalendar());
 
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -216,11 +215,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, error.toString());
-
+                showToast();
             }
         });
 
+        profileReq.setRetryPolicy(new DefaultRetryPolicy(5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
+    }
+
+    private void showToast() {
+        Toast.makeText(this, R.string.error_profile, Toast.LENGTH_SHORT).show();
     }
 }
