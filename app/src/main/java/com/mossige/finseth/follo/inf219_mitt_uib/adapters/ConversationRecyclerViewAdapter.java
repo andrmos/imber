@@ -41,12 +41,7 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Genera
         //TODO
         ConversationViewHolder conversationHolder = (ConversationViewHolder) holder;
         conversationHolder.conversation_subject.setText(data.get(position).getSubject());
-        try {
-            String authorID = data.get(position).getMessages().get(data.get(position).getMessages().size()-1).getAuthorID();
-            conversationHolder.conversation_lastMessageFrom.setText(authorID);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
+
 //        CourseViewHolder courseHolder = (CourseViewHolder) holder;
 //        courseHolder.course_code.setText(data.get(position).getCourseCode());
 //        courseHolder.course_title.setText(data.get(position).getName());
