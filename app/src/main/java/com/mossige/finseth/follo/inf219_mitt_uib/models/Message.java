@@ -17,6 +17,10 @@ public class Message {
         this.message = message;
     }
 
+    public String getAuthorID() {
+        return authorID;
+    }
+
     public String getMessage() {
         return message;
     }

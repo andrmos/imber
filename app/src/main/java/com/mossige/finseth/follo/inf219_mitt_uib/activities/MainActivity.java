@@ -25,6 +25,9 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
@@ -135,9 +138,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             return true;
         }
 
-        if(id == R.id.nav_settings){
+        if(id == R.id.nav_settings) {
             SettingFragment sf = new SettingFragment();
-            transaction.replace(R.id.content_frame,sf);
+            transaction.replace(R.id.content_frame, sf);
+            transaction.commit();
+
+            drawer.closeDrawer(navigationView);
+            return true;
+        }
+
+        if(id == R.id.nav_inbox) {
+            ConversationFragment conversationFragment = new ConversationFragment();
+            transaction.replace(R.id.content_frame, conversationFragment);
             transaction.commit();
 
             drawer.closeDrawer(navigationView);
