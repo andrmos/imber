@@ -11,12 +11,14 @@ public class CalendarEvent {
     private Date endDate;
     private String name;
     private String summary;
+    private String location;
 
-    public CalendarEvent(String name, String summary, Date startDate,Date endDate){
+    public CalendarEvent(String name, String summary, Date startDate, Date endDate, String location){
         this.name = name;
         this.summary = summary;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.location = location;
     }
 
     public String getName(){
@@ -31,6 +33,10 @@ public class CalendarEvent {
 
     public Date getEndDate(){
         return endDate;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     @Override

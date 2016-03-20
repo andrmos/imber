@@ -80,6 +80,7 @@ public class CalendarParser {
         String key;
         String summary = "";
         String time;
+        String location = "";
 
         for (String line : event) {
             if (line.startsWith("X-WR-CALNAME:")) {
@@ -96,16 +97,31 @@ public class CalendarParser {
 
             } else if (line.startsWith("SUMMARY:")) {
                 summary = getSummary(line);
+            } else if (line.startsWith("LOCATION:")) {
+                location = getLocation(line);
             }
         }
 
-        return addCalendarEvent(courseName, summary, start, stop);
+        return addCalendarEvent(courseName, summary, start, stop, location);
     }
 
-    private static CalendarEvent addCalendarEvent(String courseName, String summary, Times start, Times stop) {
+    private static String getLocation(String line) {
+        String[] sum = line.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (char c : line.toCharArray()) {
+            if(c == '(' || c == ')' || c == 92 || c == ',') {
+                continue;
+            }
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
+    private static CalendarEvent addCalendarEvent(String courseName, String summary, Times start, Times stop, String location) {
         Date startDate = start.toDate();
         Date stopDate = stop.toDate();
-        return new CalendarEvent(courseName, summary, startDate, stopDate);
+        Log.i(TAG, "addCalendarEvent: location parsed " + location);
+        return new CalendarEvent(courseName, summary, startDate, stopDate, location);
     }
 
     private static String getSummary(String line) {
