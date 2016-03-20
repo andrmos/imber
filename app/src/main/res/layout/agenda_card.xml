@@ -8,37 +8,37 @@
         android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="85dp"
         card_view:cardBackgroundColor="@color/cardview_light_background"
         card_view:cardElevation="6dp"
         card_view:cardUseCompatPadding="true">
 
         <TextView
             android:id="@+id/agenda_title"
-            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/agenda_card_margin"
             android:layout_marginLeft="@dimen/fab_margin"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="Dummy agenda title"/>
-
         <TextView
             android:id="@+id/agenda_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/agenda_card_margin"
             android:layout_marginRight="@dimen/fab_margin"
             android:gravity="right"
             android:textAlignment="gravity"
             android:text="Dummy start" />
 
         <TextView
-            android:id="@+id/agenda_summary"
+            android:id="@+id/agenda_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dummy summary"
-            android:visibility="gone"/>
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:textSize="11dp"/>
 
     </android.support.v7.widget.CardView>
 

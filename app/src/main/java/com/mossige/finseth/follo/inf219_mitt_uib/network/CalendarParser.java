@@ -114,6 +114,8 @@ public class CalendarParser {
             }
             sb.append(c);
         }
+
+        sb.replace(0, 10, "Sted: ");
         return sb.toString();
     }
 
@@ -130,6 +132,14 @@ public class CalendarParser {
         for (int i = 1; i < sum.length; i++) {
             if(sum[i].equals("/"))
                 break;
+
+            //Remove blocks around group agendas
+            if(sum[i].startsWith("[")){
+                sb.append(sum[i].substring(1,sum[i].length()-1));
+                sb.append(" ");
+                break;
+            }
+
             sb.append(sum[i]);
             sb.append(" ");
         }

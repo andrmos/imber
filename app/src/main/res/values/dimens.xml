@@ -20,4 +20,6 @@
     <dimen name="announcement_date_height">90dp</dimen>
     <dimen name="announcement_date_width">25dp</dimen>
 
+    <dimen name="agenda_card_margin">10dp</dimen>
+
 </resources>

@@ -43,6 +43,7 @@ public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
         SingleAgendaViewHolder agendaHolder = (SingleAgendaViewHolder) holder;
         agendaHolder.title.setText(data.get(position).getSummary());
         agendaHolder.time.setText(getFormatDate(position));
+        agendaHolder.location.setText(data.get(position).getLocation());
         // TODO set summary
         //agendaHolder.summary.setText(data.get(position).getName());
     }
