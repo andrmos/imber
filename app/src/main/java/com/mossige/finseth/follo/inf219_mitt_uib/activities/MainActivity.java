@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -28,8 +27,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
@@ -39,7 +36,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.downloads.DownloadDatesTask;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private User profile;
     private Bundle url;
+    private ArrayList<String> dates;
+    private DownloadDatesTask dt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         setContentView(R.layout.activity_main);
 
         requestProfile();
+        dt = new DownloadDatesTask(this);
 
         // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -75,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_frame, courseListFragment);
         transaction.commit();
+    }
+
+    public void setEvents(ArrayList<String> dates){
+        this.dates = dates;
+        url.putStringArrayList("Dates", dates);
     }
 
     @Override
@@ -207,7 +216,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     url = new Bundle();
                     url.putString("calendarURL", profile.getCalendar());
 
+                    //Get dates
+                    dt.execute(new URL(profile.getCalendar()));
+
                 } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
 
