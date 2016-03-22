@@ -27,7 +27,7 @@ public class JSONParser {
     private static final String TAG = "JSONParser";
 
     public JSONParser() {
-        Log.i(TAG, "JSONParser: " + "JSONParser created");
+//        Log.i(TAG, "JSONParser: " + "JSONParser created");
     }
 
 
@@ -59,7 +59,7 @@ public class JSONParser {
 
         for (int i = 0; i < unParsed.length(); i++) {
             parsed.add(getLastMessage(unParsed.getJSONObject(i)));
-            Log.i(TAG, "parseAllConversations: " + "Conversation with id: " + parsed.get(i).getId() + " is parsed");
+//            Log.i(TAG, "parseAllConversations: " + "Conversation with id: " + parsed.get(i).getId() + " is parsed");
         }
 
         return parsed;
@@ -78,7 +78,7 @@ public class JSONParser {
         ArrayList<Participant> participants = getParticipants(unParsed.getJSONArray("participants"));
         ArrayList<Message> messages = getMessages(unParsed.getJSONArray("messages"));
 
-        Log.i(TAG, "parseSingleConversation: " + "Conversation with id: " + id + " is parsed");
+//        Log.i(TAG, "parseSingleConversation: " + "Conversation with id: " + id + " is parsed");
         return new Conversation(id, subject, participants, messages);
     }
 
@@ -105,7 +105,7 @@ public class JSONParser {
 
         }
 
-        Log.i(TAG, "parseAllCourses: " + "All courses parsed");
+//        Log.i(TAG, "parseAllCourses: " + "All courses parsed");
 
         return parsed;
     }
@@ -151,7 +151,7 @@ public class JSONParser {
         String date = obj.getString("created_at");
         String message = obj.getString("body");
 
-        Log.i(TAG, "getSingleMessage: message is parsed" + authorID);
+//        Log.i(TAG, "getSingleMessage: message is parsed" + authorID);
 
         return new Message(authorID, date, message);
     }
@@ -170,7 +170,7 @@ public class JSONParser {
         String id = obj.getString("id");
         String name = obj.getString("name");
 
-        Log.i(TAG, "getSingleParticipant: participant is parsed " + name);
+//        Log.i(TAG, "getSingleParticipant: participant is parsed " + name);
 
         return new Participant(id, name);
     }

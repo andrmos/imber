@@ -122,7 +122,7 @@ public class CalendarParser {
     private static CalendarEvent addCalendarEvent(String courseName, String summary, Times start, Times stop, String location) {
         Date startDate = start.toDate();
         Date stopDate = stop.toDate();
-        Log.i(TAG, "addCalendarEvent: location parsed " + location);
+//        Log.i(TAG, "addCalendarEvent: location parsed " + location);
         return new CalendarEvent(courseName, summary, startDate, stopDate, location);
     }
 
