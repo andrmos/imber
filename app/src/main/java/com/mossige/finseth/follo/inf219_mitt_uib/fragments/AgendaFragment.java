@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
@@ -31,17 +33,21 @@ public class AgendaFragment extends Fragment {
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private MyCalendar calendar;
     private ArrayList<CalendarEvent> agendas;
 
+    private ProgressBar spinner;
+    private boolean loaded;
+
     public AgendaFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         agendas = new ArrayList<>();
+        loaded = false;
 
         URL url = null;
         try {
@@ -50,10 +56,22 @@ public class AgendaFragment extends Fragment {
             e.printStackTrace();
         }
 
-        DownloadCalendarTask dft = new DownloadCalendarTask(this, rootView);
+        DownloadCalendarTask dft = new DownloadCalendarTask(this);
         dft.execute(url);
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+
+        spinner = (ProgressBar) rootView.findViewById(R.id.progressBar);
         initRecycleView(rootView);
+
+        if (loaded) {
+            spinner.setVisibility(View.GONE);
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
@@ -74,7 +92,7 @@ public class AgendaFragment extends Fragment {
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
@@ -94,5 +112,8 @@ public class AgendaFragment extends Fragment {
 //         Add calendar events for current date
         agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)-1900));
         mAdapter.notifyDataSetChanged();
+
+        loaded = true;
+        spinner.setVisibility(View.GONE);
     }
 }

@@ -1,11 +1,9 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,34 +42,44 @@ public class CourseListFragment extends Fragment {
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<Course> courses;
     private ProgressBar spinner;
 
-    private boolean courseFilter;
+    /* If data is loaded */
+    private boolean loaded;
 
     public CourseListFragment() {}
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        loaded = false;
+        courses = new ArrayList<>();
+
+        //Check settings before intitializing courses
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        // Filter useless courses on institute level
+        boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
+
+        requestCourses(filterInstituteCourses);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         getActivity().setTitle(R.string.course_list_title);
 
-        courses = new ArrayList<>();
-
         spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
-
-        //Checks settings before intitializing courses
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        if(sharedPreferences.getBoolean("checkbox_preference", true)){
-            courseFilter = true;
-        }else{
-            courseFilter = false;
-        }
-
         initRecycleView(rootView);
-        requestCourses();
+
+        // Hide progress bar if data is already loaded
+        if (loaded) {
+            spinner.setVisibility(View.GONE);
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
@@ -80,9 +88,10 @@ public class CourseListFragment extends Fragment {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mainList.setVisibility(View.VISIBLE);
 
         // Create the LayoutManager that holds all the views
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
@@ -117,32 +126,31 @@ public class CourseListFragment extends Fragment {
         });
     }
 
-    private void requestCourses() {
-        spinner.setVisibility(View.VISIBLE);
+    private void requestCourses(final boolean filterInstituteCourses) {
 
-        JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
                     courses.clear();
-                    ArrayList<Course> temp = JSONParser.parseAllCourses(response,courseFilter);
-                    for (Course c: temp) {
-                        courses.add(c);
-                    }
+                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses));
 
-                    mAdapter.notifyDataSetChanged();
+                    loaded = true;
+                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
+
 
                 } catch (JSONException e) {
                     // TODO handle exception
                     Log.i(TAG, "JSONException");
                 }
 
-                spinner.setVisibility(View.GONE);
+                if (spinner != null) spinner.setVisibility(View.GONE);
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                spinner.setVisibility(View.GONE);
+                if (spinner != null) spinner.setVisibility(View.GONE);
                 showToast();
             }
 

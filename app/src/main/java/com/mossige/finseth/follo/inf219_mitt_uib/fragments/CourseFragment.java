@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,12 +46,10 @@ public class CourseFragment extends Fragment {
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private ArrayList<Announcement> announcements;
     private ArrayList<CalendarEvent> agendas;
 
-    private MyCalendar calendar;
     private ProgressBar spinner;
 
     /* If data is loaded */
@@ -59,27 +58,39 @@ public class CourseFragment extends Fragment {
     public CourseFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         announcements = new ArrayList<>();
         agendas = new ArrayList<>();
         loaded = new boolean[2];
 
-        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
-
         // Get arguments from course list
         String course_id = getArguments().getString("id");
         String calendar_url = getArguments().getString("calendarurl");
 
+        requestAnnouncements(course_id);
+        requestAgendas(calendar_url);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         // Set toolbar title to course name
         String course_name = getArguments().getString("name");
         getActivity().setTitle(course_name);
 
+        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
         initRecycleView(rootView);
 
-        requestAnnouncements(course_id);
-        requestAgendas(calendar_url);
+        // Show recycler view and hide progress bar if data is already loaded
+        if (isLoaded()) {
+            mainList.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.GONE);
+        } else {
+            mainList.setVisibility(View.GONE);
+            spinner.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
@@ -92,7 +103,7 @@ public class CourseFragment extends Fragment {
         mainList.setVisibility(View.GONE);
 
         // Create the LayoutManager that holds all the views
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
@@ -144,21 +155,19 @@ public class CourseFragment extends Fragment {
 
 
     private void requestAnnouncements(String course_id) {
-        spinner.setVisibility(View.VISIBLE);
 
         final JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
-                Log.i(TAG, "Got response");
 
                 try {
                     announcements.clear();
                     announcements.addAll(JSONParser.parseAllAnouncements(response));
 
                     loaded[0] = true;
-
                     mAdapter.notifyDataSetChanged();
+
                 } catch (JSONException e) {
                     Log.i(TAG, "JSONException requesting announcements");
                     e.printStackTrace();
@@ -202,7 +211,7 @@ public class CourseFragment extends Fragment {
     }
 
     public void setAgendas(ArrayList<CalendarEvent> calendarEvents) {
-        calendar = new MyCalendar(calendarEvents);
+        MyCalendar calendar = new MyCalendar(calendarEvents);
         agendas.clear();
         agendas.addAll(calendar.getAllEvents());
         mAdapter.notifyDataSetChanged();

@@ -25,8 +25,6 @@ public class SettingFragment extends PreferenceFragmentCompat {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.i(TAG, "created about view");
-
         //Inflates view
         addPreferencesFromResource(R.xml.preferences);
 
@@ -43,11 +41,9 @@ public class SettingFragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                Log.i(TAG, "clicked");
-
                 String key = preference.getKey();
                 
-                Boolean courseFilter = null;
+                Boolean courseFilter = false;
                 
                 if(newValue instanceof Boolean){
                     courseFilter = (Boolean) newValue;
@@ -57,7 +53,8 @@ public class SettingFragment extends PreferenceFragmentCompat {
                     checkBoxPreference.setChecked(courseFilter);
                 }
 
-                editor.commit();
+//                editor.commit();
+                editor.apply();
 
                 return courseFilter;
             }

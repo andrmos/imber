@@ -54,13 +54,11 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
+        getActivity().setTitle(R.string.calendar_title);
 
         tmpDate = null;
 
-        getActivity().setTitle(R.string.calendar_title);
-
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-
         caldroidFragment = initCalendarFragment();
         ft.replace(R.id.calendar_container, caldroidFragment);
 

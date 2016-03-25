@@ -1,6 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network.downloads;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,18 +20,14 @@ public class DownloadCourseCalendarTask extends AsyncTask<URL, Integer, ArrayLis
 
     private CourseFragment courseFragment;
     private ArrayList<CalendarEvent> events;
-    //private ProgressDialog progressDialog;
 
     public DownloadCourseCalendarTask(CourseFragment courseFragment) {
         this.courseFragment = courseFragment;
-        //this.progressDialog = new ProgressDialog(courseFragment.getContext());
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //progressDialog.setMessage("Laster faginformasjon...");
-        //progressDialog.show();
     }
 
     protected ArrayList<CalendarEvent> doInBackground(URL... urls) {
@@ -45,7 +40,6 @@ public class DownloadCourseCalendarTask extends AsyncTask<URL, Integer, ArrayLis
         MyCalendar calendar = new MyCalendar(events);
         Date curDate = new Date();
         ArrayList<CalendarEvent> ret = calendar.getThreeNextEvents(curDate);
-        Log.i(TAG, "doInBackground: ret size " + ret.size());
         return ret;
     }
 
@@ -53,7 +47,6 @@ public class DownloadCourseCalendarTask extends AsyncTask<URL, Integer, ArrayLis
     protected void onPostExecute(ArrayList<CalendarEvent> calendarEvents) {
         super.onPostExecute(calendarEvents);
         courseFragment.setAgendas(calendarEvents);
-        //progressDialog.dismiss();
     }
 
 

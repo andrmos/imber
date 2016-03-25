@@ -20,17 +20,14 @@ public class DownloadCalendarTask extends AsyncTask<URL, Integer, ArrayList<Cale
 
     private ArrayList<CalendarEvent> calendarEvents;
     private AgendaFragment agendaFragment;
-    private ProgressBar spinner;
 
-    public DownloadCalendarTask(AgendaFragment agendaFragment, View rootView) {
+    public DownloadCalendarTask(AgendaFragment agendaFragment) {
         this.agendaFragment = agendaFragment;
-        spinner = (ProgressBar) rootView.findViewById(R.id.progressBar);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        spinner.setVisibility(View.VISIBLE);
     }
 
     protected ArrayList<CalendarEvent> doInBackground(URL... urls) {
@@ -47,6 +44,5 @@ public class DownloadCalendarTask extends AsyncTask<URL, Integer, ArrayList<Cale
     protected void onPostExecute(ArrayList<CalendarEvent> calendarEvents) {
         super.onPostExecute(calendarEvents);
         agendaFragment.setAgendas(calendarEvents);
-        spinner.setVisibility(View.GONE);
     }
 }

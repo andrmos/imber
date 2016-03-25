@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,34 +44,47 @@ public class ConversationFragment extends Fragment {
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
-    private View rootView;
     private ArrayList<Conversation> conversations;
+    private ArrayList<String> conversationIDs;
+
     private ProgressBar spinner;
 
-    private ArrayList<String> conversationIDs;
+    /* If data is loaded */
+    private boolean loaded;
 
     public ConversationFragment() {}
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         conversations = new ArrayList<>();
+        conversationIDs = new ArrayList<>();
+
+        loaded = false;
+        requestConversation();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        getActivity().setTitle(R.string.conversation_title);
 
         spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
+        initRecycleView(rootView);
 
-        conversationIDs = new ArrayList<>();
-        initRecycleView();
-        requestConversation();
+        if (loaded) {
+            spinner.setVisibility(View.GONE);
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
 
     private void requestConversation() {
-        spinner.setVisibility(View.VISIBLE);
 
-        JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getConversationsUrl(), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getConversationsUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
@@ -79,9 +93,9 @@ public class ConversationFragment extends Fragment {
                     for (Conversation c: temp) {
                         conversations.add(c);
                         conversationIDs.add(c.getId());
-                        Log.i(TAG, "onResponse: " + c.getId());
                     }
 
+                    loaded = true;
                     mAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
@@ -111,14 +125,13 @@ public class ConversationFragment extends Fragment {
     }
 
 
-    private void initRecycleView() {
+    private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        mLayoutManager = new LinearLayoutManager(getActivity());
-
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
@@ -144,7 +157,6 @@ public class ConversationFragment extends Fragment {
                 singleConversationFragment.setArguments(args);
 
                 transaction.commit();
-
             }
         });
     }
