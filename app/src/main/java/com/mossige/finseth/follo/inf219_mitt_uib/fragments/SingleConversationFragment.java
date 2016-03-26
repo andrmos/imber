@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,58 +40,69 @@ public class SingleConversationFragment extends Fragment {
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
-    private View rootView;
     private ProgressBar spinner;
 
     private Conversation conversation;
     private ArrayList<Message> messages;
 
+    private boolean loaded;
+
     public SingleConversationFragment() {}
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        messages = new ArrayList<>();
+        loaded = false;
+
+        requestSingleConversation();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         spinner = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        messages = new ArrayList<>();
+        initRecycleView(rootView);
 
-        initRecycleView();
-        requestSingleConversation();
+        if (loaded) {
+            spinner.setVisibility(View.GONE);
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
 
     private void requestSingleConversation() {
-        spinner.setVisibility(View.VISIBLE);
 
         JsonObjectRequest singleConversationRequest = new JsonObjectRequest(Request.Method.GET,
                 UrlEndpoints.getSingleConversationUrl(getArguments().getString("conversationID")),
                 (String) null,
                 new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    conversation = JSONParser.parseSingleConversation(response);
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
 
-                    messages.clear();
-                    for(Message m : conversation.getMessages()) {
-                        messages.add(m);
+                            conversation = JSONParser.parseSingleConversation(response);
+                            messages.clear();
+                            messages.addAll(conversation.getMessages());
+
+                            getActivity().setTitle(conversation.getSubject());
+
+                            loaded = true;
+                            mAdapter.notifyDataSetChanged();
+
+                        } catch (JSONException e) {
+                            // TODO handle exception
+                            Log.i(TAG, "JSONException");
+                        }
+
+                        spinner.setVisibility(View.GONE);
                     }
-
-                    getActivity().setTitle(conversation.getSubject());
-
-                    mAdapter.notifyDataSetChanged();
-
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
-                }
-
-                spinner.setVisibility(View.GONE);
-            }
-        }, new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 spinner.setVisibility(View.GONE);
@@ -109,14 +121,13 @@ public class SingleConversationFragment extends Fragment {
         Toast.makeText(getContext(), R.string.error_conversation, Toast.LENGTH_SHORT).show();
     }
 
-    private void initRecycleView() {
+    private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        mLayoutManager = new LinearLayoutManager(getActivity());
-
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
