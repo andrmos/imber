@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -58,6 +59,8 @@ public class ConversationFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         conversations = new ArrayList<>();
 
+        getActivity().setTitle("Innboks");
+
         spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         conversationIDs = new ArrayList<>();
@@ -114,6 +117,7 @@ public class ConversationFragment extends Fragment {
     private void initRecycleView() {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
+
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
