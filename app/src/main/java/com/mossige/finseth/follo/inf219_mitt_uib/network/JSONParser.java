@@ -176,8 +176,9 @@ public class JSONParser {
         String id = obj.getString("id");
         Log.i(TAG, "parseOneRecipientsGroup: " + id);
         String name = obj.getString("name");
+        String size = obj.getString("user_count");
 
-        return new RecipientGroup(id, name);
+        return new RecipientGroup(id, name, size);
     }
 
     private static Conversation getLastMessage(JSONObject obj) throws JSONException {

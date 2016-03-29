@@ -53,6 +53,7 @@ public class ChooseRecipientFragment extends Fragment {
     private ArrayList<Course> courses;
     private ArrayList<RecipientGroup> recipientGroups;
     private ArrayList<Recipient> recipients;
+    private ArrayList<Recipient> choosenRecipients;
 
     public ChooseRecipientFragment() {
     }
@@ -64,13 +65,14 @@ public class ChooseRecipientFragment extends Fragment {
         courses = new ArrayList<>();
         recipientGroups = new ArrayList<>();
         recipients = new ArrayList<>();
+        choosenRecipients = new ArrayList<>();
 
         getActivity().setTitle("Velg mottaker");
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         requestCourses();
-       // initRecycleView();
+        initRecycleView();
 
 
         return rootView;
@@ -165,12 +167,10 @@ public class ChooseRecipientFragment extends Fragment {
                     Log.i(TAG, "JSONException");
                 }
 
-//                progressBar.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                progressBar.setVisibility(View.GONE);
                 error.printStackTrace();
                 showToast();
             }
@@ -190,32 +190,33 @@ public class ChooseRecipientFragment extends Fragment {
         recipients.clear();
 
         for (RecipientGroup r : recipientGroups) {
+            if(Integer.parseInt(r.getSize()) == 0) {
+                continue;
+            }
             requestRecipients(r);
         }
     }
 
     private void requestRecipients(final RecipientGroup rg) {
-//        progressBar.setVisibility(View.VISIBLE);
 
         Log.i(TAG, "requestRecipients: " + rg.getId());
 
-        JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getRecipientsByGroup(null, rg.getId()), (String) null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
+                    JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getRecipientsByGroup(null, rg.getId()), (String) null, new Response.Listener<JSONArray>() {
+                        @Override
+                        public void onResponse(JSONArray response) {
+                            try {
 
-                    ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
+                                ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
 
-                    for (Recipient r : tmp) {
-                        r.setGroup(rg.getName());
-                        Log.i(TAG, "onResponse: Recipient " + r.getName());
-                    }
+                                for (Recipient r : tmp) {
+                                    r.setGroup(rg.getName());
+                                    Log.i(TAG, "onResponse: Recipient " + r.getName());
+                                }
 
                     recipients.addAll(tmp);
 
                     Log.i(TAG, "onResponse: recipients parsed " + recipients.size());
 
-                    initRecycleView();
                     mAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
@@ -224,12 +225,10 @@ public class ChooseRecipientFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-//                progressBar.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                progressBar.setVisibility(View.GONE);
                 showToast();
             }
 
@@ -257,15 +256,13 @@ public class ChooseRecipientFragment extends Fragment {
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        Log.i(TAG, "initRecycleView: " + getActivity().toString());
         mLayoutManager = new LinearLayoutManager(getActivity());
-        Log.i(TAG, "initRecycleView: " + mLayoutManager.toString());
-        Log.i(TAG, "initRecycleView: " + mainList);
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
         mAdapter = new ChooseRecipientViewAdapter(recipients);
         mainList.setAdapter(mAdapter);
+        mLayoutManager.scroll
 
         initOnClickListener();
     }

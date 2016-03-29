@@ -11,9 +11,10 @@ public class RecipientGroup {
     private String name;
     private String size;
 
-    public RecipientGroup(String id, String name) {
+    public RecipientGroup(String id, String name, String size) {
         this.id = id;
         this.name = name;
+        this.size = size;
     }
 
     public String getId() {
