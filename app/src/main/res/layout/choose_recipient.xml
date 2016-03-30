@@ -4,53 +4,60 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <Spinner
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/course_selector" />
+        style="?android:attr/progressBarStyle"
+        android:progressDrawable="@drawable/circular_progress_bar"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <Spinner
+        android:id="@+id/course_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/group_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/recepient_selector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+
+
 
     <SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searchView"
-        android:layout_weight="0.08" />
+        android:layout_weight="0.08"
+        android:visibility="gone" />
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        card_view:cardBackgroundColor="@color/cardview_light_background"
-        card_view:cardElevation="6dp"
-        card_view:cardUseCompatPadding="true">
+    <!--
+    <TextView
+        android:id="@+id/recipient_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/course_code_height"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/text_size_course_code"
+        android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/recipient_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="@dimen/course_code_height"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_size_course_code"
-            android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/recipient_group_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="@dimen/course_name_height"
+        android:textColor="@color/cardview_dark_background"/> -->
 
-        <TextView
-            android:id="@+id/recipient_group_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="@dimen/course_name_height"
-            android:textColor="@color/cardview_dark_background"/>
-
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" >
-    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

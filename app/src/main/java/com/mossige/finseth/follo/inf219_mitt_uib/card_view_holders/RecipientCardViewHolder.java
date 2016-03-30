@@ -15,7 +15,7 @@ public class RecipientCardViewHolder extends GeneralViewHolder {
 
     public RecipientCardViewHolder(View v) {
         super(v);
-        name = (TextView) v.findViewById(R.id.recipient_name);
-        groupName = (TextView) v.findViewById(R.id.recipient_group_name);
+//        name = (TextView) v.findViewById(R.id.recipient_name);
+//        groupName = (TextView) v.findViewById(R.id.recipient_group_name);
     }
 }

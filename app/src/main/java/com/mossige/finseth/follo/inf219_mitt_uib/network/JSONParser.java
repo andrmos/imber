@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
 import android.util.Log;
 
+import com.mossige.finseth.follo.inf219_mitt_uib.activities.LoginActivity;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
@@ -59,7 +60,11 @@ public class JSONParser {
 
         for (int i = 0; i < unParsed.length(); i++) {
             JSONObject obj = unParsed.getJSONObject(i);
-            parsed.add(parseOneRecipientsGroup(obj));
+
+            RecipientGroup recipientGroup = parseOneRecipientsGroup(obj);
+            if (recipientGroup != null) {
+                parsed.add(recipientGroup);
+            }
         }
 
         return parsed;
@@ -172,13 +177,20 @@ public class JSONParser {
     }
 
     private static RecipientGroup parseOneRecipientsGroup(JSONObject obj) throws JSONException {
-
         String id = obj.getString("id");
-        Log.i(TAG, "parseOneRecipientsGroup: " + id);
+        Log.i(TAG, "parseOneRecipientsGroup: id: " + id);
         String name = obj.getString("name");
-        String size = obj.getString("user_count");
+        Log.i(TAG, "parseOneRecipientsGroup: name: " + name);
 
-        return new RecipientGroup(id, name, size);
+        // Only parse chosen groups
+        if (name.equals("Forelesere") || name.equals("Læringsassistenter") || name.equals("Studenter")) {
+            String size = obj.getString("user_count");
+            Log.i(TAG, "parseOneRecipientsGroup: size: " + size);
+            return new RecipientGroup(id, name, size);
+        } else {
+            Log.i(TAG, "parseOneRecipientsGroup: group is null");
+            return null;
+        }
     }
 
     private static Conversation getLastMessage(JSONObject obj) throws JSONException {
