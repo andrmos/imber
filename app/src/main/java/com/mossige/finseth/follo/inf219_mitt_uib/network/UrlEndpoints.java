@@ -28,7 +28,7 @@ public class UrlEndpoints {
     // Sending message arguments
     public static final String SEARCH_ARG = "search=";
 
-    public static final String PER_PAGE = "per_page=";
+    public static final String PER_PAGE = "per_page=50";
     public static final String PERMISSIONS = "permissions[]=send_messages_all";
     public static final String SYNTHETIC_CONTEXTS = "synthetic_contexts=true";
     public static final String CONTEXT = "context=";

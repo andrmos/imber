@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,6 +24,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.RecipientGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
@@ -65,6 +67,8 @@ public class ChooseRecipientFragment extends Fragment {
     private int course_counter_check;
     private int group_counter_check;
     private int recipient_counter_check;
+
+    private ArrayList<String> nextLinks;
 
     public ChooseRecipientFragment() {
     }
@@ -136,7 +140,12 @@ public class ChooseRecipientFragment extends Fragment {
                 group_counter_check++;
                 if (group_counter_check > 1) {
                     RecipientGroup recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
-                    requestRecipients(recipientGroup);
+
+                    String url = UrlEndpoints.getRecipientsByGroup(null, recipientGroup.getId());
+                    requestRecipients(recipientGroup, url);
+
+                    // Clear content of recipients spinner, to allow filling with new recipients
+                    recipients_string.clear();
                 }
             }
 
@@ -235,11 +244,8 @@ public class ChooseRecipientFragment extends Fragment {
                     for (RecipientGroup g : recipientGroups) {
                         groups.add(g.getName());
                     }
+
                     groupAdapter.notifyDataSetChanged();
-
-
-                    Log.i(TAG, "onResponse: groups parsed " + recipientGroups.size());
-
                     group_spinner.setEnabled(true);
 
                 } catch (JSONException e) {
@@ -264,28 +270,32 @@ public class ChooseRecipientFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(recipientGroupReq);
     }
 
-    private void requestRecipients(final RecipientGroup rg) {
+    private void requestRecipients(final RecipientGroup rg, String url) {
 
-        Log.i(TAG, "requestRecipients: " + rg.getId());
+        nextLinks = new ArrayList<>();
 
-        JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getRecipientsByGroup(null, rg.getId()), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
 
                     ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
 
-                    recipients_string.clear();
+                    // If there exists a link to the next 50 recipients, start request with new url
+                    if (nextLinks.size() > 0) {
+
+                        // TODO This fetches ALL recipients in a group. Might be a lot of data to fetch.
+                        // TODO Cancel the requests when going to a new activity/chooses a recipient to send to
+                        requestRecipients(rg, nextLinks.get(0));
+                    }
+
                     for (Recipient r : tmp) {
                         r.setGroup(rg.getName());
                         recipients_string.add(r.getName());
                     }
 
                     recipientsAdapter.notifyDataSetChanged();
-
                     recipient_spinner.setEnabled(true);
-
-                    Log.i(TAG, "onResponse: recipients parsed " + recipients_string.size());
 
                 } catch (JSONException e) {
                     // TODO handle exception
@@ -297,10 +307,60 @@ public class ChooseRecipientFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error.toString());
                 showToast();
             }
 
-        });
+        }) {
+            @Override
+            protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+
+                // TODO alt 1:
+                // - return super.parseNetworkResponse(response)
+                // - Field boolean containsLink = true, when response.headers.containsKey("Link") or contains "rel=next" ??
+                // - containsLink = false start of request method
+
+                // TODO alt 2:
+                // - return super.parseNetworkResponse(response)
+                // - Field String page = null at start of request method
+                // - page = response.headers.get("Link") -> parse to get "bookmark:x8x80x860"
+                // - use page as parameter in request url
+
+                // "rel=next" does not occur in the Link tag of the last page
+
+                // TODO new link do not return JSONArray
+
+                nextLinks.clear();
+
+                String linkKey = "Link";
+                if (response.headers.containsKey(linkKey)) {
+
+                    String result = response.headers.get(linkKey);
+                    String[] links = result.split(",");
+
+                    for (int i = 0; i < links.length; i++) {
+                        String line = links[i];
+                        // If link contains rel=next
+                        if (line.contains("rel=\"next\"")) {
+
+                            // Get next link url and add access token
+                            String link = line.substring(line.indexOf("<") + 1);
+                            link = link.substring(0, link.indexOf(">"));
+                            link += "&access_token=" + PrivateConstants.ACCESS_TOKEN;
+
+                            nextLinks.add(link);
+                        }
+                    }
+                }
+
+                // Print links
+                for (int i = 0; i < nextLinks.size(); i++) {
+                    Log.i(TAG, nextLinks.get(i));
+                }
+
+                return super.parseNetworkResponse(response);
+            }
+        };
 
         recipientsReq.setRetryPolicy(new DefaultRetryPolicy(5000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
