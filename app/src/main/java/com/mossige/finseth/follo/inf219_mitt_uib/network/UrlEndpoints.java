@@ -44,8 +44,6 @@ public class UrlEndpoints {
         return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
     public static String getRecipientGroups(int courseID) {
-        Log.i("URLEndpoints", "getRecipientGroups: " + courseID);
-        Log.i("URLEndpoints", "getRecipientGroups: " + BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN);
         return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 
@@ -55,7 +53,6 @@ public class UrlEndpoints {
      * @return Request URL for getting possible recipients
      */
     public static String getRecipientsByGroup(String search, String courseID) {
-        Log.i("URLEndpoints: ", "getRecipientsByGroup: " + BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN);
         return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 

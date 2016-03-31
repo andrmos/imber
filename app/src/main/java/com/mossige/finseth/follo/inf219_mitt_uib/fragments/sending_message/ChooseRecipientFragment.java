@@ -45,10 +45,12 @@ public class ChooseRecipientFragment extends Fragment {
     private ArrayList<Recipient> recipients;
     private ArrayList<Recipient> choosenRecipients;
 
+    //Dropdownlists
     private Spinner course_spinner;
     private Spinner group_spinner;
     private Spinner recipient_spinner;
 
+    //Adapters to the dropdownlists above
     private ArrayAdapter<String> courseAdapter;
     private ArrayAdapter<String> groupAdapter;
     private ArrayAdapter<String> recipientsAdapter;
@@ -72,7 +74,6 @@ public class ChooseRecipientFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         recipientGroups = new ArrayList<>();
-//        choosenRecipients = new ArrayList<>();
 
         courseCodes = new ArrayList<>();
         groups = new ArrayList<>();
@@ -103,30 +104,10 @@ public class ChooseRecipientFragment extends Fragment {
     }
 
     private void initSpinners() {
-        course_spinner = (Spinner) rootView.findViewById(R.id.course_selector);
-        group_spinner = (Spinner) rootView.findViewById(R.id.group_selector);
-        recipient_spinner = (Spinner) rootView.findViewById(R.id.recepient_selector);
 
-
-        courseAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, courseCodes);
-        courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        course_spinner.setAdapter(courseAdapter);
-
-
-        groupAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, groups);
-        groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        group_spinner.setAdapter(groupAdapter);
-        group_spinner.setEnabled(false);
-
-        recipientsAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, recipients_string);
-        recipientsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        recipient_spinner.setAdapter(recipientsAdapter);
-        recipient_spinner.setEnabled(false);
-
-
-        course_counter_check = 0;
-        group_counter_check = 0;
-        recipient_counter_check = 0;
+        initCourseSpinner();
+        initGroupSpinner();
+        initRecipientSpinner();
 
         course_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -149,8 +130,6 @@ public class ChooseRecipientFragment extends Fragment {
             }
         });
 
-
-
         group_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -166,6 +145,38 @@ public class ChooseRecipientFragment extends Fragment {
 
             }
         });
+    }
+
+    private void initCourseSpinner() {
+        course_spinner = (Spinner) rootView.findViewById(R.id.course_selector);
+
+        courseAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, courseCodes);
+        courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        course_spinner.setAdapter(courseAdapter);
+
+        course_counter_check = 0;
+    }
+
+    private void initGroupSpinner() {
+        group_spinner = (Spinner) rootView.findViewById(R.id.group_selector);
+
+        groupAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, groups);
+        groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        group_spinner.setAdapter(groupAdapter);
+        group_spinner.setEnabled(false);
+
+        group_counter_check = 0;
+    }
+
+    private void initRecipientSpinner() {
+        recipient_spinner = (Spinner) rootView.findViewById(R.id.recepient_selector);
+
+        recipientsAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, recipients_string);
+        recipientsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        recipient_spinner.setAdapter(recipientsAdapter);
+        recipient_spinner.setEnabled(false);
+
+        recipient_counter_check = 0;
     }
 
     private void requestCourses() {
@@ -253,19 +264,6 @@ public class ChooseRecipientFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(recipientGroupReq);
     }
 
-    private void loadParticipants() {
-        Log.i(TAG, "loadParticipants: starting");
-
-        recipients.clear();
-
-        for (RecipientGroup r : recipientGroups) {
-            if(Integer.parseInt(r.getSize()) == 0) {
-                continue;
-            }
-            requestRecipients(r);
-        }
-    }
-
     private void requestRecipients(final RecipientGroup rg) {
 
         Log.i(TAG, "requestRecipients: " + rg.getId());
@@ -280,7 +278,6 @@ public class ChooseRecipientFragment extends Fragment {
                     recipients_string.clear();
                     for (Recipient r : tmp) {
                         r.setGroup(rg.getName());
-                        Log.i(TAG, "onResponse: Recipient " + r.getName());
                         recipients_string.add(r.getName());
                     }
 
@@ -288,7 +285,7 @@ public class ChooseRecipientFragment extends Fragment {
 
                     recipient_spinner.setEnabled(true);
 
-                    Log.i(TAG, "onResponse: recipients parsed " + recipients.size());
+                    Log.i(TAG, "onResponse: recipients parsed " + recipients_string.size());
 
                 } catch (JSONException e) {
                     // TODO handle exception
