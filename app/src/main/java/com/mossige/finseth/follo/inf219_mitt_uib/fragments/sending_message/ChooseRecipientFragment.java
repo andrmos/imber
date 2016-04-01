@@ -3,6 +3,8 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecipientRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.RecipientGroup;
@@ -32,6 +36,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+
+import xyz.danoz.recyclerviewfastscroller.sectionindicator.title.SectionTitleIndicator;
+import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 /**
  * Created by Follo on 20.03.2016.
@@ -70,6 +77,10 @@ public class ChooseRecipientFragment extends Fragment {
 
     private ArrayList<String> nextLinks;
 
+    private RecyclerView mainList;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     public ChooseRecipientFragment() {
     }
 
@@ -101,6 +112,7 @@ public class ChooseRecipientFragment extends Fragment {
             progressBar.setVisibility(View.VISIBLE);
         }
 
+        initRecycleView();
         initSpinners();
 
 
@@ -111,7 +123,7 @@ public class ChooseRecipientFragment extends Fragment {
 
         initCourseSpinner();
         initGroupSpinner();
-        initRecipientSpinner();
+//        initRecipientSpinner();
 
         course_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -188,6 +200,31 @@ public class ChooseRecipientFragment extends Fragment {
         recipient_counter_check = 0;
     }
 
+    private void initRecycleView() {
+        // Create RecycleView
+        // findViewById() belongs to Activity, so need to access it from the root view of the fragment
+        mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) rootView.findViewById(R.id.fastScroller);
+
+        fastScroller.setRecyclerView(mainList);
+        fastScroller.setScrollbarFadingEnabled(true);
+
+        mainList.setOnScrollListener(fastScroller.getOnScrollListener());
+
+        SectionTitleIndicator sectionTitleIndicator =
+                (SectionTitleIndicator) rootView.findViewById(R.id.fast_scroller_section_title_indicator);
+
+        fastScroller.setSectionIndicator(sectionTitleIndicator);
+
+        // Create the LayoutManager that holds all the views
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mainList.setLayoutManager(mLayoutManager);
+
+        // Create adapter that binds the views with some content
+        mAdapter = new RecipientRecyclerViewAdapter(recipients_string);
+        mainList.setAdapter(mAdapter);
+    }
+
     private void requestCourses() {
 
         final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
@@ -203,6 +240,7 @@ public class ChooseRecipientFragment extends Fragment {
                         courseCodes.add(c.getCourseCode());
                     }
 
+                    // TODO Fix this
                     course_spinner.setSelection(2);
 
                     courseAdapter.notifyDataSetChanged();
@@ -294,8 +332,9 @@ public class ChooseRecipientFragment extends Fragment {
                         recipients_string.add(r.getName());
                     }
 
-                    recipientsAdapter.notifyDataSetChanged();
-                    recipient_spinner.setEnabled(true);
+//                    recipientsAdapter.notifyDataSetChanged();
+//                    recipient_spinner.setEnabled(true);
+                    mAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     // TODO handle exception
@@ -351,11 +390,6 @@ public class ChooseRecipientFragment extends Fragment {
                             nextLinks.add(link);
                         }
                     }
-                }
-
-                // Print links
-                for (int i = 0; i < nextLinks.size(); i++) {
-                    Log.i(TAG, nextLinks.get(i));
                 }
 
                 return super.parseNetworkResponse(response);
