@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     //Bundles calendarURL for later accessing
                     url = new Bundle();
                     url.putString("calendarURL", profile.getCalendar());
+                    
 
                 } catch (JSONException e) {
                     e.printStackTrace();
