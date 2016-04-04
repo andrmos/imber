@@ -3,8 +3,6 @@ package com.mossige.finseth.follo.inf219_mitt_uib.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.mossige.finseth.follo.inf219_mitt_uib.R;
-
 import xyz.danoz.recyclerviewfastscroller.sectionindicator.title.SectionTitleIndicator;
 
 /**
@@ -27,11 +25,7 @@ public class RecipientSectionTitleIndicator extends SectionTitleIndicator<String
 
     @Override
     public void setSection(String name) {
-
         String[] names = name.split(" ");
-
-//        setTitleText(names[names.length-1].charAt(0) + "");
-        setTitleText("n");
-        setIndicatorTextColor(R.color.colorPrimary);
+        setTitleText(names[names.length-1].charAt(0) + "");
     }
 }

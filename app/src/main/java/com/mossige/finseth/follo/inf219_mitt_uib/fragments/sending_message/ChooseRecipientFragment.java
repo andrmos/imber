@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.SectionIndexer;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import xyz.danoz.recyclerviewfastscroller.sectionindicator.SectionIndicator;
 import xyz.danoz.recyclerviewfastscroller.sectionindicator.title.SectionTitleIndicator;
 import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
@@ -49,6 +51,7 @@ public class ChooseRecipientFragment extends Fragment {
 
     private View rootView;
     private ProgressBar progressBar;
+    private ProgressBar progressBarRecipient;
 
     private ArrayList<RecipientGroup> recipientGroups;
     private ArrayList<Recipient> recipients;
@@ -70,10 +73,6 @@ public class ChooseRecipientFragment extends Fragment {
 
     private boolean loaded;
     private ArrayList<Course> courses;
-
-    private int course_counter_check;
-    private int group_counter_check;
-    private int recipient_counter_check;
 
     private ArrayList<String> nextLinks;
 
@@ -106,6 +105,7 @@ public class ChooseRecipientFragment extends Fragment {
         getActivity().setTitle("Velg mottaker");
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressBarRecipient = (ProgressBar) rootView.findViewById(R.id.progressBarRecipient);
         if (loaded) {
             progressBar.setVisibility(View.GONE);
         } else {
@@ -128,16 +128,8 @@ public class ChooseRecipientFragment extends Fragment {
         course_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
-                Toast.makeText(parent.getContext(), "OnItemSelectedListener" + parent.getItemAtPosition(pos).toString(), Toast.LENGTH_SHORT).show();
-
-                // TODO not able to select default course on first
-
-                course_counter_check++;
-                // Keeps listener from running when initialized
-                if (course_counter_check > 1) {
-                    int course_id = courses.get(parent.getSelectedItemPosition()).getId();
-                    requestRecipientGroups(course_id);
-                }
+                int course_id = courses.get(parent.getSelectedItemPosition()).getId();
+                requestRecipientGroups(course_id);
             }
 
             @Override
@@ -149,16 +141,15 @@ public class ChooseRecipientFragment extends Fragment {
         group_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                group_counter_check++;
-                if (group_counter_check > 1) {
-                    RecipientGroup recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
+                RecipientGroup recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
 
-                    String url = UrlEndpoints.getRecipientsByGroup(null, recipientGroup.getId());
-                    requestRecipients(recipientGroup, url);
+                String url = UrlEndpoints.getRecipientsByGroup(null, recipientGroup.getId());
+                requestRecipients(recipientGroup, url);
 
-                    // Clear content of recipients spinner, to allow filling with new recipients
-                    recipients_string.clear();
-                }
+                progressBarRecipient.setVisibility(View.VISIBLE);
+
+                // Clear content of recipients spinner, to allow filling with new recipients
+                recipients_string.clear();
             }
 
             @Override
@@ -174,8 +165,6 @@ public class ChooseRecipientFragment extends Fragment {
         courseAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, courseCodes);
         courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         course_spinner.setAdapter(courseAdapter);
-
-        course_counter_check = 0;
     }
 
     private void initGroupSpinner() {
@@ -185,8 +174,6 @@ public class ChooseRecipientFragment extends Fragment {
         groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         group_spinner.setAdapter(groupAdapter);
         group_spinner.setEnabled(false);
-
-        group_counter_check = 0;
     }
 
     private void initRecipientSpinner() {
@@ -196,8 +183,6 @@ public class ChooseRecipientFragment extends Fragment {
         recipientsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         recipient_spinner.setAdapter(recipientsAdapter);
         recipient_spinner.setEnabled(false);
-
-        recipient_counter_check = 0;
     }
 
     private void initRecycleView() {
@@ -239,9 +224,6 @@ public class ChooseRecipientFragment extends Fragment {
                     for (Course c : courses) {
                         courseCodes.add(c.getCourseCode());
                     }
-
-                    // TODO Fix this
-                    course_spinner.setSelection(2);
 
                     courseAdapter.notifyDataSetChanged();
                     loaded = true;
@@ -332,8 +314,8 @@ public class ChooseRecipientFragment extends Fragment {
                         recipients_string.add(r.getName());
                     }
 
-//                    recipientsAdapter.notifyDataSetChanged();
-//                    recipient_spinner.setEnabled(true);
+                    progressBarRecipient.setVisibility(View.GONE);
+
                     mAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
@@ -406,5 +388,4 @@ public class ChooseRecipientFragment extends Fragment {
     private void showToast() {
         Toast.makeText(getContext(), R.string.error_conversation, Toast.LENGTH_SHORT).show();
     }
-
 }

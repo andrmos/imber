@@ -1,9 +1,11 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SectionIndexer;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.CourseViewHolder;
@@ -19,7 +21,9 @@ import java.util.ArrayList;
  *
  * Created by André on 12.02.2016.
  */
-public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
+public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> implements SectionIndexer {
+
+    private final static String TAG = "RecipientAdapter";
 
     private ArrayList<String> data;
 
@@ -29,7 +33,6 @@ public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralVi
 
     @Override
     public GeneralViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // course card
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipient_card, parent, false);
         GeneralViewHolder holder = new RecipientViewHolder(v);
 
@@ -47,5 +50,26 @@ public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralVi
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    @Override
+    public Object[] getSections() {
+        return data.toArray();
+    }
+
+    @Override
+    public int getPositionForSection(int sectionIndex) {
+        // Is never run?
+        Log.i(TAG, "getPositionForSection");
+        return 0;
+    }
+
+    @Override
+    public int getSectionForPosition(int position) {
+        if (position >= data.size()) {
+            return data.size() - 1;
+        }
+
+        return position;
     }
 }
