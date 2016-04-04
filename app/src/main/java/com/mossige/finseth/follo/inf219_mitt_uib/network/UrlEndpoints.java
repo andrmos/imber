@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
 import android.print.PrinterCapabilitiesInfo;
+import android.util.Log;
 
 /**
  * Created by Andre on 19/02/2016.
@@ -22,6 +23,38 @@ public class UrlEndpoints {
     public static final String ENROLLMENTS = "enrollments";
     public static final String SELF = "self";
     public static final String PROFILE = "profile";
+    public static final String SEARCH = "search/";
+    public static final String RECIPIENTS = "recipients";
+    // Sending message arguments
+    public static final String SEARCH_ARG = "search=";
+
+    public static final String PER_PAGE = "per_page=50";
+    public static final String PERMISSIONS = "permissions[]=send_messages_all";
+    public static final String SYNTHETIC_CONTEXTS = "synthetic_contexts=true";
+    public static final String CONTEXT = "context=";
+    public static final String COURSE = "course_";
+    public static final String AND = "&";
+
+    /**
+     * @param search textinput (name)
+     * @param courseID what course you wish to search within
+     * @return Request URL for getting possible recipients
+     */
+    public static String getRecipients(String search, int courseID) {
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    }
+    public static String getRecipientGroups(int courseID) {
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    }
+
+    /**
+     * @param search textinput (name)
+     * @param courseID which group you want to search within
+     * @return Request URL for getting possible recipients
+     */
+    public static String getRecipientsByGroup(String search, String courseID) {
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    }
 
     /**
      * @return Request URL for getting the users profile

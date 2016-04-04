@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -19,7 +18,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.ConversationRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
@@ -30,9 +28,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -128,6 +124,7 @@ public class ConversationFragment extends Fragment {
     private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
+
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views

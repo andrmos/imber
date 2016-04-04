@@ -34,7 +34,7 @@
     <string name="calendar_title">Kalender</string>
     <string name="course_list_title">Fag</string>
     <string name="announcements_title">Kunngjøringer</string>
-    <string name="conversation_title">Inboks</string>
+    <string name="conversation_title">Innboks</string>
 
     <!-- Error messages -->
     <string name="error_profile">Feil ved lasting av profil…</string>

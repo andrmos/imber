@@ -11,6 +11,16 @@ public class Message {
     private String date;
     private String message;
 
+    private ArrayList<String> recipiants;
+    private String subject;
+    private String body;
+
+    public Message(ArrayList<String> recipiants, String subject, String body) {
+        this.recipiants = recipiants;
+        this.subject = subject;
+        this.body = body;
+    }
+
     public Message(String authorID, String date, String message) {
         this.authorID = authorID;
         this.date = date;

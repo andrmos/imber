@@ -28,6 +28,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
@@ -147,8 +148,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
 
         if (id == R.id.nav_about) {
-            AboutFragment aboutFragment = new AboutFragment();
-            transaction.replace(R.id.content_frame, aboutFragment);
+//            AboutFragment aboutFragment = new AboutFragment();
+            ChooseRecipientFragment crf = new ChooseRecipientFragment();
+            transaction.replace(R.id.content_frame, crf);
             transaction.commit();
 
             drawer.closeDrawer(navigationView);
@@ -216,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     //Bundles calendarURL for later accessing
                     url = new Bundle();
                     url.putString("calendarURL", profile.getCalendar());
+                    
 
                     //Get dates
                     dt.execute(new URL(profile.getCalendar()));
