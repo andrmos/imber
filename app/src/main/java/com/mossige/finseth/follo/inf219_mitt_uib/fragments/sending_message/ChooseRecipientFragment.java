@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -122,7 +123,14 @@ public class ChooseRecipientFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        // TODO Implement canceling of Volley requests
+
+        // Cancel all recipients requests when navigating away from fragment
+        RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return request.getTag().equals("recipient");
+            }
+        });
     }
 
     private void initSpinners() {
@@ -307,7 +315,7 @@ public class ChooseRecipientFragment extends Fragment {
                     Log.i(TAG, "onResponse");
                     ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
 
-                    // If there exists a link to the next 50 recipients, start request with new url
+                    // If there exists a link to the next recipients page, start request with new url
                     if (nextLinks.size() > 0) {
 
                         // TODO This fetches ALL recipients in a group. Might be a lot of data to fetch.
@@ -321,7 +329,6 @@ public class ChooseRecipientFragment extends Fragment {
                     }
 
                     progressBarRecipient.setVisibility(View.GONE);
-
                     mAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
@@ -384,6 +391,7 @@ public class ChooseRecipientFragment extends Fragment {
             }
         };
 
+        recipientsReq.setTag("recipient");
         recipientsReq.setRetryPolicy(new DefaultRetryPolicy(5000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
