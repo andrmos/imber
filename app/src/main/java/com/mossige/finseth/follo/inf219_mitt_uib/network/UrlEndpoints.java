@@ -102,4 +102,11 @@ public class UrlEndpoints {
         return BASE_URL + USERS + user_id + "/" + ENROLLMENTS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 
+    /**
+     * @return Request URL posting new message.
+     */
+    public static String postNewMessageUrl() {
+        return BASE_URL + CONVERSATIONS;
+    }
+
 }

@@ -1,8 +1,10 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.SectionIndexer;
 import android.widget.Spinner;
@@ -26,6 +30,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecipientRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SingleConversationFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.RecipientGroup;
@@ -38,6 +44,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import xyz.danoz.recyclerviewfastscroller.sectionindicator.SectionIndicator;
 import xyz.danoz.recyclerviewfastscroller.sectionindicator.title.SectionTitleIndicator;
@@ -81,6 +90,10 @@ public class ChooseRecipientFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private HashMap<String,Boolean> recipientsChecked;
+
+    private Button writeMessage;
+
     public ChooseRecipientFragment() {
     }
 
@@ -94,6 +107,7 @@ public class ChooseRecipientFragment extends Fragment {
         groups = new ArrayList<>();
         recipients = new ArrayList<>();
         recipients_string = new ArrayList<>();
+        recipientsChecked = new HashMap<>();
 
         loaded = false;
 
@@ -104,6 +118,39 @@ public class ChooseRecipientFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.choose_recipient, container, false);
         getActivity().setTitle("Velg mottaker");
+
+        writeMessage = (Button) getActivity().findViewById(R.id.send);
+        writeMessage.setVisibility(View.VISIBLE);
+        writeMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
+                transaction.replace(R.id.content_frame, composeMessageFragment);
+
+                //Bundles all parameters needed for showing one announcement
+                Bundle args = new Bundle();
+
+                Iterator it = recipientsChecked.entrySet().iterator();
+                ArrayList<String> tmpList = new ArrayList<String>();
+
+                //Make arraylist with ids 
+                while(it.hasNext()){
+                    Map.Entry<String,Boolean> pair = (Map.Entry<String,Boolean>) it.next();
+
+                    if(pair.getValue()){
+                        tmpList.add(pair.getKey());
+                    }
+                }
+
+                args.putStringArrayList("recipientIDs", tmpList);
+                composeMessageFragment.setArguments(args);
+
+                writeMessage.setVisibility(View.INVISIBLE);
+
+                transaction.commit();
+            }
+        });
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         progressBarRecipient = (ProgressBar) rootView.findViewById(R.id.progressBarRecipient);
@@ -164,6 +211,7 @@ public class ChooseRecipientFragment extends Fragment {
 
                 // Clear content of recipients spinner, to allow filling with new recipients
                 recipients_string.clear();
+                recipients.clear();
             }
 
             @Override
@@ -220,8 +268,10 @@ public class ChooseRecipientFragment extends Fragment {
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new RecipientRecyclerViewAdapter(recipients_string);
+        mAdapter = new RecipientRecyclerViewAdapter(recipients);
         mainList.setAdapter(mAdapter);
+
+        initOnClickListener();
     }
 
     private void requestCourses() {
@@ -326,6 +376,7 @@ public class ChooseRecipientFragment extends Fragment {
                     for (Recipient r : tmp) {
                         r.setGroup(rg.getName());
                         recipients_string.add(r.getName());
+                        recipients.add(r);
                     }
 
                     progressBarRecipient.setVisibility(View.GONE);
@@ -401,5 +452,18 @@ public class ChooseRecipientFragment extends Fragment {
 
     private void showToast() {
         Toast.makeText(getContext(), R.string.error_conversation, Toast.LENGTH_SHORT).show();
+    }
+
+    private void initOnClickListener() {
+        ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                CheckBox checkBox = (CheckBox) v.findViewById(R.id.sendTo);
+                checkBox.setChecked(!checkBox.isChecked());
+                recipientsChecked.put(recipients.get(position).getId(),checkBox.isChecked());
+
+                Log.i(TAG, "onItemClicked: " + recipients.get(position) + " = " + recipientsChecked.get(recipients.get(position).getId()));
+            }
+        });
     }
 }
