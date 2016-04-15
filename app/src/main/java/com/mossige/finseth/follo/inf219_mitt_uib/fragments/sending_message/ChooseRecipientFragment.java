@@ -134,7 +134,7 @@ public class ChooseRecipientFragment extends Fragment {
                 Iterator it = recipientsChecked.entrySet().iterator();
                 ArrayList<String> tmpList = new ArrayList<String>();
 
-                //Make arraylist with ids 
+                //Make arraylist with ids
                 while(it.hasNext()){
                     Map.Entry<String,Boolean> pair = (Map.Entry<String,Boolean>) it.next();
 
