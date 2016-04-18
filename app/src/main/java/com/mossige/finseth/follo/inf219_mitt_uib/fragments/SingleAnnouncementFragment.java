@@ -2,7 +2,6 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.CalendarParser;
 
 /**
  * Created by PatrickFinseth on 13.03.16.

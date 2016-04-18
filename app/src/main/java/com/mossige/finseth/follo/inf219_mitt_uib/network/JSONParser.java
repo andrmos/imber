@@ -2,7 +2,9 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
 import android.util.Log;
 
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
@@ -15,7 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Parser for different JSONRequests
@@ -48,6 +52,16 @@ public class JSONParser {
         return parsed;
     }
 
+    public static ArrayList<CalendarEvent> parseAllCalendarEvents(JSONArray unparsed) throws JSONException {
+        ArrayList<CalendarEvent> parsed = new ArrayList<>();
+
+        for(int i = 0; i < unparsed.length(); i++){
+            JSONObject obj = unparsed.getJSONObject(i);
+            parsed.add(parseOneCalendarEvent(obj));
+        }
+
+        return parsed;
+    }
     /**
      * Parses the different recipient groups
      * @param unParsed JSONArray you get onResponse with the request
@@ -252,6 +266,36 @@ public class JSONParser {
         String code = obj.getString("course_code");
 
         return new Course(id, name, cal, code);
+    }
+
+    /**
+     *
+     * @param obj
+     * @return
+     * @throws JSONException
+     */
+    private static CalendarEvent parseOneCalendarEvent(JSONObject obj) throws JSONException {
+        String title = obj.getString("title");
+        String location = obj.getString("location_name");
+        String start = obj.getString("start_at");
+        String stop = obj.getString("stop_at");
+
+        return new CalendarEvent(title,parseDateString(start),parseDateString(stop),location);
+    }
+
+    /**
+     * Parsing date from string to date format ISO-8601 YYYY-MM-DD
+     * @param date
+     * @return
+     *         Date
+     */
+    private static Date parseDateString(String date){
+        int year = Integer.parseInt(date.substring(0,4));
+        int month = Integer.parseInt(date.substring(4,6));
+        int day = Integer.parseInt(date.substring(6,8));
+        int hour = Integer.parseInt(date.substring(9,11));
+        int min = Integer.parseInt(date.substring(11,13));
+        return new Date(year, month, day, hour, min);
     }
 
 }
