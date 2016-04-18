@@ -18,8 +18,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.melnykov.fab.FloatingActionButton;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.adapters.ChooseRecipientViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.ConversationRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -63,7 +66,7 @@ public class ConversationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
         getActivity().setTitle(R.string.conversation_title);
 
         spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
@@ -124,8 +127,9 @@ public class ConversationFragment extends Fragment {
     private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+
+        initFabButton(rootView);
 
         // Create the LayoutManager that holds all the views
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -136,6 +140,22 @@ public class ConversationFragment extends Fragment {
         mainList.setAdapter(mAdapter);
 
         initOnClickListener();
+    }
+
+    private void initFabButton(View rootView) {
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.attachToRecyclerView(mainList);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                ChooseRecipientFragment chooseRecipientFragment = new ChooseRecipientFragment();
+                transaction.replace(R.id.content_frame, chooseRecipientFragment);
+
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
     }
 
     private void initOnClickListener() {

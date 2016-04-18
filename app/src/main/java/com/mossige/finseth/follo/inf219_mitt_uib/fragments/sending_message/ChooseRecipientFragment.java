@@ -171,17 +171,32 @@ public class ChooseRecipientFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-
+//    @Override
+//    public void onPause() {
         // Cancel all recipients requests when navigating away from fragment
-        RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
-            @Override
-            public boolean apply(Request<?> request) {
-                return request.getTag().equals("recipient");
-            }
-        });
+//        RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
+//            @Override
+//            public boolean apply(Request<?> request) {
+//                if (request.getTag() != null) {
+//                    return request.getTag().equals("recipient");
+//                }
+//                return false;
+//            }
+//        });
+//
+//        super.onPause();
+//    }
+
+    @Override
+    public void onStop() {
+        Log.i(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        Log.i(TAG, "onDestroyView");
+        super.onDestroyView();
     }
 
     private void initSpinners() {
@@ -372,7 +387,7 @@ public class ChooseRecipientFragment extends Fragment {
                     // If there exists a link to the next recipients page, start request with new url
                     if (nextLinks.size() > 0) {
 
-                        // TODO This fetches ALL recipients in a group. Might be a lot of data to fetch.
+                        // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
                         // TODO Cancel the requests when going to a new activity/chooses a recipient to send to
                         requestRecipients(rg, nextLinks.get(0));
                     }
@@ -397,6 +412,8 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error.toString());
+                // TODO Is run when canceling requests.
+                // TODO Cannot show toast when in another fragment, so this will throw a nullpointer exception
                 showToast();
             }
 
