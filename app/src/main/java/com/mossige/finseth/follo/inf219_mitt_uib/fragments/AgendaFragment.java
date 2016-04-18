@@ -48,6 +48,8 @@ public class AgendaFragment extends Fragment {
         agendas = new ArrayList<>();
         loaded = false;
 
+        ArrayList<CalendarEvent> tmpAgendas = new ArrayList<>();
+
         Bundle arguments = getArguments();
         if (arguments != null) {
             ArrayList<String> start_date = arguments.getStringArrayList("start_date");
@@ -56,14 +58,19 @@ public class AgendaFragment extends Fragment {
             ArrayList<String> location = arguments.getStringArrayList("location");
 
             for (int i = 0; i < start_date.size(); i++) {
-                agendas.add(new CalendarEvent(name.get(i), start_date.get(i), end_date.get(i), location.get(i)));
+                tmpAgendas.add(new CalendarEvent(name.get(i), start_date.get(i), end_date.get(i), location.get(i)));
             }
+            Log.i(TAG, "onCreate: agendas size " + agendas.size());
 
         } else {
             Log.i(TAG, "onCreate: arguments is null");
         }
 
-        calendar = new MyCalendar(agendas);
+
+        calendar = new MyCalendar(tmpAgendas);
+
+
+
 
 
 
@@ -73,6 +80,7 @@ public class AgendaFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(TAG, "onCreateView: agendas size " + agendas.size());
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         spinner = (ProgressBar) rootView.findViewById(R.id.progressBar);
@@ -102,6 +110,11 @@ public class AgendaFragment extends Fragment {
 
         agendas.clear();
         agendas.addAll(calendar.getEventsForDate(date.getDate(), date.getMonth(), date.getYear()));
+
+        calendar.test();
+
+
+
         Log.i(TAG, "updateAgendaCards: cal size " + calendar.getAllEvents().size());
         mAdapter.notifyDataSetChanged();
     }
@@ -128,9 +141,11 @@ public class AgendaFragment extends Fragment {
 //    }
 
     private void setTodaysAgenda() {
-        agendas.clear();
+//        agendas.clear();
         Calendar cal = Calendar.getInstance();
 //         Add calendar events for current date
+
+        agendas.clear();
         agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)));
         mAdapter.notifyDataSetChanged();
 

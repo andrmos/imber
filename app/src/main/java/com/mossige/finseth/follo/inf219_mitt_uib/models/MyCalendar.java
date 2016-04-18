@@ -2,7 +2,6 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,24 +16,25 @@ public class MyCalendar {
 
     private ArrayList<CalendarEvent> calendar;
 
-    public MyCalendar(ArrayList<CalendarEvent> calendar){
-        this.calendar = calendar;
+    public MyCalendar(ArrayList<CalendarEvent> mcalendar){
+        this.calendar = mcalendar;
         Log.i(TAG, "MyCalendar: size: " + this.calendar.size());
 
-        Log.i(TAG, "MyCalendar: hash " + calendar.hashCode());
+        Log.i(TAG, "MyCalendar: hash " + this.calendar.hashCode());
+    }
+
+    public void test() {
+        Log.i(TAG, "test: size " + calendar.size());
     }
 
     public ArrayList<CalendarEvent> getEventsForDate(int day, int month, int year){
         ArrayList<CalendarEvent> retCalendar = new ArrayList<>();
 
+        for(CalendarEvent c : this.calendar){
 
-        for(CalendarEvent c : calendar){
-
-            Log.i(TAG, "getEventsForDate: c: " + c);
             //Checks if a date is equal to given date in calendar
             if(c.getStartDate().getDate() == day && c.getStartDate().getMonth() == month && c.getStartDate().getYear() == year){
                 retCalendar.add(c);
-                Log.i(TAG, "getEventsForDate: add");
             }
         }
 
@@ -60,6 +60,7 @@ public class MyCalendar {
     }
 
     public CalendarEvent getEvent(int position){
+        Log.i(TAG, "getEvent: size " + calendar.size());
         return calendar.get(position);
     }
 
