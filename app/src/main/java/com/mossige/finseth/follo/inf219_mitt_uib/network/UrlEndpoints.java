@@ -106,7 +106,7 @@ public class UrlEndpoints {
      * @return Request URL posting new message.
      */
     public static String postNewMessageUrl() {
-        return BASE_URL + CONVERSATIONS;
+        return BASE_URL + CONVERSATIONS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 
 }

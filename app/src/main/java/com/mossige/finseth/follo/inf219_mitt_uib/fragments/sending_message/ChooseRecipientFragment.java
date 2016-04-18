@@ -124,31 +124,35 @@ public class ChooseRecipientFragment extends Fragment {
         writeMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
-                transaction.replace(R.id.content_frame, composeMessageFragment);
-
-                //Bundles all parameters needed for showing one announcement
-                Bundle args = new Bundle();
-
-                Iterator it = recipientsChecked.entrySet().iterator();
+                Iterator hashMapIterator = recipientsChecked.entrySet().iterator();
                 ArrayList<String> tmpList = new ArrayList<String>();
 
-                //Make arraylist with ids
-                while(it.hasNext()){
-                    Map.Entry<String,Boolean> pair = (Map.Entry<String,Boolean>) it.next();
+                //Make arraylist with ids from hashmap
+                while (hashMapIterator.hasNext()) {
+                    Map.Entry<String, Boolean> pair = (Map.Entry<String, Boolean>) hashMapIterator.next();
 
-                    if(pair.getValue()){
+                    if (pair.getValue()) {
                         tmpList.add(pair.getKey());
                     }
                 }
 
-                args.putStringArrayList("recipientIDs", tmpList);
-                composeMessageFragment.setArguments(args);
+                //If recipients are choosen write new message. If not show toast message
+                if(tmpList.size() > 0) {
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
+                    transaction.replace(R.id.content_frame, composeMessageFragment);
 
-                writeMessage.setVisibility(View.INVISIBLE);
+                    //Bundles all parameters needed for showing one announcement
+                    Bundle args = new Bundle();
+                    args.putStringArrayList("recipientIDs", tmpList);
+                    composeMessageFragment.setArguments(args);
 
-                transaction.commit();
+                    writeMessage.setVisibility(View.INVISIBLE);
+
+                    transaction.commit();
+                }else{
+                    Toast.makeText(getContext(), "Ingen mottakere valgt", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -461,8 +465,6 @@ public class ChooseRecipientFragment extends Fragment {
                 CheckBox checkBox = (CheckBox) v.findViewById(R.id.sendTo);
                 checkBox.setChecked(!checkBox.isChecked());
                 recipientsChecked.put(recipients.get(position).getId(),checkBox.isChecked());
-
-                Log.i(TAG, "onItemClicked: " + recipients.get(position) + " = " + recipientsChecked.get(recipients.get(position).getId()));
             }
         });
     }

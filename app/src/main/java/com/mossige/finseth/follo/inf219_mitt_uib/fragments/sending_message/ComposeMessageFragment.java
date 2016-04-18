@@ -60,6 +60,8 @@ public class ComposeMessageFragment extends Fragment {
         sendMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //TODO add group checkbox and constraints for subject and message
                 subject = (EditText) rootView.findViewById(R.id.subject);
                 message = (EditText) rootView.findViewById(R.id.message);
 
@@ -78,26 +80,31 @@ public class ComposeMessageFragment extends Fragment {
 
     private void postMessageRequest(final ArrayList<String> recipients, final String subject, final String message) throws JSONException {
 
-        //Create json onject
-        JSONObject obj = new JSONObject();
-        obj.put("recipients[]",recipients.get(0));
-        obj.put("subject", subject);
-        obj.put("body", message);
+        //Create json object
+        JSONObject postJSONObject = new JSONObject();
+        postJSONObject.put("body", message);
+        postJSONObject.put("subject", subject);
+
+        //Accumulate all recipients
+        for(int i = 0 ; i < recipients.size(); i++){
+            postJSONObject.accumulate("recipients", recipients.get(i));
+        }
 
         //Request post method
-        final JsonObjectRequest postMessage = new JsonObjectRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(), obj, new Response.Listener<JSONObject>() {
+        JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(), postJSONObject, new Response.Listener<JSONArray>() {
+
 
             @Override
-            public void onResponse(JSONObject response) {
-                Log.i(TAG, "onResponse: got resonse" + response);
+            public void onResponse(JSONArray response) {
+                Log.i(TAG, "onResponse: " + response.toString());
             }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error.toString());
             }
         });
-
 
         //Add to queue
         RequestQueueHandler.getInstance(this.getContext()).addToRequestQueue(postMessage);
