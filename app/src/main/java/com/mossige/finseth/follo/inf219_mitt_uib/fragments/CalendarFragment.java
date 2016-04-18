@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.ArrayMap;
@@ -17,6 +18,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,6 +54,28 @@ public class CalendarFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        calendarEvents = new ArrayList<>();
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            ArrayList<String> start_date = arguments.getStringArrayList("start_date");
+            ArrayList<String> end_date = arguments.getStringArrayList("end_date");
+            ArrayList<String> name = arguments.getStringArrayList("name");
+            ArrayList<String> location = arguments.getStringArrayList("location");
+
+            for (int i = 0; i < start_date.size(); i++) {
+                calendarEvents.add(new CalendarEvent(name.get(i), start_date.get(i), end_date.get(i), location.get(i)));
+            }
+
+        } else {
+            Log.i(TAG, "onCreate: arguments is null");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         getActivity().setTitle(R.string.calendar_title);
@@ -82,12 +106,9 @@ public class CalendarFragment extends Fragment {
         backgrounds = new HashMap<>();
 
         //Set background for dates that contains at least one agenda
-        for(String s : getArguments().getStringArrayList("Dates")){
-            int year = Integer.parseInt(s.substring(0,3));
-            int month = Integer.parseInt(s.substring(3,5))-1;
-            int day = Integer.parseInt(s.substring(5,7));
-            dates.put(new Date(year,month,day),bg);
-            backgrounds.put(new Date(year,month,day),bg);
+        for(CalendarEvent event : calendarEvents){
+            dates.put(event.getStartDate(), bg);
+            backgrounds.put(event.getStartDate(), bg);
         }
 
         caldroidFragment.setBackgroundDrawableForDates(dates);

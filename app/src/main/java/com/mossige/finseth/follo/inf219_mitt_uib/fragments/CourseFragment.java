@@ -25,7 +25,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.downloads.DownloadCourseCalendarTask;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
@@ -206,8 +205,8 @@ public class CourseFragment extends Fragment {
             e.printStackTrace();
         }
 
-        DownloadCourseCalendarTask dft = new DownloadCourseCalendarTask(this);
-        dft.execute(url);
+//        DownloadCourseCalendarTask dft = new DownloadCourseCalendarTask(this);
+//        dft.execute(url);
     }
 
     public void setAgendas(ArrayList<CalendarEvent> calendarEvents) {

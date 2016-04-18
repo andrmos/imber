@@ -1,6 +1,8 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
@@ -29,20 +33,26 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.downloads.DownloadDatesTask;
 
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
@@ -52,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private User profile;
     private Bundle url;
     private ArrayList<String> dates;
-    private DownloadDatesTask dt;
+
+    private ArrayList<Course> courses;
+    private ArrayList<CalendarEvent> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         setContentView(R.layout.activity_main);
 
         requestProfile();
-        dt = new DownloadDatesTask(this);
 
         // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -77,8 +88,71 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //Check settings before intitializing courses
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        // Filter useless courses on institute level
+        boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
+
+        courses = new ArrayList<>();
+        requestCourses(filterInstituteCourses);
+
+        //TODO Show spinner...?
+    }
+
+    private void requestCourses(final boolean filterInstituteCourses) {
+        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+
+                try {
+                    courses.clear();
+                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses));
+
+                    initCourseListFragment();
+
+                    requestCalendar();
+
+                } catch (JSONException e) {
+                    // TODO handle exception
+                    Log.i(TAG, "JSONException " + e);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error);
+            }
+
+        });
+
+        RequestQueueHandler.getInstance(this).addToRequestQueue(coursesReq);
+    }
+
+    private void initCourseListFragment() {
         CourseListFragment courseListFragment = new CourseListFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        Bundle bundle = new Bundle();
+        ArrayList<Integer> ids = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+        ArrayList<String> calendaer_urls = new ArrayList<>();
+        ArrayList<String> course_codes = new ArrayList<>();
+
+        for (Course c : courses) {
+            ids.add(c.getId());
+            names.add(c.getName());
+            calendaer_urls.add(c.getCalenderUrl());
+            course_codes.add(c.getCourseCode());
+        }
+
+        bundle.putIntegerArrayList("ids", ids);
+        bundle.putStringArrayList("names", names);
+        bundle.putStringArrayList("calendar_urls", calendaer_urls);
+        bundle.putStringArrayList("course_codes", course_codes);
+
+        courseListFragment.setArguments(bundle);
+
         transaction.replace(R.id.content_frame, courseListFragment);
         transaction.commit();
     }
@@ -129,19 +203,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         if(id == R.id.nav_course){
-            CourseListFragment courseListFragment = new CourseListFragment();
-            transaction.replace(R.id.content_frame, courseListFragment);
-            transaction.commit();
+            initCourseListFragment();
 
             drawer.closeDrawer(navigationView);
             return true;
         }
 
         if(id == R.id.nav_calendar){
-            CalendarFragment calendarFragment = new CalendarFragment();
-            calendarFragment.setArguments(url);
-            transaction.replace(R.id.content_frame, calendarFragment);
-            transaction.commit();
+            initCalendarFragment(events);
 
             drawer.closeDrawer(navigationView);
             return true;
@@ -194,6 +263,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         AgendaFragment agendaFragment = (AgendaFragment) getSupportFragmentManager().findFragmentById(R.id.agenda_container);
         if (agendaFragment != null) {
             agendaFragment.updateAgendaCards(date);
+
+            Log.i(TAG, "onDateSelected: " + date);
         }
     }
 
@@ -218,14 +289,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     //Bundles calendarURL for later accessing
                     url = new Bundle();
                     url.putString("calendarURL", profile.getCalendar());
-                    
+
 
                     //Get dates
-                    dt.execute(new URL(profile.getCalendar()));
+//                    dt.execute(new URL(profile.getCalendar()));
 
                 } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
 
@@ -242,6 +311,85 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
+    }
+
+    private void requestCalendar() {
+        Log.i(TAG, "requestCalendar");
+
+        ArrayList<String> ids = new ArrayList<>();
+        for (Course c : courses) {
+            ids.add("course_" + c.getId());
+        }
+
+        ArrayList<String> exclude = new ArrayList<>();
+        String type = "event";
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        // Set the date to the 1st
+        cal.set(Calendar.DATE, 1);
+        String start_date = df.format(cal.getTime());
+
+        // Add one month to the date
+        cal.add(Calendar.MONTH, 1);
+        String end_date = df.format(cal.getTime());
+
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date), (String) null, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+
+                try {
+                    events = JSONParser.parseAllCalendarEvents(response);
+//                    Log.i(TAG, "onResponse: size: " + events.size());
+//                    initCalendarFragment(events);
+
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "exception: " + e);
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error);
+            }
+        });
+
+        RequestQueueHandler.getInstance(this).addToRequestQueue(calendarEventsRequest);
+    }
+
+    private void initCalendarFragment(ArrayList<CalendarEvent> events) {
+        Log.i(TAG, "initCalendarFragment: size: " + events.size());
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        CalendarFragment calendarFragment = new CalendarFragment();
+
+        Bundle bundle = new Bundle();
+
+        ArrayList<String> start_date = new ArrayList<>();
+        ArrayList<String> end_date = new ArrayList<>();
+        ArrayList<String> name = new ArrayList<>();
+        ArrayList<String> location = new ArrayList<>();
+
+        for (int i = 0; i < events.size(); i++) {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            start_date.add(df.format(events.get(i).getStartDate()));
+            end_date.add(df.format(events.get(i).getEndDate()));
+            name.add(events.get(i).getName());
+            location.add(events.get(i).getLocation());
+        }
+
+        bundle.putStringArrayList("start_date", start_date);
+        bundle.putStringArrayList("end_date", end_date);
+        bundle.putStringArrayList("name", name);
+        bundle.putStringArrayList("location", location);
+
+        calendarFragment.setArguments(bundle);
+
+        transaction.replace(R.id.content_frame, calendarFragment);
+        transaction.commit();
     }
 
     private void showToast() {

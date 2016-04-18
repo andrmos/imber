@@ -48,7 +48,7 @@ public class CalendarEvent {
         int day = Integer.parseInt(date.substring(8,10));
         int hour = Integer.parseInt(date.substring(11,13));
         int min = Integer.parseInt(date.substring(14,16));
-        return new Date(year, month, day, hour, min);
+        return new Date(year-1900, month, day, hour, min);
     }
 
     @Override

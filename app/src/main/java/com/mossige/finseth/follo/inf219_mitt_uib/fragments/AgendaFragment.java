@@ -16,7 +16,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.downloads.DownloadCalendarTask;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,15 +48,27 @@ public class AgendaFragment extends Fragment {
         agendas = new ArrayList<>();
         loaded = false;
 
-        URL url = null;
-        try {
-            url = new URL(getArguments().get("calendarURL").toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            ArrayList<String> start_date = arguments.getStringArrayList("start_date");
+            ArrayList<String> end_date = arguments.getStringArrayList("end_date");
+            ArrayList<String> name = arguments.getStringArrayList("name");
+            ArrayList<String> location = arguments.getStringArrayList("location");
+
+            for (int i = 0; i < start_date.size(); i++) {
+                agendas.add(new CalendarEvent(name.get(i), start_date.get(i), end_date.get(i), location.get(i)));
+            }
+
+        } else {
+            Log.i(TAG, "onCreate: arguments is null");
         }
 
-        DownloadCalendarTask dft = new DownloadCalendarTask(this);
-        dft.execute(url);
+        calendar = new MyCalendar(agendas);
+
+
+
+//        DownloadCalendarTask dft = new DownloadCalendarTask(this);
+//        dft.execute(url);
     }
 
     @Override
@@ -67,11 +78,17 @@ public class AgendaFragment extends Fragment {
         spinner = (ProgressBar) rootView.findViewById(R.id.progressBar);
         initRecycleView(rootView);
 
-        if (loaded) {
-            spinner.setVisibility(View.GONE);
-        } else {
-            spinner.setVisibility(View.VISIBLE);
-        }
+        setTodaysAgenda();
+
+
+
+//        if (loaded) {
+//            spinner.setVisibility(View.GONE);
+//        } else {
+//            spinner.setVisibility(View.VISIBLE);
+//        }
+
+//        setAgendas();
 
         return rootView;
     }
@@ -81,8 +98,11 @@ public class AgendaFragment extends Fragment {
      * @param date The date of the calendar events to be shown
      */
     public void updateAgendaCards(Date date) {
+        Log.i(TAG, "updateAgendaCards: " + date);
+
         agendas.clear();
-        agendas.addAll(calendar.getEventsForDate(date.getDate(), date.getMonth()+1, date.getYear()));
+        agendas.addAll(calendar.getEventsForDate(date.getDate(), date.getMonth(), date.getYear()));
+        Log.i(TAG, "updateAgendaCards: cal size " + calendar.getAllEvents().size());
         mAdapter.notifyDataSetChanged();
     }
 
@@ -98,19 +118,20 @@ public class AgendaFragment extends Fragment {
         // Create adapter that binds the views with some content
         mAdapter = new AgendaRecyclerViewAdapter(agendas);
         mainList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
-    public void setAgendas(ArrayList<CalendarEvent> calendarEvents) {
-        calendar = new MyCalendar(calendarEvents);
-        // TODO Use updateAgendas() instead
-        setTodaysAgenda();
-    }
+//    public void setAgendas(ArrayList<CalendarEvent> calendarEvents) {
+//        calendar = new MyCalendar(calendarEvents);
+//        // TODO Use updateAgendas() instead
+//        setTodaysAgenda();
+//    }
 
     private void setTodaysAgenda() {
         agendas.clear();
         Calendar cal = Calendar.getInstance();
 //         Add calendar events for current date
-        agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)-1900));
+        agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)));
         mAdapter.notifyDataSetChanged();
 
         loaded = true;

@@ -98,7 +98,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
             endMin = "00";
         }
 
-        String summary = agendas.get(i).getSummary();
+        String summary = agendas.get(i).getName();
         return "" + summary + day + "." + month + " " + startHour + ":" + startMin + "-" + endHour + ":" + endMin;
     }
 

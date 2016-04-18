@@ -58,12 +58,27 @@ public class CourseListFragment extends Fragment {
         loaded = false;
         courses = new ArrayList<>();
 
-        //Check settings before intitializing courses
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        // Filter useless courses on institute level
-        boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
+        ArrayList<Integer> ids = getArguments().getIntegerArrayList("ids");
+        ArrayList<String> names = getArguments().getStringArrayList("names");
+        ArrayList<String> calendaer_urls = getArguments().getStringArrayList("calendar_urls");
+        ArrayList<String> course_codes = getArguments().getStringArrayList("course_codes");
 
-        requestCourses(filterInstituteCourses);
+        if (ids != null && names != null && calendaer_urls != null && course_codes != null) {
+            for (int i = 0; i < ids.size(); i++) {
+                Course course = new Course(ids.get(i), names.get(i), calendaer_urls.get(i), course_codes.get(i));
+                courses.add(course);
+            }
+
+        } else {
+            Log.i(TAG, "onCreate: bundles is null. fix");
+        }
+
+        //Check settings before intitializing courses
+//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        // Filter useless courses on institute level
+//        boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
+
+//        requestCourses(filterInstituteCourses);
     }
 
     @Override
@@ -75,11 +90,11 @@ public class CourseListFragment extends Fragment {
         initRecycleView(rootView);
 
         // Hide progress bar if data is already loaded
-        if (loaded) {
-            spinner.setVisibility(View.GONE);
-        } else {
-            spinner.setVisibility(View.VISIBLE);
-        }
+//        if (loaded) {
+//            spinner.setVisibility(View.GONE);
+//        } else {
+//            spinner.setVisibility(View.VISIBLE);
+//        }
 
         return rootView;
     }

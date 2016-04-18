@@ -278,7 +278,7 @@ public class JSONParser {
         String title = obj.getString("title");
         String location = obj.getString("location_name");
         String start = obj.getString("start_at");
-        String stop = obj.getString("stop_at");
+        String stop = obj.getString("end_at");
 
         return new CalendarEvent(title,parseDateString(start),parseDateString(stop),location);
     }
@@ -291,10 +291,10 @@ public class JSONParser {
      */
     private static Date parseDateString(String date){
         int year = Integer.parseInt(date.substring(0,4));
-        int month = Integer.parseInt(date.substring(4,6));
-        int day = Integer.parseInt(date.substring(6,8));
-        int hour = Integer.parseInt(date.substring(9,11));
-        int min = Integer.parseInt(date.substring(11,13));
+        int month = Integer.parseInt(date.substring(5,7));
+        int day = Integer.parseInt(date.substring(8,10));
+        int hour = Integer.parseInt(date.substring(11,13));
+        int min = Integer.parseInt(date.substring(14,16));
         return new Date(year, month, day, hour, min);
     }
 

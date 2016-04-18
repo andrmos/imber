@@ -19,16 +19,22 @@ public class MyCalendar {
 
     public MyCalendar(ArrayList<CalendarEvent> calendar){
         this.calendar = calendar;
+        Log.i(TAG, "MyCalendar: size: " + this.calendar.size());
+
+        Log.i(TAG, "MyCalendar: hash " + calendar.hashCode());
     }
 
     public ArrayList<CalendarEvent> getEventsForDate(int day, int month, int year){
         ArrayList<CalendarEvent> retCalendar = new ArrayList<>();
 
+
         for(CalendarEvent c : calendar){
 
+            Log.i(TAG, "getEventsForDate: c: " + c);
             //Checks if a date is equal to given date in calendar
             if(c.getStartDate().getDate() == day && c.getStartDate().getMonth() == month && c.getStartDate().getYear() == year){
                 retCalendar.add(c);
+                Log.i(TAG, "getEventsForDate: add");
             }
         }
 

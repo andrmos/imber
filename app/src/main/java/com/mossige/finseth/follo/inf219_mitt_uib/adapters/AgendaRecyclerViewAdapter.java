@@ -41,7 +41,7 @@ public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
         SingleAgendaViewHolder agendaHolder = (SingleAgendaViewHolder) holder;
-        agendaHolder.title.setText(data.get(position).getSummary());
+        agendaHolder.title.setText(data.get(position).getName());
         agendaHolder.time.setText(getFormatDate(position));
         agendaHolder.location.setText(data.get(position).getLocation());
         // TODO set summary

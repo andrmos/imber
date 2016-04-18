@@ -3,6 +3,8 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network;
 import android.print.PrinterCapabilitiesInfo;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 /**
  * Created by Andre on 19/02/2016.
  *
@@ -34,6 +36,13 @@ public class UrlEndpoints {
     public static final String CONTEXT = "context=";
     public static final String COURSE = "course_";
     public static final String AND = "&";
+    public static final String CALENDAR_EVENTS = "calendar_events";
+    public static final String CONTEXT_CODE_KEY = "context_codes[]=";
+    public static final String EXCLUDES_KEY = "excludes[]=";
+    public static final String ALL_EVENTS_KEY = "all_events=";
+    public static final String START_DATE_KEY = "start_date=";
+    public static final String END_DATE_KEY = "end_date=";
+    public static final String TYPE_KEY = "type=";
 
     /**
      * @param search textinput (name)
@@ -107,6 +116,34 @@ public class UrlEndpoints {
      */
     public static String postNewMessageUrl() {
         return BASE_URL + CONVERSATIONS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    }
+
+    /**
+     * Return url for getting calendar events url.
+     * @param context_codes Code of courses/groups to include. In format: "course_330" or "group_42"
+     * @param excludes
+     * @param type
+     * @param start_date Format: YYYY-MM-DD
+     * @param end_date Format: YYYY-MM-DD
+     * @return
+     */
+    public static String getCalendarEventsUrl(ArrayList<String> context_codes, ArrayList<String> excludes, String type, String start_date, String end_date) {
+        String url = BASE_URL + CALENDAR_EVENTS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN + "&";
+
+        for (String context_code : context_codes) {
+            url += CONTEXT_CODE_KEY + context_code + "&";
+        }
+
+        for (String e : excludes) {
+            url += EXCLUDES_KEY + e + "&";
+        }
+
+        url += ALL_EVENTS_KEY + "true&";
+        url += TYPE_KEY + type + "&";
+        url += START_DATE_KEY + start_date + "&";
+        url += END_DATE_KEY + end_date + "&";
+        url += PER_PAGE;
+        return url;
     }
 
 }
