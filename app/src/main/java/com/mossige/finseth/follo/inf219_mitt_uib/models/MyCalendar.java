@@ -3,6 +3,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -18,9 +19,6 @@ public class MyCalendar {
 
     public MyCalendar(ArrayList<CalendarEvent> mcalendar){
         this.calendar = mcalendar;
-        Log.i(TAG, "MyCalendar: size: " + this.calendar.size());
-
-        Log.i(TAG, "MyCalendar: hash " + this.calendar.hashCode());
     }
 
     public void test() {
@@ -30,8 +28,10 @@ public class MyCalendar {
     public ArrayList<CalendarEvent> getEventsForDate(int day, int month, int year){
         ArrayList<CalendarEvent> retCalendar = new ArrayList<>();
 
+        Date d = this.calendar.get(0).getStartDate();
+        Log.i(TAG, "getEventsForDate: calendar event: month:" + d.getMonth() + " year:" + d.getYear());
+//        TODO Calendar.setTime(date)
         for(CalendarEvent c : this.calendar){
-
             //Checks if a date is equal to given date in calendar
             if(c.getStartDate().getDate() == day && c.getStartDate().getMonth() == month && c.getStartDate().getYear() == year){
                 retCalendar.add(c);

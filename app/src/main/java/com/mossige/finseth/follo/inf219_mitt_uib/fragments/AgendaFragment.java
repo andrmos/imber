@@ -147,6 +147,7 @@ public class AgendaFragment extends Fragment {
 
         agendas.clear();
         agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)));
+        Log.i(TAG, "setTodaysAgenda: calendar: month:" + cal.get(Calendar.MONTH) + " year:" + cal.get(Calendar.YEAR));
         mAdapter.notifyDataSetChanged();
 
         loaded = true;

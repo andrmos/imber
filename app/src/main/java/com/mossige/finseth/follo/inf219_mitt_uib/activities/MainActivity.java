@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if (agendaFragment != null) {
             agendaFragment.updateAgendaCards(date);
 
-            Log.i(TAG, "onDateSelected: " + date);
+            Log.i(TAG, "onDateSelected: date:" + date);
         }
     }
 
