@@ -85,21 +85,26 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
         }
     }
 
+    /**
+     * Formatting string representation for a course
+     * @param i
+     * @return
+     */
     private String getEvent(int i) {
-        Date s = agendas.get(i).getStartDate();
-        Date e = agendas.get(i).getEndDate();
-        int day = s.getDate();
-        int month = s.getMonth()+1;
-        int startHour = s.getHours();
-        int startMin = s.getMinutes();
-        int endHour = e.getHours();
-        String endMin = String.valueOf(e.getMinutes());
-        if(endMin.equals("0")) {
-            endMin = "00";
-        }
+        Date start = agendas.get(i).getStartDate();
+        Date end = agendas.get(i).getEndDate();
 
-        String summary = agendas.get(i).getName();
-        return "" + summary + day + "." + month + " " + startHour + ":" + startMin + "-" + endHour + ":" + endMin;
+        String summary = agendas.get(i).getName() + " ";
+
+        //Gives time two digit representation
+        summary += start.getDate() + ".";
+        summary += start.getMonth() + " ";
+        summary += String.format("%02d",start.getHours()) + ":";
+        summary += String.format("%02d",start.getMinutes()) + "-";
+        summary += String.format("%02d",end.getHours()) + ":";
+        summary += String.format("%02d",end.getMinutes());
+
+        return summary;
     }
 
     private void setAnnouncements(GeneralViewHolder holder) {

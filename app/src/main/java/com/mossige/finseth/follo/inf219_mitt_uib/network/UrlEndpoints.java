@@ -30,7 +30,7 @@ public class UrlEndpoints {
     // Sending message arguments
     public static final String SEARCH_ARG = "search=";
 
-    public static final String PER_PAGE = "per_page=50";
+    public static final String PER_PAGE = "per_page=";
     public static final String PERMISSIONS = "permissions[]=send_messages_all";
     public static final String SYNTHETIC_CONTEXTS = "synthetic_contexts=true";
     public static final String CONTEXT = "context=";
@@ -43,6 +43,7 @@ public class UrlEndpoints {
     public static final String START_DATE_KEY = "start_date=";
     public static final String END_DATE_KEY = "end_date=";
     public static final String TYPE_KEY = "type=";
+    public static final String PAGE = "page=";
 
     /**
      * @param search textinput (name)
@@ -50,10 +51,10 @@ public class UrlEndpoints {
      * @return Request URL for getting possible recipients
      */
     public static String getRecipients(String search, int courseID) {
-        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE + "50"  + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
     public static String getRecipientGroups(int courseID) {
-        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 
     /**
@@ -62,7 +63,7 @@ public class UrlEndpoints {
      * @return Request URL for getting possible recipients
      */
     public static String getRecipientsByGroup(String search, String courseID) {
-        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 
     /**
@@ -121,13 +122,13 @@ public class UrlEndpoints {
     /**
      * Return url for getting calendar events url.
      * @param context_codes Code of courses/groups to include. In format: "course_330" or "group_42"
-     * @param excludes
-     * @param type
+     * @param excludes Exlude information
+     * @param type Events or Assignments
      * @param start_date Format: YYYY-MM-DD
      * @param end_date Format: YYYY-MM-DD
      * @return
      */
-    public static String getCalendarEventsUrl(ArrayList<String> context_codes, ArrayList<String> excludes, String type, String start_date, String end_date) {
+    public static String getCalendarEventsUrl(ArrayList<String> context_codes, ArrayList<String> excludes, String type, String start_date, String end_date, String per_page, int page_num) {
         String url = BASE_URL + CALENDAR_EVENTS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN + "&";
 
         for (String context_code : context_codes) {
@@ -138,11 +139,16 @@ public class UrlEndpoints {
             url += EXCLUDES_KEY + e + "&";
         }
 
-        url += ALL_EVENTS_KEY + "true&";
+        url += ALL_EVENTS_KEY + "false&";
         url += TYPE_KEY + type + "&";
         url += START_DATE_KEY + start_date + "&";
         url += END_DATE_KEY + end_date + "&";
-        url += PER_PAGE;
+        url += PER_PAGE + per_page;
+
+        if(page_num != 1){
+            url += "&" + PAGE + page_num;
+        }
+
         return url;
     }
 

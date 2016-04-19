@@ -36,9 +36,6 @@ public class AgendaFragment extends Fragment {
     private MyCalendar calendar;
     private ArrayList<CalendarEvent> agendas;
 
-    private ProgressBar spinner;
-    private boolean loaded;
-
     public AgendaFragment() {}
 
     @Override
@@ -46,7 +43,6 @@ public class AgendaFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         agendas = new ArrayList<>();
-        loaded = false;
 
         ArrayList<CalendarEvent> tmpAgendas = new ArrayList<>();
 
@@ -60,7 +56,6 @@ public class AgendaFragment extends Fragment {
             for (int i = 0; i < start_date.size(); i++) {
                 tmpAgendas.add(new CalendarEvent(name.get(i), start_date.get(i), end_date.get(i), location.get(i)));
             }
-            Log.i(TAG, "onCreate: agendas size " + agendas.size());
 
         } else {
             Log.i(TAG, "onCreate: arguments is null");
@@ -69,34 +64,15 @@ public class AgendaFragment extends Fragment {
 
         calendar = new MyCalendar(tmpAgendas);
 
-
-
-
-
-
-//        DownloadCalendarTask dft = new DownloadCalendarTask(this);
-//        dft.execute(url);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView: agendas size " + agendas.size());
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        spinner = (ProgressBar) rootView.findViewById(R.id.progressBar);
         initRecycleView(rootView);
 
         setTodaysAgenda();
-
-
-
-//        if (loaded) {
-//            spinner.setVisibility(View.GONE);
-//        } else {
-//            spinner.setVisibility(View.VISIBLE);
-//        }
-
-//        setAgendas();
 
         return rootView;
     }
@@ -106,16 +82,12 @@ public class AgendaFragment extends Fragment {
      * @param date The date of the calendar events to be shown
      */
     public void updateAgendaCards(Date date) {
-        Log.i(TAG, "updateAgendaCards: " + date);
-
         agendas.clear();
-        agendas.addAll(calendar.getEventsForDate(date.getDate(), date.getMonth(), date.getYear()));
 
-        calendar.test();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
 
-
-
-        Log.i(TAG, "updateAgendaCards: cal size " + calendar.getAllEvents().size());
+        agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
         mAdapter.notifyDataSetChanged();
     }
 
@@ -134,23 +106,12 @@ public class AgendaFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-//    public void setAgendas(ArrayList<CalendarEvent> calendarEvents) {
-//        calendar = new MyCalendar(calendarEvents);
-//        // TODO Use updateAgendas() instead
-//        setTodaysAgenda();
-//    }
-
     private void setTodaysAgenda() {
-//        agendas.clear();
+        //Add calendar events for current date
         Calendar cal = Calendar.getInstance();
-//         Add calendar events for current date
-
         agendas.clear();
-        agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)));
-        Log.i(TAG, "setTodaysAgenda: calendar: month:" + cal.get(Calendar.MONTH) + " year:" + cal.get(Calendar.YEAR));
+        agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
         mAdapter.notifyDataSetChanged();
 
-        loaded = true;
-        spinner.setVisibility(View.GONE);
     }
 }

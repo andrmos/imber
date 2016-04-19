@@ -21,17 +21,11 @@ public class MyCalendar {
         this.calendar = mcalendar;
     }
 
-    public void test() {
-        Log.i(TAG, "test: size " + calendar.size());
-    }
-
     public ArrayList<CalendarEvent> getEventsForDate(int day, int month, int year){
         ArrayList<CalendarEvent> retCalendar = new ArrayList<>();
 
-        Date d = this.calendar.get(0).getStartDate();
-        Log.i(TAG, "getEventsForDate: calendar event: month:" + d.getMonth() + " year:" + d.getYear());
-//        TODO Calendar.setTime(date)
         for(CalendarEvent c : this.calendar){
+
             //Checks if a date is equal to given date in calendar
             if(c.getStartDate().getDate() == day && c.getStartDate().getMonth() == month && c.getStartDate().getYear() == year){
                 retCalendar.add(c);
@@ -60,7 +54,6 @@ public class MyCalendar {
     }
 
     public CalendarEvent getEvent(int position){
-        Log.i(TAG, "getEvent: size " + calendar.size());
         return calendar.get(position);
     }
 

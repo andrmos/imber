@@ -139,9 +139,6 @@ public class CalendarFragment extends Fragment {
                 // Callback to main activity to notify agenda fragment to update its calendar events
                 mCallback.onDateSelected(date);
 
-                Log.i(TAG, "onSelectDate: date: " + date);
-
-
                 //Remove higlighting for last selected day
                 if(tmpDate != null) {
 

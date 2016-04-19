@@ -24,6 +24,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdap
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
@@ -34,7 +35,10 @@ import org.json.JSONException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +55,8 @@ public class CourseFragment extends Fragment {
 
     private ProgressBar spinner;
 
+    private Course course;
+
     /* If data is loaded */
     private boolean[] loaded;
 
@@ -65,11 +71,15 @@ public class CourseFragment extends Fragment {
         loaded = new boolean[2];
 
         // Get arguments from course list
-        String course_id = getArguments().getString("id");
-        String calendar_url = getArguments().getString("calendarurl");
+        int course_id = getArguments().getInt("id");
+        String calendar_url = getArguments().getString("calendar_url");
+        String name = getArguments().getString("name");
+        String course_code = getArguments().getString("course_code");
 
-        requestAnnouncements(course_id);
-        requestAgendas(calendar_url);
+        course = new Course(course_id,name,calendar_url,course_code);
+
+        requestAnnouncements("" + course.getId());
+        requestAgendas();
     }
 
     @Override
@@ -79,17 +89,7 @@ public class CourseFragment extends Fragment {
         String course_name = getArguments().getString("name");
         getActivity().setTitle(course_name);
 
-        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
         initRecycleView(rootView);
-
-        // Show recycler view and hide progress bar if data is already loaded
-        if (isLoaded()) {
-            mainList.setVisibility(View.VISIBLE);
-            spinner.setVisibility(View.GONE);
-        } else {
-            mainList.setVisibility(View.GONE);
-            spinner.setVisibility(View.VISIBLE);
-        }
 
         return rootView;
     }
@@ -99,7 +99,7 @@ public class CourseFragment extends Fragment {
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         // Hide content before everything is loaded
-        mainList.setVisibility(View.GONE);
+        //mainList.setVisibility(View.GONE);
 
         // Create the LayoutManager that holds all the views
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -123,6 +123,7 @@ public class CourseFragment extends Fragment {
                     transaction.replace(R.id.content_frame, announcementFragment);
                     transaction.addToBackStack(null);
 
+                    //Temporary lists for bundling announcement object
                     ArrayList<String> announcementTitles = new ArrayList<>();
                     ArrayList<String> announcementMessages = new ArrayList<>();
                     ArrayList<String> announcementSender =  new ArrayList<>();
@@ -197,32 +198,6 @@ public class CourseFragment extends Fragment {
         Toast.makeText(getContext(), R.string.error_course_info, Toast.LENGTH_SHORT).show();
     }
 
-    private void requestAgendas(String string_url) {
-        URL url = null;
-        try {
-            url = new URL(string_url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-//        DownloadCourseCalendarTask dft = new DownloadCourseCalendarTask(this);
-//        dft.execute(url);
-    }
-
-    public void setAgendas(ArrayList<CalendarEvent> calendarEvents) {
-        MyCalendar calendar = new MyCalendar(calendarEvents);
-        agendas.clear();
-        agendas.addAll(calendar.getAllEvents());
-        mAdapter.notifyDataSetChanged();
-
-        loaded[1] = true;
-
-        if (isLoaded()) {
-            mainList.setVisibility(View.VISIBLE);
-            spinner.setVisibility(View.GONE);
-        }
-    }
-
     /**
      * @return Returns true if all data is loaded
      */
@@ -231,5 +206,60 @@ public class CourseFragment extends Fragment {
             if (!loaded[i]) return false;
         }
         return true;
+    }
+
+
+    private void requestAgendas() {
+        Log.i(TAG, "requestAgendas");
+
+        //Course ids for context_codes in url
+        ArrayList<String> ids = new ArrayList<>();
+        ids.add("course_" + course.getId());
+
+        //What to exclude
+        ArrayList<String> exclude = new ArrayList<>();
+
+        //Type - event/assignment
+        String type = "event";
+
+        //Only 3 agendas for one course
+        String per_page = "3";
+
+        //Get todays date in right format
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        String start_date = df.format(cal.getTime());
+        String end_date = df.format(cal.getTime());
+
+        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1));
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+
+                try {
+
+                    ArrayList<CalendarEvent> tmpList = JSONParser.parseAllCalendarEvents(response);
+                    agendas.clear();
+                    for(int i = 0; i < tmpList.size() && i < 3; i++){
+                        agendas.add(tmpList.get(i));
+                    }
+
+                    Log.i(TAG, "onResponse: " + agendas.size());
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "exception: " + e);
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error);
+            }
+        });
+
+        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
     }
 }

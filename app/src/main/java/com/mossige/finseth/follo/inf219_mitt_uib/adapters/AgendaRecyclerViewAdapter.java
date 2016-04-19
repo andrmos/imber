@@ -44,14 +44,13 @@ public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
         agendaHolder.title.setText(data.get(position).getName());
         agendaHolder.time.setText(getFormatDate(position));
         agendaHolder.location.setText(data.get(position).getLocation());
-        // TODO set summary
-        //agendaHolder.summary.setText(data.get(position).getName());
     }
 
     private String getFormatDate(int position){
-        String date = String.format("%02d",data.get(position).getStartDate().getHours()+1) + ":";
+        //Gives time two digits
+        String date = String.format("%02d",data.get(position).getStartDate().getHours()) + ":";
         date += String.format("%02d",data.get(position).getStartDate().getMinutes()) + "-";
-        date += String.format("%02d",data.get(position).getEndDate().getHours()+1) + ":";
+        date += String.format("%02d",data.get(position).getEndDate().getHours()) + ":";
         date += String.format("%02d",data.get(position).getEndDate().getMinutes());
 
         return date;

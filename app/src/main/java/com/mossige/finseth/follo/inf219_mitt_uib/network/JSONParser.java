@@ -52,6 +52,12 @@ public class JSONParser {
         return parsed;
     }
 
+    /**
+     * Parsing all calendar events from unparsed param
+     * @param unparsed
+     * @return
+     * @throws JSONException
+     */
     public static ArrayList<CalendarEvent> parseAllCalendarEvents(JSONArray unparsed) throws JSONException {
         ArrayList<CalendarEvent> parsed = new ArrayList<>();
 
@@ -269,7 +275,7 @@ public class JSONParser {
     }
 
     /**
-     *
+     * Parsing one calendar event
      * @param obj
      * @return
      * @throws JSONException

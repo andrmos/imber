@@ -16,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +26,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
@@ -46,9 +44,6 @@ import org.json.JSONObject;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,10 +56,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private User profile;
     private Bundle url;
-    private ArrayList<String> dates;
 
     private ArrayList<Course> courses;
     private ArrayList<CalendarEvent> events;
+
+    private int page_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,11 +86,15 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         //Check settings before intitializing courses
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
         // Filter useless courses on institute level
         boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
 
         courses = new ArrayList<>();
+        events = new ArrayList<>();
         requestCourses(filterInstituteCourses);
+
+        page_num = 1;
 
         //TODO Show spinner...?
     }
@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         CourseListFragment courseListFragment = new CourseListFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
+        //Temporary lists for bundling course object
         Bundle bundle = new Bundle();
         ArrayList<Integer> ids = new ArrayList<>();
         ArrayList<String> names = new ArrayList<>();
@@ -155,11 +156,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         transaction.replace(R.id.content_frame, courseListFragment);
         transaction.commit();
-    }
-
-    public void setEvents(ArrayList<String> dates){
-        this.dates = dates;
-        url.putStringArrayList("Dates", dates);
     }
 
     @Override
@@ -313,36 +309,56 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
     }
 
-    private void requestCalendar() {
+
+    private void requestCalendar(){
         Log.i(TAG, "requestCalendar");
 
+        //All course ids for context_codes in url
         ArrayList<String> ids = new ArrayList<>();
         for (Course c : courses) {
             ids.add("course_" + c.getId());
         }
 
+        //What to exlude
         ArrayList<String> exclude = new ArrayList<>();
+        exclude.add("child_events");
         String type = "event";
 
+        //Todays date
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
+
         // Set the date to the 1st
         cal.set(Calendar.DATE, 1);
         String start_date = df.format(cal.getTime());
 
         // Add one month to the date
-        cal.add(Calendar.MONTH, 1);
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+
         String end_date = df.format(cal.getTime());
 
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date), (String) null, new Response.Listener<JSONArray>() {
+        //Per page set to max
+        String per_page = "50";
+
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,page_num), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
 
                 try {
-                    events = JSONParser.parseAllCalendarEvents(response);
-//                    Log.i(TAG, "onResponse: size: " + events.size());
-//                    initCalendarFragment(events);
+                    //TODO clear?
+                    ArrayList<CalendarEvent> tmpList = new ArrayList<>();
+
+                    tmpList = JSONParser.parseAllCalendarEvents(response);
+                    events.addAll(tmpList);
+
+                    Log.i(TAG, "onResponse: events size" + events.size());
+                    Log.i(TAG, "onResponse: last event" + events.get(events.size()-1));
+
+                    if(tmpList.size() == 50) {
+                        page_num++;
+                        requestCalendar();
+                    }
 
 
                 } catch (JSONException e) {
@@ -368,6 +384,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         Bundle bundle = new Bundle();
 
+        //Temporary lists for bundling course object
         ArrayList<String> start_date = new ArrayList<>();
         ArrayList<String> end_date = new ArrayList<>();
         ArrayList<String> name = new ArrayList<>();
