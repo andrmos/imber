@@ -309,6 +309,76 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
     }
 
+    /**
+     * Get all calendar events for a month, and add them to the 'events' field.
+     * @param month The month to get the calendar events. Zero indexed.
+     * @param page_num Page number of calendar event request. Declared final since it's accessed from inner class.
+     */
+    private void getCalendarEvents(final int month, final int page_num) {
+        Log.i(TAG, "getCalendarEvents");
+
+        // Add all course ids for use in context_codes in url
+        ArrayList<String> ids = new ArrayList<>();
+        for (Course c : courses) {
+            ids.add("course_" + c.getId());
+        }
+
+        //What to exlude
+        ArrayList<String> exclude = new ArrayList<>();
+        exclude.add("child_events");
+        String type = "event";
+
+        //Todays date
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+
+        // Set the date to the 1st
+        cal.set(Calendar.DATE, 1);
+        cal.set(Calendar.MONTH, month);
+        String start_date = df.format(cal.getTime());
+
+        // Set date to last day of month
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        String end_date = df.format(cal.getTime());
+
+        Log.i(TAG, "getCalendarEvents: start " + start_date);
+        Log.i(TAG, "getCalendarEvents: end " + end_date);
+
+        //Per page set to max
+        String per_page = "50";
+
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,page_num), (String) null, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+
+                try {
+                    ArrayList<CalendarEvent> tmpList = JSONParser.parseAllCalendarEvents(response);
+                    //TODO When to clear events?
+                    events.addAll(tmpList);
+
+                    // If returned maximum amount of events, get events for next page
+                    if(tmpList.size() == 50) {
+                        getCalendarEvents(month, page_num + 1);
+                    }
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "exception: " + e);
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error);
+            }
+        });
+
+        RequestQueueHandler.getInstance(this).addToRequestQueue(calendarEventsRequest);
+
+    }
+
 
     private void requestCalendar(){
         Log.i(TAG, "requestCalendar");
