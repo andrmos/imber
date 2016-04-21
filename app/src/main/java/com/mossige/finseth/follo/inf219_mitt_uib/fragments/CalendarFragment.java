@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.ArrayMap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +17,14 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import hirondelle.date4j.DateTime;
+
 
 public class CalendarFragment extends Fragment {
 
@@ -31,13 +32,17 @@ public class CalendarFragment extends Fragment {
 
     private ArrayList<CalendarEvent> calendarEvents;
     private CaldroidFragment caldroidFragment;
+
+    /*
+    Have to use java.Utils.Date, since Caldroid uses Map<Date, 'color'> to display background color for dates.
+     */
     private Date tmpDate;
     private Map<Date,ColorDrawable> backgrounds;
 
     OnDateClickListener mCallback;
 
     public interface OnDateClickListener {
-        void onDateSelected(Date date);
+        void onDateSelected(DateTime dateTime);
     }
 
     public CalendarFragment() {}
@@ -106,15 +111,27 @@ public class CalendarFragment extends Fragment {
         backgrounds = new HashMap<>();
 
         //Set background for dates that contains at least one agenda
-        for(CalendarEvent event : calendarEvents){
-            dates.put(event.getStartDate(), bg);
-            backgrounds.put(event.getStartDate(), bg);
-        }
+        for(CalendarEvent e : calendarEvents){
 
+            /*
+            Date conversion explained:
+            In java.Utils.Date, months are zero indexed. So January = 0.
+            In date library Date4j, months are one indexed. So January = 1.
+            In java.Utils.Date, years are stored as year - 1900. So 2016 - 1900 = 116.
+            Caldroid uses java.Utils.Date, while our project uses Date4j.
+            So to convert Date4j to java.Utils.Date, 1900 is subtracted to year, while one is subtracted to month.
+             */
+            DateTime dt = e.getStartDate();
+            Date startDate = new Date(dt.getYear() - 1900, dt.getMonth() - 1, dt.getDay());
+
+            dates.put(startDate, bg);
+            backgrounds.put(startDate, bg);
+        }
         caldroidFragment.setBackgroundDrawableForDates(dates);
 
         Calendar cal = Calendar.getInstance();
 
+        // Calendar is used to get current date
         // Bundle Caldroid arguments to initialize calendar
         Bundle args = new Bundle();
         args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1); // January = 0
@@ -136,12 +153,24 @@ public class CalendarFragment extends Fragment {
         final CaldroidListener listener = new CaldroidListener() {
             @Override
             public void onSelectDate(Date date, View view) {
+
+                /*
+                Date conversion explained:
+                In java.Utils.Date, months are zero indexed. So January = 0.
+                In date library Date4j, months are one indexed. So January = 1.
+                In java.Utils.Date, years are stored as year - 1900. So 2016 - 1900 = 116.
+                Caldroid uses java.Utils.Date, while our project uses Date4j.
+                So to convert java.Utils.Date to Date4j, 1900 is added to year, while one is added to month.
+
+                Hours, minutes, seconds and nano seconds are ignored, since they are irrelevant when clicking on a date.
+                 */
+                DateTime dateTime = new DateTime(date.getYear() + 1900, date.getMonth() + 1, date.getDate(), 0, 0, 0, 0);
+
                 // Callback to main activity to notify agenda fragment to update its calendar events
-                mCallback.onDateSelected(date);
+                mCallback.onDateSelected(dateTime);
 
-                //Remove higlighting for last selected day
+                //Remove higlighting for selected day
                 if(tmpDate != null) {
-
                     //If last selected day was highlighted by agendas reverse background color
                     if(backgrounds.get(tmpDate) != null){
                         caldroidFragment.setBackgroundDrawableForDate(backgrounds.get(tmpDate),tmpDate);
@@ -155,7 +184,6 @@ public class CalendarFragment extends Fragment {
                 caldroidFragment.setBackgroundDrawableForDate(bg, date);
                 caldroidFragment.refreshView();
                 tmpDate = date;
-
             }
         };
         return listener;

@@ -17,11 +17,10 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdap
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
+import hirondelle.date4j.DateTime;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,33 +60,20 @@ public class AgendaFragment extends Fragment {
             Log.i(TAG, "onCreate: arguments is null");
         }
 
-
         calendar = new MyCalendar(tmpAgendas);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-
         initRecycleView(rootView);
-
         setTodaysAgenda();
-
         return rootView;
     }
 
-    /**
-     * Update calendar events for a specified date.
-     * @param date The date of the calendar events to be shown
-     */
-    public void updateAgendaCards(Date date) {
+    public void updateAgendaCards(DateTime dateTime) {
         agendas.clear();
-
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-
-        agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
+        agendas.addAll(calendar.getEventsForDate(dateTime.getDay(), dateTime.getMonth(), dateTime.getYear()));
         mAdapter.notifyDataSetChanged();
     }
 
@@ -110,8 +96,8 @@ public class AgendaFragment extends Fragment {
         //Add calendar events for current date
         Calendar cal = Calendar.getInstance();
         agendas.clear();
+        // TODO Change to DateTime.now(TimeZone)
         agendas.addAll(calendar.getEventsForDate(cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR)));
         mAdapter.notifyDataSetChanged();
-
     }
 }

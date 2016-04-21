@@ -1,11 +1,8 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
+/**
 /**
  * Calendar class holding CalendarEvents for a user.
  *
@@ -26,8 +23,7 @@ public class MyCalendar {
 
         for(CalendarEvent c : this.calendar){
 
-            //Checks if a date is equal to given date in calendar
-            if(c.getStartDate().getDate() == day && c.getStartDate().getMonth() == month && c.getStartDate().getYear() == year){
+            if (c.getStartDate().getDay() == day && c.getStartDate().getMonth() == month && c.getStartDate().getYear() == year) {
                 retCalendar.add(c);
             }
         }
@@ -35,23 +31,24 @@ public class MyCalendar {
         return retCalendar;
     }
 
-    public ArrayList<CalendarEvent> getThreeNextEvents(Date curDate) {
-        ArrayList<CalendarEvent> ret = new ArrayList<>();
-
-        for (CalendarEvent e : calendar) {
-            if(e.getStartDate().before(curDate)) {
-                continue;
-            }
-
-            ret.add(e);
-
-            if(ret.size() == 3) {
-                break;
-            }
-        }
-
-        return ret;
-    }
+//    Not used
+//    public ArrayList<CalendarEvent> getThreeNextEvents(Date curDate) {
+//        ArrayList<CalendarEvent> ret = new ArrayList<>();
+//
+//        for (CalendarEvent e : calendar) {
+//            if(e.getStartDate().before(curDate)) {
+//                continue;
+//            }
+//
+//            ret.add(e);
+//
+//            if(ret.size() == 3) {
+//                break;
+//            }
+//        }
+//
+//        return ret;
+//    }
 
     public CalendarEvent getEvent(int position){
         return calendar.get(position);

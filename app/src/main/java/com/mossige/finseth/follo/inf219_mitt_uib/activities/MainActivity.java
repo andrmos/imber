@@ -48,7 +48,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
+import hirondelle.date4j.DateTime;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
 
@@ -249,18 +250,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         return false;
     }
 
-
-    /**
-     * Notify agenda fragment to update its calendar event cards to the specified date.
-     * @param date The date clicked
-     */
     @Override
-    public void onDateSelected(Date date) {
+    public void onDateSelected(DateTime date) {
         AgendaFragment agendaFragment = (AgendaFragment) getSupportFragmentManager().findFragmentById(R.id.agenda_container);
         if (agendaFragment != null) {
             agendaFragment.updateAgendaCards(date);
-
-            Log.i(TAG, "onDateSelected: date:" + date);
         }
     }
 
@@ -285,10 +279,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     //Bundles calendarURL for later accessing
                     url = new Bundle();
                     url.putString("calendarURL", profile.getCalendar());
-
-
-                    //Get dates
-//                    dt.execute(new URL(profile.getCalendar()));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -328,6 +318,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         exclude.add("child_events");
         String type = "event";
 
+        // TODO Change to Date4j
         //Todays date
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
@@ -398,6 +389,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
 
+        // TODO change to Date4j?
+//        DateTime dateTime = new DateTime(timeZone from profile??)
+
         // Set the date to the 1st
         cal.set(Calendar.DATE, 1);
         String start_date = df.format(cal.getTime());
@@ -461,9 +455,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         ArrayList<String> location = new ArrayList<>();
 
         for (int i = 0; i < events.size(); i++) {
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
-            start_date.add(df.format(events.get(i).getStartDate()));
-            end_date.add(df.format(events.get(i).getEndDate()));
+            DateTime start = events.get(i).getStartDate();
+            DateTime end = events.get(i).getEndDate();
+            // Format date to correctly
+            start_date.add(start.format("YYYY-MM-DD hh:mm:ss"));
+            end_date.add(end.format("YYYY-MM-DD hh:mm:ss"));
             name.add(events.get(i).getName());
             location.add(events.get(i).getLocation());
         }

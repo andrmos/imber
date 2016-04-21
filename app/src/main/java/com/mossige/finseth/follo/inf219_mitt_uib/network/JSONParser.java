@@ -2,7 +2,6 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
 import android.util.Log;
 
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
@@ -17,9 +16,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
+
+import hirondelle.date4j.DateTime;
 
 /**
  * Parser for different JSONRequests
@@ -31,9 +30,7 @@ public class JSONParser {
 
     private static final String TAG = "JSONParser";
 
-    public JSONParser() {
-//        Log.i(TAG, "JSONParser: " + "JSONParser created");
-    }
+    public JSONParser() {}
 
     /**
      * Parses all the recipients within a group
@@ -117,7 +114,6 @@ public class JSONParser {
 
         for (int i = 0; i < unParsed.length(); i++) {
             parsed.add(getLastMessage(unParsed.getJSONObject(i)));
-//            Log.i(TAG, "parseAllConversations: " + "Conversation with id: " + parsed.get(i).getId() + " is parsed");
         }
 
         return parsed;
@@ -162,8 +158,6 @@ public class JSONParser {
             }
 
         }
-
-//        Log.i(TAG, "parseAllCourses: " + "All courses parsed");
 
         return parsed;
     }
@@ -228,9 +222,6 @@ public class JSONParser {
         String authorID = obj.getString("author_id");
         String date = obj.getString("created_at");
         String message = obj.getString("body");
-
-//        Log.i(TAG, "getSingleMessage: message is parsed" + authorID);
-
         return new Message(authorID, date, message);
     }
 
@@ -247,9 +238,6 @@ public class JSONParser {
     private static Participant getSingleParticipant(JSONObject obj) throws JSONException {
         String id = obj.getString("id");
         String name = obj.getString("name");
-
-//        Log.i(TAG, "getSingleParticipant: participant is parsed " + name);
-
         return new Participant(id, name);
     }
 
@@ -286,22 +274,18 @@ public class JSONParser {
         String start = obj.getString("start_at");
         String stop = obj.getString("end_at");
 
-        return new CalendarEvent(title,parseDateString(start),parseDateString(stop),location);
+        CalendarEvent temp = new CalendarEvent(title, parseDateString(start), parseDateString(stop), location);
+        return temp;
     }
 
-    /**
-     * Parsing date from string to date format ISO-8601 YYYY-MM-DD
-     * @param date
-     * @return
-     *         Date
-     */
-    private static Date parseDateString(String date){
+    private static DateTime parseDateString(String date){
         int year = Integer.parseInt(date.substring(0,4));
         int month = Integer.parseInt(date.substring(5,7));
         int day = Integer.parseInt(date.substring(8,10));
         int hour = Integer.parseInt(date.substring(11,13));
         int min = Integer.parseInt(date.substring(14,16));
-        return new Date(year, month, day, hour, min);
+        // TODO can use new DateTime(date)
+        return new DateTime(year, month, day, hour, min, 0, 0);
     }
 
 }

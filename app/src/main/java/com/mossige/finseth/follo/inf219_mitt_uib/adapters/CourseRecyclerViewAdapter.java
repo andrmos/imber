@@ -1,21 +1,20 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendasViewHolder;
-import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.SingleAgendaViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AnnouncementsViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 
 import java.util.ArrayList;
-import java.util.Date;
+
+import hirondelle.date4j.DateTime;
 
 /**
  * Adapter for the RecyclerView.
@@ -91,18 +90,18 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
      * @return
      */
     private String getEvent(int i) {
-        Date start = agendas.get(i).getStartDate();
-        Date end = agendas.get(i).getEndDate();
+        DateTime start = agendas.get(i).getStartDate();
+        DateTime end = agendas.get(i).getEndDate();
 
         String summary = agendas.get(i).getName() + " ";
 
         //Gives time two digit representation
-        summary += start.getDate() + ".";
+        summary += start.getDay() + ".";
         summary += start.getMonth() + " ";
-        summary += String.format("%02d",start.getHours()) + ":";
-        summary += String.format("%02d",start.getMinutes()) + "-";
-        summary += String.format("%02d",end.getHours()) + ":";
-        summary += String.format("%02d",end.getMinutes());
+        summary += String.format("%02d",start.getHour()) + ":";
+        summary += String.format("%02d",start.getMinute()) + "-";
+        summary += String.format("%02d",end.getHour()) + ":";
+        summary += String.format("%02d",end.getMinute());
 
         return summary;
     }
