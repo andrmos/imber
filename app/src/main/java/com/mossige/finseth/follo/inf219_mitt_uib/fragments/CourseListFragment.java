@@ -74,9 +74,9 @@ public class CourseListFragment extends Fragment {
         }
 
         //Check settings before intitializing courses
-//        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         // Filter useless courses on institute level
-//        boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
+        boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
 
 //        requestCourses(filterInstituteCourses);
     }

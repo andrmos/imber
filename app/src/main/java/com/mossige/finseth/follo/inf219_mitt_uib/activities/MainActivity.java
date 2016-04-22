@@ -43,17 +43,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.quoteBank.QuoteBank;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Scanner;
 
 import hirondelle.date4j.DateTime;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
 
     private static final String TAG = "MainActivity";
+
+    private QuoteBank quoteBank;
 
     private User profile;
     private Bundle url;
@@ -68,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         super.onCreate(savedInstanceState);
         // Set main layout
         setContentView(R.layout.activity_main);
+
+        quoteBank = new QuoteBank(this);
 
         requestProfile();
 
@@ -107,7 +116,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
                 try {
                     courses.clear();
-                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses));
+
+                    ArrayList<Course> tmpListCourses = JSONParser.parseAllCourses(response, filterInstituteCourses);
+
+                    if(!filterInstituteCourses) {
+                        courses.addAll(tmpListCourses);
+                    }else{
+                        setCoursesWithInstituteFilter(tmpListCourses);
+                    }
 
                     initCourseListFragment();
 
@@ -116,6 +132,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 } catch (JSONException e) {
                     // TODO handle exception
                     Log.i(TAG, "JSONException " + e);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -128,6 +146,25 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         });
 
         RequestQueueHandler.getInstance(this).addToRequestQueue(coursesReq);
+    }
+
+    private void setCoursesWithInstituteFilter(ArrayList<Course> courses) throws FileNotFoundException {
+        List<String> mLines = new ArrayList<>();
+        mLines = quoteBank.readLine("Courses_without_number.txt");
+
+        //Checking for number inn course_code
+        for(Course c : courses){
+            if(c.getCourseCode().matches("[a-zA-Z ]*\\d+.*")){
+                this.courses.add(c);
+            }else{
+                //Checking for match in text file
+                for(String s : mLines){
+                    if(c.getCourseCode().equals(s)){
+                        this.courses.add(c);
+                    }
+                }
+            }
+        }
     }
 
     private void initCourseListFragment() {

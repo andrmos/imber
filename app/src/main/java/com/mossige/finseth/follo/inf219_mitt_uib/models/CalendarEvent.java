@@ -1,6 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import java.util.Date;
+import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
@@ -9,39 +9,28 @@ import hirondelle.date4j.DateTime;
  */
 public class CalendarEvent {
 
-    private Date startDate;
-    private Date endDate;
     private String name;
     private String location;
-
     private DateTime mStartDate;
     private DateTime mEndDate;
 
     public CalendarEvent(String name, String startDate, String endDate, String location){
-        this.name = name;
-        this.mStartDate = new DateTime(startDate);
-        this.mEndDate = new DateTime(endDate);
+        this.name = trimEventName(name);
+        this.mStartDate = new DateTime(startDate).changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("GMT+2"));
+        this.mEndDate = new DateTime(endDate).changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("GMT+2"));
         this.location = location;
     }
 
     public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location) {
-        this.name = name;
-        this.mStartDate = startDate;
-        this.mEndDate = endDate;
+        this.name = trimEventName(name);
+        this.mStartDate = startDate.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("GMT+2"));
+        this.mEndDate = endDate.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("GMT+2"));
         this.location = location;
     }
 
     public String getName(){
         return name;
     }
-
-//    public Date getLameStartDate() {
-//        return startDate;
-//    }
-//
-//    public Date getLameEndDate(){
-//        return endDate;
-//    }
 
     public DateTime getStartDate() {
         return mStartDate;
@@ -55,21 +44,32 @@ public class CalendarEvent {
         return location;
     }
 
-//    Not used
-//    /**
-//     * Parsing from string to date in ISO-8601 format
-//     * @param date
-//     * @returna
-//     */
-//    private static Date parseDateString(String date){
-//        Log.i("calevent", "parseDateString: date: " + date);
-//        int year = Integer.parseInt(date.substring(0,4));
-//        int month = Integer.parseInt(date.substring(5,7));
-//        int day = Integer.parseInt(date.substring(8,10));
-//        int hour = Integer.parseInt(date.substring(11,13));
-//        int min = Integer.parseInt(date.substring(14,16));
-//        return new Date(year-1900, month-1, day, hour, min);
-//    }
+    /**
+     * Remove brackets and unnecessary name info
+     * @param name
+     * @return
+     */
+    private String trimEventName(String name){
+        String[] splitArray = name.split(" ");
+        String trimedName = "";
+
+        if(splitArray[0].startsWith("[")) {
+            String course_code = "";
+            for (int i = 1; i < splitArray[0].length(); i++){
+                if(splitArray[0].charAt(i) != ']'){
+                    course_code += splitArray[0].charAt(i);
+                }
+
+            }
+            trimedName += course_code;
+            trimedName += " " + splitArray[1];
+        }else{
+            trimedName += splitArray[0];
+            trimedName += " " + splitArray [1];
+        }
+
+        return trimedName;
+    }
 
     @Override
     public String toString(){
