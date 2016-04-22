@@ -16,15 +16,15 @@ public class CalendarEvent {
 
     public CalendarEvent(String name, String startDate, String endDate, String location){
         this.name = trimEventName(name);
-        this.mStartDate = new DateTime(startDate).changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("GMT+2"));
-        this.mEndDate = new DateTime(endDate).changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("GMT+2"));
+        this.mStartDate = new DateTime(startDate).changeTimeZone(TimeZone.getTimeZone("GMT+0"),TimeZone.getTimeZone("GMT+1"));
+        this.mEndDate = new DateTime(endDate).changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
         this.location = location;
     }
 
     public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location) {
         this.name = trimEventName(name);
-        this.mStartDate = startDate.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("GMT+2"));
-        this.mEndDate = endDate.changeTimeZone(TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("GMT+2"));
+        this.mStartDate = startDate.changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
+        this.mEndDate = endDate.changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
         this.location = location;
     }
 
