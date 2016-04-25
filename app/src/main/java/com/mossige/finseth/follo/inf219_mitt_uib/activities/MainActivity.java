@@ -404,7 +404,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         });
 
         RequestQueueHandler.getInstance(this).addToRequestQueue(calendarEventsRequest);
-
     }
 
 
@@ -448,13 +447,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
                 try {
                     //TODO clear?
-                    ArrayList<CalendarEvent> tmpList = new ArrayList<>();
-
-                    tmpList = JSONParser.parseAllCalendarEvents(response);
+                    ArrayList<CalendarEvent> tmpList = JSONParser.parseAllCalendarEvents(response);
                     events.addAll(tmpList);
-
-                    Log.i(TAG, "onResponse: events size" + events.size());
-                    Log.i(TAG, "onResponse: last event" + events.get(events.size()-1));
 
                     if(tmpList.size() == 50) {
                         page_num++;
@@ -474,6 +468,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 Log.i(TAG, "onErrorResponse: " + error);
             }
         });
+
+        calendarEventsRequest.setRetryPolicy(new DefaultRetryPolicy(5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueueHandler.getInstance(this).addToRequestQueue(calendarEventsRequest);
     }

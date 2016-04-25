@@ -16,6 +16,7 @@ public class CalendarEvent {
 
     public CalendarEvent(String name, String startDate, String endDate, String location){
         this.name = trimEventName(name);
+        // TODO Change to timezone from profile?
         this.mStartDate = new DateTime(startDate).changeTimeZone(TimeZone.getTimeZone("GMT+0"),TimeZone.getTimeZone("GMT+1"));
         this.mEndDate = new DateTime(endDate).changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
         this.location = location;
@@ -23,6 +24,7 @@ public class CalendarEvent {
 
     public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location) {
         this.name = trimEventName(name);
+        // TODO Change to timezone from profile?
         this.mStartDate = startDate.changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
         this.mEndDate = endDate.changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
         this.location = location;

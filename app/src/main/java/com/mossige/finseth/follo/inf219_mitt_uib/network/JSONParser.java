@@ -60,11 +60,23 @@ public class JSONParser {
 
         for(int i = 0; i < unparsed.length(); i++){
             JSONObject obj = unparsed.getJSONObject(i);
-            parsed.add(parseOneCalendarEvent(obj));
+
+            if (obj.has("hidden")) {
+                boolean hidden = obj.getBoolean("hidden");
+                if (!hidden) {
+                    parsed.add(parseOneCalendarEvent(obj));
+                } else {
+                    // Do not add events that are hidden from the calendar
+                }
+            } else {
+                parsed.add(parseOneCalendarEvent(obj));
+            }
+
         }
 
         return parsed;
     }
+
     /**
      * Parses the different recipient groups
      * @param unParsed JSONArray you get onResponse with the request
@@ -146,7 +158,7 @@ public class JSONParser {
     public static ArrayList<Course> parseAllCourses(JSONArray unParsed,boolean courseFilter) throws JSONException {
 
         ArrayList<Course> parsed = new ArrayList<>();
-        
+
         for (int i = 0; i < unParsed.length(); i++) {
 
             if(courseFilter){
@@ -274,8 +286,7 @@ public class JSONParser {
         String start = obj.getString("start_at");
         String stop = obj.getString("end_at");
 
-        CalendarEvent temp = new CalendarEvent(title, parseDateString(start), parseDateString(stop), location);
-        return temp;
+        return new CalendarEvent(title, parseDateString(start), parseDateString(stop), location);
     }
 
     private static DateTime parseDateString(String date){
