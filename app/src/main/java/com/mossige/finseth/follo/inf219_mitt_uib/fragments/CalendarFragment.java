@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
@@ -72,7 +73,13 @@ public class CalendarFragment extends Fragment {
             ArrayList<String> location = arguments.getStringArrayList("location");
 
             for (int i = 0; i < start_date.size(); i++) {
-                calendarEvents.add(new CalendarEvent(name.get(i), start_date.get(i), end_date.get(i), location.get(i)));
+
+                DateTime start = new DateTime(start_date.get(i));
+                DateTime end = new DateTime(end_date.get(i));
+
+                TimeZone timeZone = TimeZone.getTimeZone("Europe/Oslo");
+
+                calendarEvents.add(new CalendarEvent(name.get(i), start, end, location.get(i), timeZone));
             }
 
         } else {

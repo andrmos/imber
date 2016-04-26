@@ -127,7 +127,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
                     initCourseListFragment();
 
-                    requestCalendar();
+                    // Get calendar events for all months
+                    for (int i = 0; i < 12; i++) {
+                        getCalendarEvents(i, 1);
+                    }
+
 
                 } catch (JSONException e) {
                     // TODO handle exception
@@ -342,8 +346,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
      * @param page_num Page number of calendar event request. Declared final since it's accessed from inner class.
      */
     private void getCalendarEvents(final int month, final int page_num) {
-        Log.i(TAG, "getCalendarEvents");
-
         // Add all course ids for use in context_codes in url
         ArrayList<String> ids = new ArrayList<>();
         for (Course c : courses) {
@@ -368,9 +370,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // Set date to last day of month
         cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         String end_date = df.format(cal.getTime());
-
-        Log.i(TAG, "getCalendarEvents: start " + start_date);
-        Log.i(TAG, "getCalendarEvents: end " + end_date);
 
         //Per page set to max
         String per_page = "50";
@@ -399,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error);
+                Log.i(TAG, "onErrorResponse: " + error + " for month " + month + " (zero indexed)");
             }
         });
 

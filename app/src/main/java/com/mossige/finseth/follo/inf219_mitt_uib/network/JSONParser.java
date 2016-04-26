@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
@@ -286,7 +287,9 @@ public class JSONParser {
         String start = obj.getString("start_at");
         String stop = obj.getString("end_at");
 
-        return new CalendarEvent(title, parseDateString(start), parseDateString(stop), location);
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+
+        return new CalendarEvent(title, parseDateString(start), parseDateString(stop), location, timeZone);
     }
 
     private static DateTime parseDateString(String date){
@@ -296,6 +299,7 @@ public class JSONParser {
         int hour = Integer.parseInt(date.substring(11,13));
         int min = Integer.parseInt(date.substring(14,16));
         // TODO can use new DateTime(date)
+
         return new DateTime(year, month, day, hour, min, 0, 0);
     }
 

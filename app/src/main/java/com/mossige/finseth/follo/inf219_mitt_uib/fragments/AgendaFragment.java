@@ -19,6 +19,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
@@ -53,7 +54,13 @@ public class AgendaFragment extends Fragment {
             ArrayList<String> location = arguments.getStringArrayList("location");
 
             for (int i = 0; i < start_date.size(); i++) {
-                tmpAgendas.add(new CalendarEvent(name.get(i), start_date.get(i), end_date.get(i), location.get(i)));
+
+                DateTime start = new DateTime(start_date.get(i));
+                DateTime end = new DateTime(end_date.get(i));
+
+                TimeZone timeZone = TimeZone.getTimeZone("Europe/Oslo");
+
+                tmpAgendas.add(new CalendarEvent(name.get(i), start, end, location.get(i), timeZone));
             }
 
         } else {

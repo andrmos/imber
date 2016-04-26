@@ -9,24 +9,19 @@ import hirondelle.date4j.DateTime;
  */
 public class CalendarEvent {
 
+    private static final String TAG = "CalendarEvent";
+
     private String name;
     private String location;
     private DateTime mStartDate;
     private DateTime mEndDate;
 
-    public CalendarEvent(String name, String startDate, String endDate, String location){
+    public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location, TimeZone oldTimeZone) {
         this.name = trimEventName(name);
-        // TODO Change to timezone from profile?
-        this.mStartDate = new DateTime(startDate).changeTimeZone(TimeZone.getTimeZone("GMT+0"),TimeZone.getTimeZone("GMT+1"));
-        this.mEndDate = new DateTime(endDate).changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
-        this.location = location;
-    }
+        TimeZone newTimeZone = TimeZone.getTimeZone("Europe/Oslo");
+        this.mStartDate = startDate.changeTimeZone(oldTimeZone, newTimeZone);
+        this.mEndDate = endDate.changeTimeZone(oldTimeZone, newTimeZone);
 
-    public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location) {
-        this.name = trimEventName(name);
-        // TODO Change to timezone from profile?
-        this.mStartDate = startDate.changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
-        this.mEndDate = endDate.changeTimeZone(TimeZone.getTimeZone("GMT+0"), TimeZone.getTimeZone("GMT+1"));
         this.location = location;
     }
 
