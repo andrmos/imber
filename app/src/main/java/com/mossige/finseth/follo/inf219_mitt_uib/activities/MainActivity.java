@@ -45,14 +45,12 @@ import org.json.JSONObject;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.quoteBank.QuoteBank;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Scanner;
 
 import hirondelle.date4j.DateTime;
 
@@ -61,14 +59,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private static final String TAG = "MainActivity";
 
     private QuoteBank quoteBank;
-
     private User profile;
-    private Bundle url;
-
     private ArrayList<Course> courses;
-    private ArrayList<CalendarEvent> events;
-
-    private int page_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
 
         courses = new ArrayList<>();
-        events = new ArrayList<>();
         requestCourses(filterInstituteCourses);
-
-        page_num = 1;
 
         //TODO Show spinner...?
     }
@@ -126,12 +115,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     }
 
                     initCourseListFragment();
-
-                    // Get calendar events for all months
-                    for (int i = 0; i < 12; i++) {
-                        getCalendarEvents(i, 1);
-                    }
-
 
                 } catch (JSONException e) {
                     // TODO handle exception
@@ -248,7 +231,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
 
         if(id == R.id.nav_calendar){
-            initCalendarFragment(events);
+            initCalendarFragment();
 
             drawer.closeDrawer(navigationView);
             return true;
@@ -292,10 +275,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     @Override
-    public void onDateSelected(DateTime date) {
+    public void setAgendas(ArrayList<CalendarEvent> events) {
         AgendaFragment agendaFragment = (AgendaFragment) getSupportFragmentManager().findFragmentById(R.id.agenda_container);
         if (agendaFragment != null) {
-            agendaFragment.updateAgendaCards(date);
+            agendaFragment.setAgendas(events);
         }
     }
 
@@ -317,10 +300,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                     TextView emailTV = (TextView) findViewById(R.id.email);
                     emailTV.setText(profile.getEmail());
 
-                    //Bundles calendarURL for later accessing
-                    url = new Bundle();
-                    url.putString("calendarURL", profile.getCalendar());
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -340,169 +319,17 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
     }
 
-    /**
-     * Get all calendar events for a month, and add them to the 'events' field.
-     * @param month The month to get the calendar events. Zero indexed.
-     * @param page_num Page number of calendar event request. Declared final since it's accessed from inner class.
-     */
-    private void getCalendarEvents(final int month, final int page_num) {
-        // Add all course ids for use in context_codes in url
-        ArrayList<String> ids = new ArrayList<>();
-        for (Course c : courses) {
-            ids.add("course_" + c.getId());
-        }
-
-        //What to exlude
-        ArrayList<String> exclude = new ArrayList<>();
-        exclude.add("child_events");
-        String type = "event";
-
-        // TODO Change to Date4j
-        //Todays date
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-
-        // Set the date to the 1st
-        cal.set(Calendar.DATE, 1);
-        cal.set(Calendar.MONTH, month);
-        String start_date = df.format(cal.getTime());
-
-        // Set date to last day of month
-        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-        String end_date = df.format(cal.getTime());
-
-        //Per page set to max
-        String per_page = "50";
-
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,page_num), (String) null, new Response.Listener<JSONArray>() {
-
-            @Override
-            public void onResponse(JSONArray response) {
-
-                try {
-                    ArrayList<CalendarEvent> tmpList = JSONParser.parseAllCalendarEvents(response);
-                    //TODO When to clear events?
-                    events.addAll(tmpList);
-
-                    // If returned maximum amount of events, get events for next page
-                    if(tmpList.size() == 50) {
-                        getCalendarEvents(month, page_num + 1);
-                    }
-
-                } catch (JSONException e) {
-                    Log.i(TAG, "exception: " + e);
-                }
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error + " for month " + month + " (zero indexed)");
-            }
-        });
-
-        RequestQueueHandler.getInstance(this).addToRequestQueue(calendarEventsRequest);
-    }
-
-
-    private void requestCalendar(){
-        Log.i(TAG, "requestCalendar");
-
-        //All course ids for context_codes in url
-        ArrayList<String> ids = new ArrayList<>();
-        for (Course c : courses) {
-            ids.add("course_" + c.getId());
-        }
-
-        //What to exlude
-        ArrayList<String> exclude = new ArrayList<>();
-        exclude.add("child_events");
-        String type = "event";
-
-        //Todays date
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar cal = Calendar.getInstance();
-
-        // TODO change to Date4j?
-//        DateTime dateTime = new DateTime(timeZone from profile??)
-
-        // Set the date to the 1st
-        cal.set(Calendar.DATE, 1);
-        String start_date = df.format(cal.getTime());
-
-        // Add one month to the date
-        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        String end_date = df.format(cal.getTime());
-
-        //Per page set to max
-        String per_page = "50";
-
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,page_num), (String) null, new Response.Listener<JSONArray>() {
-
-            @Override
-            public void onResponse(JSONArray response) {
-
-                try {
-                    //TODO clear?
-                    ArrayList<CalendarEvent> tmpList = JSONParser.parseAllCalendarEvents(response);
-                    events.addAll(tmpList);
-
-                    if(tmpList.size() == 50) {
-                        page_num++;
-                        requestCalendar();
-                    }
-
-
-                } catch (JSONException e) {
-                    Log.i(TAG, "exception: " + e);
-                }
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error);
-            }
-        });
-
-        calendarEventsRequest.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueueHandler.getInstance(this).addToRequestQueue(calendarEventsRequest);
-    }
-
-    private void initCalendarFragment(ArrayList<CalendarEvent> events) {
-        Log.i(TAG, "initCalendarFragment: size: " + events.size());
+    private void initCalendarFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         CalendarFragment calendarFragment = new CalendarFragment();
 
+        // Bundle course ids
         Bundle bundle = new Bundle();
-
-        //Temporary lists for bundling course object
-        ArrayList<String> start_date = new ArrayList<>();
-        ArrayList<String> end_date = new ArrayList<>();
-        ArrayList<String> name = new ArrayList<>();
-        ArrayList<String> location = new ArrayList<>();
-
-        for (int i = 0; i < events.size(); i++) {
-            DateTime start = events.get(i).getStartDate();
-            DateTime end = events.get(i).getEndDate();
-            // Format date to correctly
-            start_date.add(start.format("YYYY-MM-DD hh:mm:ss"));
-            end_date.add(end.format("YYYY-MM-DD hh:mm:ss"));
-            name.add(events.get(i).getName());
-            location.add(events.get(i).getLocation());
+        ArrayList<Integer> ids = new ArrayList<>();
+        for (Course c : courses) {
+            ids.add(c.getId());
         }
-
-        bundle.putStringArrayList("start_date", start_date);
-        bundle.putStringArrayList("end_date", end_date);
-        bundle.putStringArrayList("name", name);
-        bundle.putStringArrayList("location", location);
-
+        bundle.putIntegerArrayList("ids", ids);
         calendarFragment.setArguments(bundle);
 
         transaction.replace(R.id.content_frame, calendarFragment);

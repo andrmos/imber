@@ -126,10 +126,6 @@ public class CourseListFragment extends Fragment {
 
                 transaction.addToBackStack(null);
 
-                TextView course_id_tv = (TextView) v.findViewById(R.id.course_id);
-                TextView course_name_tv = (TextView) v.findViewById(R.id.course_title);
-                TextView course_url_tv = (TextView) v.findViewById(R.id.calendar_url);
-
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", courses.get(position).getId());
                 bundle.putString("calendar_url", courses.get(position).getCalenderUrl());
