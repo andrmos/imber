@@ -1,8 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -43,17 +41,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.courseBank.CourseBank;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
 
     private static final String TAG = "MainActivity";
 
-    private CourseBank courseBank;
     private User profile;
     private ArrayList<Course> courses;
 
@@ -63,9 +57,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // Set main layout
         setContentView(R.layout.activity_main);
 
-        courseBank = new CourseBank(this);
-
         requestProfile();
+        courses = new ArrayList<>();
+        // No course filter, need all events in calendar
+        requestCourses(false);
+
+        initCourseListFragment();
 
         // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -81,16 +78,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Check settings before intitializing courses
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
-        // Filter useless courses on institute level
-        boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
-
-        courses = new ArrayList<>();
-        requestCourses(filterInstituteCourses);
-
-        //TODO Show spinner...?
     }
 
     private void requestCourses(final boolean filterInstituteCourses) {
@@ -100,22 +87,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
                 try {
                     courses.clear();
-
-                    ArrayList<Course> tmpListCourses = JSONParser.parseAllCourses(response, filterInstituteCourses);
-
-                    if(!filterInstituteCourses) {
-                        courses.addAll(tmpListCourses);
-                    }else{
-                        setCoursesWithInstituteFilter(tmpListCourses);
-                    }
-
-                    initCourseListFragment();
+                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses));
 
                 } catch (JSONException e) {
                     // TODO handle exception
                     Log.i(TAG, "JSONException " + e);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 }
 
             }
@@ -130,49 +106,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(coursesReq);
     }
 
-    private void setCoursesWithInstituteFilter(ArrayList<Course> courses) throws FileNotFoundException {
-        List<String> mLines = new ArrayList<>();
-        mLines = courseBank.readLine("Courses_without_number.txt");
-
-        //Checking for number inn course_code
-        for(Course c : courses){
-            if(c.getCourseCode().matches("[a-zA-Z ]*\\d+.*")){
-                this.courses.add(c);
-            }else{
-                //Checking for match in text file
-                for(String s : mLines){
-                    if(c.getCourseCode().equals(s)){
-                        this.courses.add(c);
-                    }
-                }
-            }
-        }
-    }
-
     private void initCourseListFragment() {
         CourseListFragment courseListFragment = new CourseListFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        //Temporary lists for bundling course object
-        Bundle bundle = new Bundle();
-        ArrayList<Integer> ids = new ArrayList<>();
-        ArrayList<String> names = new ArrayList<>();
-        ArrayList<String> calendaer_urls = new ArrayList<>();
-        ArrayList<String> course_codes = new ArrayList<>();
-
-        for (Course c : courses) {
-            ids.add(c.getId());
-            names.add(c.getName());
-            calendaer_urls.add(c.getCalenderUrl());
-            course_codes.add(c.getCourseCode());
-        }
-
-        bundle.putIntegerArrayList("ids", ids);
-        bundle.putStringArrayList("names", names);
-        bundle.putStringArrayList("calendar_urls", calendaer_urls);
-        bundle.putStringArrayList("course_codes", course_codes);
-
-        courseListFragment.setArguments(bundle);
 
         transaction.replace(R.id.content_frame, courseListFragment);
         transaction.commit();

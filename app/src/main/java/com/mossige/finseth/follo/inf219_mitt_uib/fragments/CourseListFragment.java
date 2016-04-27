@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.courseBank.CourseBank;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -31,7 +32,9 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -49,6 +52,8 @@ public class CourseListFragment extends Fragment {
     /* If data is loaded */
     private boolean loaded;
 
+    private CourseBank courseBank;
+
     public CourseListFragment() {}
 
     @Override
@@ -57,28 +62,14 @@ public class CourseListFragment extends Fragment {
 
         loaded = false;
         courses = new ArrayList<>();
-
-        ArrayList<Integer> ids = getArguments().getIntegerArrayList("ids");
-        ArrayList<String> names = getArguments().getStringArrayList("names");
-        ArrayList<String> calendaer_urls = getArguments().getStringArrayList("calendar_urls");
-        ArrayList<String> course_codes = getArguments().getStringArrayList("course_codes");
-
-        if (ids != null && names != null && calendaer_urls != null && course_codes != null) {
-            for (int i = 0; i < ids.size(); i++) {
-                Course course = new Course(ids.get(i), names.get(i), calendaer_urls.get(i), course_codes.get(i));
-                courses.add(course);
-            }
-
-        } else {
-            Log.i(TAG, "onCreate: bundles is null. fix");
-        }
+        courseBank = new CourseBank(getContext());
 
         //Check settings before intitializing courses
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         // Filter useless courses on institute level
         boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
 
-//        requestCourses(filterInstituteCourses);
+        requestCourses(filterInstituteCourses);
     }
 
     @Override
@@ -90,11 +81,11 @@ public class CourseListFragment extends Fragment {
         initRecycleView(rootView);
 
         // Hide progress bar if data is already loaded
-//        if (loaded) {
-//            spinner.setVisibility(View.GONE);
-//        } else {
-//            spinner.setVisibility(View.VISIBLE);
-//        }
+        if (loaded) {
+            spinner.setVisibility(View.GONE);
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
@@ -145,7 +136,13 @@ public class CourseListFragment extends Fragment {
             public void onResponse(JSONArray response) {
                 try {
                     courses.clear();
-                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses));
+                    ArrayList<Course> tmpListCourses = JSONParser.parseAllCourses(response, filterInstituteCourses);
+
+                    if (!filterInstituteCourses) {
+                        courses.addAll(tmpListCourses);
+                    } else {
+                        setCoursesWithInstituteFilter(tmpListCourses);
+                    }
 
                     loaded = true;
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
@@ -154,6 +151,8 @@ public class CourseListFragment extends Fragment {
                 } catch (JSONException e) {
                     // TODO handle exception
                     Log.i(TAG, "JSONException");
+                } catch (FileNotFoundException e) {
+                    Log.i(TAG, "onResponse: " + e);
                 }
 
                 if (spinner != null) spinner.setVisibility(View.GONE);
@@ -169,6 +168,24 @@ public class CourseListFragment extends Fragment {
         });
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
+    }
+
+    private void setCoursesWithInstituteFilter(ArrayList<Course> courses) throws FileNotFoundException {
+        List<String> mLines = courseBank.readLine("Courses_without_number.txt");
+
+        //Checking for number inn course_code
+        for(Course c : courses){
+            if(c.getCourseCode().matches("[a-zA-Z ]*\\d+.*")){
+                this.courses.add(c);
+            }else{
+                //Checking for match in text file
+                for(String s : mLines){
+                    if(c.getCourseCode().equals(s)){
+                        this.courses.add(c);
+                    }
+                }
+            }
+        }
     }
 
     private void showToast() {
