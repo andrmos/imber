@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib.quoteBank;
+package com.mossige.finseth.follo.inf219_mitt_uib.courseBank;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -13,11 +13,11 @@ import java.util.List;
 /**
  * Created by patrickfinseth on 22.04.2016.
  */
-public class QuoteBank {
+public class CourseBank {
 
     private Context mContext;
 
-    public QuoteBank(Context context) {
+    public CourseBank(Context context) {
         this.mContext = context;
     }
 
