@@ -162,7 +162,8 @@ public class CourseListFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (spinner != null) spinner.setVisibility(View.GONE);
-                showToast();
+//                showToast();
+                //TODO show other error... Toast is broken.
             }
 
         });

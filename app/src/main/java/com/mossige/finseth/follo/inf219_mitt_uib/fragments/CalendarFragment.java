@@ -116,7 +116,8 @@ public class CalendarFragment extends Fragment {
      * @return the Caldroid Fragment
      */
     private CaldroidFragment initCalendarFragment() {
-        CaldroidFragment caldroidFragment = new CaldroidFragment();
+//        CaldroidFragment caldroidFragment = new CaldroidFragment();
+        CaldroidFragment caldroidFragment = new CustomCaldroidFragment();
 
         // Calendar is used to get current date
         Calendar cal = Calendar.getInstance();
@@ -248,6 +249,8 @@ public class CalendarFragment extends Fragment {
 
                     ColorDrawable bg = new ColorDrawable(0xFFFF6666);
 
+                    Map<String, Object> extraData = caldroidFragment.getExtraData();
+
                     //Set background for dates that contains at least one agenda
                     for(CalendarEvent e : events){
 
@@ -261,6 +264,10 @@ public class CalendarFragment extends Fragment {
                         */
                         DateTime dt = e.getStartDate();
                         Date startDate = new Date(dt.getYear() - 1900, dt.getMonth() - 1, dt.getDay());
+
+                        // TODO put which dates to add a circle
+                        // TODO refreshView()
+//                        extraData.put(e.getStartDate().getYear() + "-" + e.getStartDate().getMonth() + "-" + e.getStartDate().getDay(), true);
 
                         dates.put(startDate, bg);
                         backgrounds.put(startDate, bg);
