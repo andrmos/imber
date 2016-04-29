@@ -67,6 +67,9 @@ public class MyCalendar {
 
     public void addEvents(ArrayList<CalendarEvent> events) {
         // TODO Ensure no duplicates are added...
+        // Maybe change data structure?
+        // Using HashSet? It does not add duplicates.
+        // Would handle everything automatically.
         calendar.addAll(events);
     }
 
@@ -76,5 +79,18 @@ public class MyCalendar {
 
     public ArrayList<CalendarEvent> getAllEvents(){
         return calendar;
+    }
+
+    public void removeEvents(int year, int month) {
+
+        // TODO remove events in this year and month
+        // Needed to ensure no duplicates are added
+
+        for (int i = 0; i < calendar.size(); i++) {
+            DateTime dateTime = calendar.get(i).getStartDate();
+            if (dateTime.getYear() == year && dateTime.getMonth() == month) {
+                calendar.remove(i);
+            }
+        }
     }
 }

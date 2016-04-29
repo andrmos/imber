@@ -132,11 +132,24 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onChangeMonth(int month, int year) {
-                // TODO fetch events for month - 1, month and month + 1
-                // needs extra check for month = 0 and month = 12
+                DateTime curMonth = new DateTime(year, month, 1, 0, 0, 0, 0); // Only need year and month
+                DateTime prevMonth = curMonth.minus(0, 1, 0, 0, 0, 0, 0, DateTime.DayOverflow.FirstDay);
+                DateTime nextMonth = curMonth.plus(0, 1, 0, 0, 0, 0, 0, DateTime.DayOverflow.FirstDay);
 
-                if (!calendar.loaded(year, month - 1)) { // Zero indexed month
-                    getCalendarEvents(year, month - 1, 1);
+                if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth() - 1)) { // Zero indexed month
+                    getCalendarEvents(curMonth.getYear(), curMonth.getMonth() - 1, 1);
+                } else {
+                    // Already loaded, do nothing
+                }
+
+                if (!calendar.loaded(nextMonth.getYear(), nextMonth.getMonth() - 1)) { // Zero indexed month
+                    getCalendarEvents(nextMonth.getYear(), nextMonth.getMonth() - 1, 1);
+                } else {
+                    // Already loaded, do nothing
+                }
+
+                if (!calendar.loaded(prevMonth.getYear(), prevMonth.getMonth() - 1)) { // Zero indexed month
+                    getCalendarEvents(prevMonth.getYear(), prevMonth.getMonth() - 1, 1);
                 } else {
                     // Already loaded, do nothing
                 }
@@ -245,6 +258,7 @@ public class CalendarFragment extends Fragment {
                 } catch (JSONException e) {
                     Log.i(TAG, "exception: " + e);
                     calendar.setLoaded(year, month, false);
+//                    calendar.removeEvents(year, month);
                 }
 
 
@@ -254,6 +268,7 @@ public class CalendarFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error + " for month " + month + " (zero indexed)");
                 calendar.setLoaded(year, month, false);
+//                calendar.removeEvents(year, month);
 
                 // TODO Show error message
             }
