@@ -1,7 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,7 +33,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -46,13 +44,10 @@ public class CalendarFragment extends Fragment {
     private static final String TAG = "CalendarFragment";
 
     private CaldroidFragment caldroidFragment;
-    //Have to use java.Utils.Date, since Caldroid uses Map<Date, 'color'> to display background color for dates.
-    private Date tmpDate;
-    private Map<Date,ColorDrawable> backgrounds;
-    private Map<Date, Drawable> dates;
     private MyCalendar calendar;
     private ArrayList<Integer> courseIds;
     private boolean firstRequest;
+    private DateTime previousDateTime;
 
     OnDateClickListener mCallback;
 
@@ -85,18 +80,13 @@ public class CalendarFragment extends Fragment {
         }
 
         firstRequest = true;
-        dates = new HashMap<>();
-        backgrounds = new HashMap<>();
         calendar = new MyCalendar();
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         getActivity().setTitle(R.string.calendar_title);
-
-        tmpDate = null;
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         caldroidFragment = initCalendarFragment();
@@ -116,7 +106,6 @@ public class CalendarFragment extends Fragment {
      * @return the Caldroid Fragment
      */
     private CaldroidFragment initCalendarFragment() {
-//        CaldroidFragment caldroidFragment = new CaldroidFragment();
         CaldroidFragment caldroidFragment = new CustomCaldroidFragment();
 
         // Calendar is used to get current date
@@ -146,8 +135,6 @@ public class CalendarFragment extends Fragment {
                 // TODO fetch events for month - 1, month and month + 1
                 // needs extra check for month = 0 and month = 12
 
-                // TODO fetch events for shown dates in calendar, instead of month?
-
                 if (!calendar.loaded(year, month - 1)) { // Zero indexed month
                     getCalendarEvents(year, month - 1, 1);
                 } else {
@@ -157,7 +144,6 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onSelectDate(Date date, View view) {
-
                 /*
                 Date conversion explained:
                 In java.Utils.Date, months are zero indexed. So January = 0.
@@ -173,25 +159,26 @@ public class CalendarFragment extends Fragment {
                 // Callback to main activity to notify agenda fragment to update its calendar events
                 mCallback.setAgendas(calendar.getEventsForDate(dateTime));
 
-                // TODO Refactor?
-                //Remove higlighting for selected day
-                if(tmpDate != null) {
-                    //If last selected day was highlighted by agendas reverse background color
-                    if(backgrounds.get(tmpDate) != null){
-                        caldroidFragment.setBackgroundDrawableForDate(backgrounds.get(tmpDate),tmpDate);
-                    } else {
-                        caldroidFragment.clearBackgroundDrawableForDate(tmpDate);
-                    }
-                }
-
-                //Set color to selected date
-                ColorDrawable bg = new ColorDrawable(0xFF0000);
-                caldroidFragment.setBackgroundDrawableForDate(bg, date);
-                caldroidFragment.refreshView();
-                tmpDate = date;
+                setBackground(dateTime);
             }
         };
         return listener;
+    }
+
+    /**
+     * Sets background drawable for DateTime and clears previous selected date.
+     * @param dateTime
+     */
+    private void setBackground(DateTime dateTime) {
+        Drawable border = getResources().getDrawable(R.drawable.border);
+        if (previousDateTime != null) {
+            // Clear background for previous selected DateTime
+            caldroidFragment.clearBackgroundDrawableForDateTime(previousDateTime);
+        }
+        // Add border drawable to selected date
+        caldroidFragment.setBackgroundDrawableForDateTime(border, dateTime);
+        caldroidFragment.refreshView();
+        previousDateTime = dateTime;
     }
 
     /**
@@ -247,33 +234,7 @@ public class CalendarFragment extends Fragment {
 
                     calendar.setLoaded(year, month, true);
 
-                    ColorDrawable bg = new ColorDrawable(0xFFFF6666);
-
-                    Map<String, Object> extraData = caldroidFragment.getExtraData();
-
-                    //Set background for dates that contains at least one agenda
-                    for(CalendarEvent e : events){
-
-                        /*
-                        Date conversion explained:
-                        In java.Utils.Date, months are zero indexed. So January = 0.
-                        In date library Date4j, months are one indexed. So January = 1.
-                        In java.Utils.Date, years are stored as year - 1900. So 2016 - 1900 = 116.
-                        Caldroid uses java.Utils.Date, while our project uses Date4j.
-                        So to convert Date4j to java.Utils.Date, 1900 is subtracted to year, while one is subtracted to month.
-                        */
-                        DateTime dt = e.getStartDate();
-                        Date startDate = new Date(dt.getYear() - 1900, dt.getMonth() - 1, dt.getDay());
-
-                        // TODO put which dates to add a circle
-                        // TODO refreshView()
-//                        extraData.put(e.getStartDate().getYear() + "-" + e.getStartDate().getMonth() + "-" + e.getStartDate().getDay(), true);
-
-                        dates.put(startDate, bg);
-                        backgrounds.put(startDate, bg);
-                    }
-                    caldroidFragment.setBackgroundDrawableForDates(dates);
-                    caldroidFragment.refreshView();
+                    setBackgrounds(events);
 
                     if (firstRequest) {
                         DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
@@ -303,6 +264,19 @@ public class CalendarFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
+    }
+
+    /**
+     * Sets backgrounds for dates.
+     * @param events events containing an agenda
+     */
+    private void setBackgrounds(ArrayList<CalendarEvent> events) {
+        Map<String, Object> extraData = caldroidFragment.getExtraData();
+        for(CalendarEvent e : events){
+            String key = e.getStartDate().getYear() + "-" + e.getStartDate().getMonth() + "-" + e.getStartDate().getDay();
+            extraData.put(key, true);
+        }
+        caldroidFragment.refreshView();
     }
 
 

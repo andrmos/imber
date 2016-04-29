@@ -18,12 +18,14 @@
             android:paddingBottom="5dp"/>
 
         <ImageView
+            android:id="@+id/hasEventCircle"
             android:layout_width="4dp"
             android:layout_height="4dp"
             android:src="@drawable/circle"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="3dp"/>
+            android:layout_marginBottom="3dp"
+            android:visibility="invisible"/>
 
     </RelativeLayout>
 

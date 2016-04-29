@@ -3,15 +3,16 @@ package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
-import com.roomorama.caldroid.CellView;
 
 import java.util.Map;
 
@@ -21,6 +22,8 @@ import hirondelle.date4j.DateTime;
  * Created by Andre on 27/04/2016.
  */
 public class CustomCaldroidAdapter extends CaldroidGridAdapter {
+
+    private static final String TAG = "CaldroidAdapter";
 
     public CustomCaldroidAdapter(Context context, int month, int year, Map<String, Object> caldroidData, Map<String, Object> extraData) {
         super(context, month, year, caldroidData, extraData);
@@ -43,16 +46,25 @@ public class CustomCaldroidAdapter extends CaldroidGridAdapter {
 
         // Get date for this cell
         DateTime dateTime = this.datetimeList.get(position);
-        TextView tvDayNumber = (TextView) cellView.findViewById(R.id.dayNumber);
 
+        TextView tvDayNumber = (TextView) cellView.findViewById(R.id.dayNumber);
         tvDayNumber.setTextColor(Color.BLACK);
 
         Resources resources = context.getResources();
 
         // Set color of the dates in previous / next month
         if (dateTime.getMonth() != month) {
-            tvDayNumber.setTextColor(resources
-                    .getColor(com.caldroid.R.color.caldroid_darker_gray));
+            tvDayNumber.setTextColor(resources.getColor(com.caldroid.R.color.caldroid_darker_gray));
+        }
+
+        // Show circle on dates that contains an event
+        String key = dateTime.getYear() + "-" + dateTime.getMonth() + "-" + dateTime.getDay();
+        if (extraData.containsKey(key)) {
+            boolean hasEvent = (boolean) extraData.get(key);
+            if (hasEvent) {
+                ImageView hasEventCircle = (ImageView) cellView.findViewById(R.id.hasEventCircle);
+                hasEventCircle.setVisibility(View.VISIBLE);
+            }
         }
 
         boolean shouldResetDiabledView = false;
