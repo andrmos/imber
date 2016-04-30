@@ -7,7 +7,7 @@ import hirondelle.date4j.DateTime;
 /**
  * Created by PatrickFinseth on 23.02.16.
  */
-public class CalendarEvent {
+public class CalendarEvent implements Comparable<CalendarEvent>{
 
     private static final String TAG = "CalendarEvent";
 
@@ -66,6 +66,17 @@ public class CalendarEvent {
         }
 
         return trimedName;
+    }
+
+    @Override
+    public int compareTo(CalendarEvent event){
+        if(this.getStartDate().equals(event.getStartDate())) {
+            return 0;
+        }else if(this.getStartDate().gt(event.getStartDate())){
+            return 1;
+        } else {
+            return -1;
+        }
     }
 
     @Override

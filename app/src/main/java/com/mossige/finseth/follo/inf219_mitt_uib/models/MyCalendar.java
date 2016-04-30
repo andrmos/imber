@@ -3,7 +3,12 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 import hirondelle.date4j.DateTime;
 
@@ -17,25 +22,28 @@ public class MyCalendar {
 
     private static final String TAG = "Calendar";
 
-    private ArrayList<CalendarEvent> calendar;
+    private HashSet<CalendarEvent> calendar;
 
     /** If year-month at key: 'year-month' is loaded. Zero indexed month.*/
     private HashMap<String, Boolean> loaded;
 
     public MyCalendar() {
-        this.calendar = new ArrayList<>();
+        this.calendar = new HashSet<>();
         this.loaded = new HashMap<>();
     }
 
     public ArrayList<CalendarEvent> getEventsForDate(DateTime date){
         ArrayList<CalendarEvent> retCalendar = new ArrayList<>();
 
-        for(CalendarEvent c : this.calendar){
-            if (date.isSameDayAs(c.getStartDate())) {
-                retCalendar.add(c);
+        Iterator it = this.calendar.iterator();
+
+        while(it.hasNext()){
+            CalendarEvent event = (CalendarEvent) it.next();
+            if (date.isSameDayAs(event.getStartDate())) {
+                retCalendar.add(event);
             }
         }
-
+        Collections.sort(retCalendar);
         return retCalendar;
     }
 
@@ -70,27 +78,7 @@ public class MyCalendar {
         // Maybe change data structure?
         // Using HashSet? It does not add duplicates.
         // Would handle everything automatically.
-        calendar.addAll(events);
+        this.calendar.addAll(events);
     }
 
-    public CalendarEvent getEvent(int position){
-        return calendar.get(position);
-    }
-
-    public ArrayList<CalendarEvent> getAllEvents(){
-        return calendar;
-    }
-
-    public void removeEvents(int year, int month) {
-
-        // TODO remove events in this year and month
-        // Needed to ensure no duplicates are added
-
-        for (int i = 0; i < calendar.size(); i++) {
-            DateTime dateTime = calendar.get(i).getStartDate();
-            if (dateTime.getYear() == year && dateTime.getMonth() == month) {
-                calendar.remove(i);
-            }
-        }
-    }
 }

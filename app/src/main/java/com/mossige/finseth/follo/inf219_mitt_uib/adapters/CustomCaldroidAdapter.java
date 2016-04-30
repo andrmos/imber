@@ -65,6 +65,9 @@ public class CustomCaldroidAdapter extends CaldroidGridAdapter {
                 ImageView hasEventCircle = (ImageView) cellView.findViewById(R.id.hasEventCircle);
                 hasEventCircle.setVisibility(View.VISIBLE);
             }
+        }else{
+            ImageView hasEventCircle = (ImageView) cellView.findViewById(R.id.hasEventCircle);
+            hasEventCircle.setVisibility(View.INVISIBLE);
         }
 
         boolean shouldResetDiabledView = false;
