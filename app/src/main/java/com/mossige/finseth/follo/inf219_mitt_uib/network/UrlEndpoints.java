@@ -44,6 +44,7 @@ public class UrlEndpoints {
     public static final String END_DATE_KEY = "end_date=";
     public static final String TYPE_KEY = "type=";
     public static final String PAGE = "page=";
+    public static final String UNREAD_COUNT = "unread_count";
 
     /**
      * @param search textinput (name)
@@ -150,6 +151,14 @@ public class UrlEndpoints {
         }
 
         return url;
+    }
+
+    /**
+     * Return url for unread count
+     * @return
+     */
+    public static String getUnreadCountURL(){
+        return BASE_URL + CONVERSATIONS + UNREAD_COUNT + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 
 }

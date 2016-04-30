@@ -292,6 +292,9 @@ public class JSONParser {
         return new CalendarEvent(title, parseDateString(start), parseDateString(stop), location, timeZone);
     }
 
+    public static int parseUnreadCount(JSONObject obj) throws JSONException{
+        return obj.getInt("unread_count");
+    }
     private static DateTime parseDateString(String date){
         int year = Integer.parseInt(date.substring(0,4));
         int month = Integer.parseInt(date.substring(5,7));

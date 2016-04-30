@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.activities.MainActivity;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.MessageRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
@@ -94,6 +95,10 @@ public class SingleConversationFragment extends Fragment {
 
                             loaded = true;
                             mAdapter.notifyDataSetChanged();
+
+                            //Update unread count in navigation drawer
+                            MainActivity mainActivity = (MainActivity) getActivity();
+                            mainActivity.requestUnreadCount();
 
                         } catch (JSONException e) {
                             // TODO handle exception

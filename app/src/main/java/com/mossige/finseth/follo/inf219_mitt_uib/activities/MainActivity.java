@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.v4.app.FragmentManager;
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private User profile;
     private ArrayList<Course> courses;
+    private NavigationView navigationView;
+    private int unreadCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         setContentView(R.layout.activity_main);
 
         requestProfile();
+        requestUnreadCount();
         courses = new ArrayList<>();
         // No course filter, need all events in calendar
         requestCourses(false);
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
     }
@@ -250,6 +254,36 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
     }
 
+    public void requestUnreadCount() {
+
+        final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUnreadCountURL(), (String) null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+
+                try {
+                    unreadCount = JSONParser.parseUnreadCount(response);
+
+                    setMenuCounter(R.id.nav_inbox, unreadCount);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+
+        profileReq.setRetryPolicy(new DefaultRetryPolicy(5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
+    }
+
     private void initCalendarFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         CalendarFragment calendarFragment = new CalendarFragment();
@@ -265,6 +299,15 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         transaction.replace(R.id.content_frame, calendarFragment);
         transaction.commit();
+    }
+
+    public void setMenuCounter(@IdRes int itemId, int count) {
+        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
+        view.setText(count > 0 ? String.valueOf(count) : null);
+    }
+
+    public int getUnreadCount() {
+        return unreadCount;
     }
 
     private void showToast() {
