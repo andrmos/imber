@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.ConversationRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
@@ -51,7 +53,20 @@ public class ConversationFragment extends Fragment {
     /* If data is loaded */
     private boolean loaded;
 
+    ShowSnackbar.ShowToastListener mCallback;
+
     public ConversationFragment() {}
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (ShowSnackbar.ShowToastListener) context;
+        }catch(ClassCastException e){
+            Log.i(TAG, "onAttach: " + e.toString());
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,7 +122,12 @@ public class ConversationFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 spinner.setVisibility(View.GONE);
-                showToast();
+                mCallback.showSnackbar(getString(R.string.error_conversation), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestConversation();
+                    }
+                });
             }
         });
 
@@ -116,10 +136,6 @@ public class ConversationFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
-    }
-
-    private void showToast() {
-        Toast.makeText(getContext(), R.string.error_conversation, Toast.LENGTH_SHORT).show();
     }
 
 

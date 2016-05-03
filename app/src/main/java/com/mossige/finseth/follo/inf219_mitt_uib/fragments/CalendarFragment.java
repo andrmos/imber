@@ -251,6 +251,7 @@ public class CalendarFragment extends Fragment {
 
                     if (firstRequest) {
                         DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
+                        Log.i(TAG, "onResponse: " + today);
                         mCallback.setAgendas(calendar.getEventsForDate(today));
                         firstRequest = !firstRequest;
                     }

@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,6 +23,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerView
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.courseBank.CourseBank;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
@@ -52,7 +52,11 @@ public class CourseListFragment extends Fragment {
     /* If data is loaded */
     private boolean loaded;
 
+    private boolean filterInstituteCourses;
+
     private CourseBank courseBank;
+
+    ShowSnackbar.ShowToastListener mCallback;
 
     public CourseListFragment() {}
 
@@ -67,10 +71,21 @@ public class CourseListFragment extends Fragment {
         //Check settings before intitializing courses
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         // Filter useless courses on institute level
-        boolean filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
+        filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
 
         requestCourses(filterInstituteCourses);
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (ShowSnackbar.ShowToastListener) context;
+        }catch (ClassCastException e){
+            Log.i(TAG, "onAttach: " + e.toString());
+        }
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -162,8 +177,12 @@ public class CourseListFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (spinner != null) spinner.setVisibility(View.GONE);
-//                showToast();
-                //TODO show other error... Toast is broken.
+                mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestCourses(filterInstituteCourses);
+                    }
+                });
             }
 
         });

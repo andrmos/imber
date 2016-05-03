@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
@@ -59,6 +61,19 @@ public class CourseFragment extends Fragment {
 
     /* If data is loaded */
     private boolean[] loaded;
+
+    ShowSnackbar.ShowToastListener mCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (ShowSnackbar.ShowToastListener) context;
+        }catch(ClassCastException e){
+            Log.i(TAG, "onAttach: " + e.toString());
+        }
+    }
 
     public CourseFragment() {}
 
@@ -154,7 +169,7 @@ public class CourseFragment extends Fragment {
 
 
 
-    private void requestAnnouncements(String course_id) {
+    private void requestAnnouncements(final String course_id) {
 
         final JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id), (String) null, new Response.Listener<JSONArray>() {
 
@@ -183,7 +198,12 @@ public class CourseFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 spinner.setVisibility(View.GONE);
-                showToast();
+                mCallback.showSnackbar("Error requesting announcements", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestAnnouncements(course_id);
+                    }
+                });
             }
         });
 

@@ -1,6 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message;
 
-import android.graphics.Color;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
-import android.widget.SectionIndexer;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,10 +27,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecipientRecyclerViewAdapter;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SingleConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.RecipientGroup;
@@ -48,7 +46,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import xyz.danoz.recyclerviewfastscroller.sectionindicator.SectionIndicator;
 import xyz.danoz.recyclerviewfastscroller.sectionindicator.title.SectionTitleIndicator;
 import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
@@ -94,6 +91,8 @@ public class ChooseRecipientFragment extends Fragment {
 
     private Button writeMessage;
 
+    ShowSnackbar.ShowToastListener mCallback;
+
     public ChooseRecipientFragment() {
     }
 
@@ -112,6 +111,17 @@ public class ChooseRecipientFragment extends Fragment {
         loaded = false;
 
         requestCourses();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (ShowSnackbar.ShowToastListener) context;
+        } catch (ClassCastException e) {
+            Log.i(TAG, "Class cast exception");
+        }
     }
 
     @Override
@@ -171,21 +181,22 @@ public class ChooseRecipientFragment extends Fragment {
         return rootView;
     }
 
-//    @Override
-//    public void onPause() {
+    @Override
+    public void onPause() {
         // Cancel all recipients requests when navigating away from fragment
-//        RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
-//            @Override
-//            public boolean apply(Request<?> request) {
-//                if (request.getTag() != null) {
-//                    return request.getTag().equals("recipient");
-//                }
-//                return false;
-//            }
-//        });
-//
-//        super.onPause();
-//    }
+        RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                if (request.getTag() != null) {
+                    return request.getTag().equals("recipient");
+                }
+                return false;
+            }
+        });
+
+        writeMessage.setVisibility(View.INVISIBLE);
+        super.onPause();
+   }
 
     @Override
     public void onStop() {
@@ -322,7 +333,7 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
-                showToast();
+                //mCallback.showSnackbar(getString(R.string.error_course_list));
             }
 
         });
@@ -361,7 +372,7 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                showToast();
+                //mCallback.showSnackbar("Error requesting recipient groups");
             }
 
         });
@@ -414,7 +425,7 @@ public class ChooseRecipientFragment extends Fragment {
                 Log.i(TAG, "onErrorResponse: " + error.toString());
                 // TODO Is run when canceling requests.
                 // TODO Cannot show toast when in another fragment, so this will throw a nullpointer exception
-                showToast();
+                //mCallback.showSnackbar("Error requesting recipients");
             }
 
         }) {
@@ -471,17 +482,13 @@ public class ChooseRecipientFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(recipientsReq);
     }
 
-    private void showToast() {
-        Toast.makeText(getContext(), R.string.error_conversation, Toast.LENGTH_SHORT).show();
-    }
-
     private void initOnClickListener() {
         ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 CheckBox checkBox = (CheckBox) v.findViewById(R.id.sendTo);
                 checkBox.setChecked(!checkBox.isChecked());
-                recipientsChecked.put(recipients.get(position).getId(),checkBox.isChecked());
+                recipientsChecked.put(recipients.get(position).getId(), checkBox.isChecked());
             }
         });
     }

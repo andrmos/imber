@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.activities.MainActivity;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.MessageRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -48,6 +50,19 @@ public class SingleConversationFragment extends Fragment {
     private ArrayList<Message> messages;
 
     private boolean loaded;
+
+    ShowSnackbar.ShowToastListener mCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (ShowSnackbar.ShowToastListener) context;
+        }catch(ClassCastException e){
+            Log.i(TAG, "onAttach: " + e.toString());
+        }
+    }
 
     public SingleConversationFragment() {}
 
@@ -111,7 +126,12 @@ public class SingleConversationFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 spinner.setVisibility(View.GONE);
-                showToast();
+                mCallback.showSnackbar(getString(R.string.error_conversation), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestSingleConversation();
+                    }
+                });
             }
         });
 
@@ -120,10 +140,6 @@ public class SingleConversationFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(singleConversationRequest);
-    }
-
-    private void showToast() {
-        Toast.makeText(getContext(), R.string.error_conversation, Toast.LENGTH_SHORT).show();
     }
 
     private void initRecycleView(View rootView) {

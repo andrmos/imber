@@ -1,10 +1,12 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -15,8 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -30,6 +32,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
@@ -45,7 +48,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener{
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener, ShowSnackbar.ShowToastListener{
 
     private static final String TAG = "MainActivity";
 
@@ -243,7 +246,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                showToast();
+                showSnackbar(getString(R.string.error_profile), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestProfile();
+                    }
+                });
             }
         });
 
@@ -310,7 +318,19 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         return unreadCount;
     }
 
-    private void showToast() {
-        Toast.makeText(this, R.string.error_profile, Toast.LENGTH_SHORT).show();
+    @Override
+    public void showSnackbar(String toastMessage, View.OnClickListener listener) {
+        Snackbar snackbar =  Snackbar.make(findViewById(R.id.content_frame), toastMessage,
+                Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(Color.GREEN);
+        snackbar.setAction("Reload", listener);
+        snackbar.show();
+
     }
+
+    //private void showSnackbar(String message) {
+        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    //}
+
+
 }
