@@ -50,7 +50,11 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
             holder = new AnnouncementsViewHolder(v);
 
         } else if (viewType == 1) { // agendas card
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agendas_card, parent, false);
+            if(agendas.size() == 0) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.nodata,parent,false);
+            }else{
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agendas_card, parent, false);
+            }
             holder = new AgendasViewHolder(v);
         }
 

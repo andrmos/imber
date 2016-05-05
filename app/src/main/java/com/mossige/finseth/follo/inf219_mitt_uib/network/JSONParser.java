@@ -168,7 +168,7 @@ public class JSONParser {
         for (int i = 0; i < unParsed.length(); i++) {
             parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
         }
-        
+
         if(instituteFilter){
             return getCoursesWithInstituteFilter(parsed,context);
         }
