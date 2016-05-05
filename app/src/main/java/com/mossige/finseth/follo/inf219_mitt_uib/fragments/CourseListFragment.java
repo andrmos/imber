@@ -148,7 +148,8 @@ public class CourseListFragment extends Fragment {
             public void onResponse(JSONArray response) {
                 try {
                     courses.clear();
-                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses));
+                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getActivity().getApplicationContext()));
+
 
                     loaded = true;
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();

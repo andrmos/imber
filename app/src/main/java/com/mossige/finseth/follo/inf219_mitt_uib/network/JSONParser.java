@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.courseBank.CourseBank;
@@ -160,16 +161,16 @@ public class JSONParser {
      * @return An ArrayList containing all the users {@link Course courses}
      * @throws JSONException
      */
-    public static ArrayList<Course> parseAllCourses(JSONArray unParsed, boolean instituteFilter) throws JSONException, FileNotFoundException {
+    public static ArrayList<Course> parseAllCourses(JSONArray unParsed, boolean instituteFilter, Context context) throws JSONException, FileNotFoundException {
 
         ArrayList<Course> parsed = new ArrayList<>();
 
         for (int i = 0; i < unParsed.length(); i++) {
             parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
         }
-
+        
         if(instituteFilter){
-            return getCoursesWithInstituteFilter(parsed);
+            return getCoursesWithInstituteFilter(parsed,context);
         }
 
         return parsed;
@@ -315,7 +316,8 @@ public class JSONParser {
     }
 
 
-    private static ArrayList<Course> getCoursesWithInstituteFilter(ArrayList<Course> courses) throws FileNotFoundException {
+    private static ArrayList<Course> getCoursesWithInstituteFilter(ArrayList<Course> courses, Context context) throws FileNotFoundException {
+        courseBank = new CourseBank(context);
         List<String> mLines = courseBank.readLine("Courses_without_number.txt");
         ArrayList<Course> coursesWithFilter = new ArrayList<>();
 

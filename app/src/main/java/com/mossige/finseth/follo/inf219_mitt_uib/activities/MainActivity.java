@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
                 try {
                     courses.clear();
-                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses));
+                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getApplicationContext()));
 
                 } catch (JSONException e) {
                     // TODO handle exception

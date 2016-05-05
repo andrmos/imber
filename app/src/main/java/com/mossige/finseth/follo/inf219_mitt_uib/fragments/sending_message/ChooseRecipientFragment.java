@@ -336,7 +336,7 @@ public class ChooseRecipientFragment extends Fragment {
 
                 try {
                     boolean filterInstituteCourses = false;
-                    courses = JSONParser.parseAllCourses(response, filterInstituteCourses);
+                    courses = JSONParser.parseAllCourses(response, filterInstituteCourses, getContext());
 
                     courseCodes.clear();
                     for (Course c : courses) {

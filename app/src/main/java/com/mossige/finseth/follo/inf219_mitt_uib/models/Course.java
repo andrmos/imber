@@ -1,5 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -15,7 +17,7 @@ public class Course {
 
     public Course(int id, String name, String calender, String courseCode){
         this.id = id;
-        this.name = name;
+        this.name = trimName(name,courseCode);
         this.calender = calender;
         this.courseCode = courseCode;
 //        announcements = new ArrayList<Announcementmcmd>(id);
@@ -35,6 +37,18 @@ public class Course {
 
     public String getCourseCode(){
         return courseCode;
+    }
+
+    private String trimName(String name, String courseCode){
+        String trimmedName = name;
+
+        String [] splitArray = name.split("/");
+
+        if(splitArray[0].trim().equalsIgnoreCase(courseCode) && splitArray.length > 1){
+            trimmedName = splitArray[1].trim();
+        }
+
+        return trimmedName;
     }
 //
 //    public ArrayList<Announcement> getAnnouncement(){
