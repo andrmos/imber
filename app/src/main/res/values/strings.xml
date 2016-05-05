@@ -36,6 +36,9 @@
     <string name="announcements_title">Kunngjøringer</string>
     <string name="conversation_title">Innboks</string>
 
+    <string name="search_title">Søk</string>
+    <string name="search_hint">Mottaker</string>
+
     <!-- Error messages -->
     <string name="error_profile">Feil ved lasting av profil…</string>
     <string name="error_course_list">Feil ved lasting av fag…</string>

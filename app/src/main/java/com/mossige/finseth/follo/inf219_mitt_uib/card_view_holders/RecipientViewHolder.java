@@ -14,13 +14,13 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 public class RecipientViewHolder extends GeneralViewHolder {
     // each data item is just a string
     public TextView name;
-    public CheckBox sendTo;
+    public CheckBox checkBox;
 
     // TODO Textviews name and surname instead?
 
     public RecipientViewHolder(View v) {
         super(v);
         name = (TextView) v.findViewById(R.id.name);
-        sendTo = (CheckBox) v.findViewById(R.id.sendTo);
+        checkBox = (CheckBox) v.findViewById(R.id.checkBox);
     }
 }
