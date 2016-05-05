@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private NavigationView navigationView;
     private int unreadCount;
 
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,11 +79,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         setSupportActionBar(toolbar);
 
         // Setup navigation drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -155,23 +158,20 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // Setup fragment transaction for replacing fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         // Reset back stack when navigating to a new fragment from the nav bar
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         if(id == R.id.nav_course){
             initCourseListFragment();
 
-            drawer.closeDrawer(navigationView);
+            drawerLayout.closeDrawer(navigationView);
             return true;
         }
 
         if(id == R.id.nav_calendar){
             initCalendarFragment();
 
-            drawer.closeDrawer(navigationView);
+            drawerLayout.closeDrawer(navigationView);
             return true;
         }
 
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             transaction.replace(R.id.content_frame, crf);
             transaction.commit();
 
-            drawer.closeDrawer(navigationView);
+            drawerLayout.closeDrawer(navigationView);
             return true;
         }
 
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             transaction.replace(R.id.content_frame, sf);
             transaction.commit();
 
-            drawer.closeDrawer(navigationView);
+            drawerLayout.closeDrawer(navigationView);
             return true;
         }
 
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             transaction.replace(R.id.content_frame, conversationFragment);
             transaction.commit();
 
-            drawer.closeDrawer(navigationView);
+            drawerLayout.closeDrawer(navigationView);
             return true;
         }
 

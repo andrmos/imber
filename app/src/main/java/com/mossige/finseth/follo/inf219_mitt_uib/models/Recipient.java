@@ -8,12 +8,13 @@ public class Recipient {
     private String id;
     private String name;
     private String group;
+    private boolean checked;
 
     public Recipient(String id, String name) {
         this.id = id;
         this.name = name;
         this.group = null;
-
+        this.checked = false;
     }
 
     public Recipient(String id, String name, String group) {
@@ -26,6 +27,10 @@ public class Recipient {
         this.group = group;
     }
 
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     public String getGroup() {
         return group;
     }
@@ -36,5 +41,9 @@ public class Recipient {
 
     public String getId() {
         return id;
+    }
+
+    public boolean getChecked() {
+        return checked;
     }
 }
