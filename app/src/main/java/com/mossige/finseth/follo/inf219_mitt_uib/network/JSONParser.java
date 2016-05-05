@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
 import android.util.Log;
 
+import com.mossige.finseth.follo.inf219_mitt_uib.courseBank.CourseBank;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
@@ -16,7 +17,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
@@ -30,6 +33,8 @@ import hirondelle.date4j.DateTime;
 public class JSONParser {
 
     private static final String TAG = "JSONParser";
+
+    private static CourseBank courseBank;
 
     public JSONParser() {}
 
@@ -143,9 +148,8 @@ public class JSONParser {
         String id = unParsed.getString("id");
         String subject = unParsed.getString("subject");
         ArrayList<Participant> participants = getParticipants(unParsed.getJSONArray("participants"));
-        ArrayList<Message> messages = getMessages(unParsed.getJSONArray("messages"));
+        ArrayList<Message> messages = getMessages(unParsed.getJSONArray("messages"),participants);
 
-//        Log.i(TAG, "parseSingleConversation: " + "Conversation with id: " + id + " is parsed");
         return new Conversation(id, subject, participants, messages);
     }
 
@@ -156,20 +160,16 @@ public class JSONParser {
      * @return An ArrayList containing all the users {@link Course courses}
      * @throws JSONException
      */
-    public static ArrayList<Course> parseAllCourses(JSONArray unParsed,boolean courseFilter) throws JSONException {
+    public static ArrayList<Course> parseAllCourses(JSONArray unParsed, boolean instituteFilter) throws JSONException, FileNotFoundException {
 
         ArrayList<Course> parsed = new ArrayList<>();
 
         for (int i = 0; i < unParsed.length(); i++) {
+            parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
+        }
 
-            if(courseFilter){
-                if(unParsed.getJSONObject(i).getString("course_code").matches(".*\\d.*")) {
-                    parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
-                }
-            }else {
-                parsed.add(getSingleCourse(unParsed.getJSONObject(i)));
-            }
-
+        if(instituteFilter){
+            return getCoursesWithInstituteFilter(parsed);
         }
 
         return parsed;
@@ -221,21 +221,29 @@ public class JSONParser {
         return new Conversation(id,subject, participants, lastMessage);
     }
 
-    private static ArrayList<Message> getMessages(JSONArray unParsed) throws JSONException {
+    private static ArrayList<Message> getMessages(JSONArray unParsed, ArrayList<Participant> participants) throws JSONException {
         ArrayList<Message> parsed = new ArrayList<>();
 
         for (int i = 0; i < unParsed.length(); i++) {
-            parsed.add(getSingleMessage(unParsed.getJSONObject(i)));
+            parsed.add(getSingleMessage(unParsed.getJSONObject(i),participants));
         }
 
         return parsed;
     }
 
-    private static Message getSingleMessage(JSONObject obj) throws JSONException {
+    private static Message getSingleMessage(JSONObject obj, ArrayList<Participant> participants) throws JSONException {
+
+        String author = "";
         String authorID = obj.getString("author_id");
         String date = obj.getString("created_at");
         String message = obj.getString("body");
-        return new Message(authorID, date, message);
+
+        for(Participant p : participants){
+            if(p.getId().equals(authorID)){
+                author = p.getName();
+            }
+        }
+        return new Message(authorID, date, message, author);
     }
 
     private static ArrayList<Participant> getParticipants(JSONArray unParsed) throws JSONException {
@@ -306,4 +314,24 @@ public class JSONParser {
         return new DateTime(year, month, day, hour, min, 0, 0);
     }
 
+
+    private static ArrayList<Course> getCoursesWithInstituteFilter(ArrayList<Course> courses) throws FileNotFoundException {
+        List<String> mLines = courseBank.readLine("Courses_without_number.txt");
+        ArrayList<Course> coursesWithFilter = new ArrayList<>();
+
+        //Checking for number inn course code
+        for (Course c : courses) {
+            if (c.getCourseCode().matches("[a-zA-Z ]*\\d+.*")) {
+                coursesWithFilter.add(c);
+            } else {
+                //Checking for match in text file
+                for (String s : mLines) {
+                    if (c.getCourseCode().equals(s)) {
+                        coursesWithFilter.add(c);
+                    }
+                }
+            }
+        }
+        return coursesWithFilter;
+    }
 }

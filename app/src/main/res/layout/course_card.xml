@@ -9,8 +9,11 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:layout_marginTop="@dimen/card_margin"
+        android:layout_marginLeft="@dimen/card_margin"
+        android:layout_marginRight="@dimen/card_margin"
         card_view:cardBackgroundColor="@color/cardview_light_background"
-        card_view:cardElevation="6dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <TextView
@@ -20,7 +23,7 @@
             android:layout_gravity="center_horizontal"
             android:paddingTop="@dimen/course_code_height"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_size_course_code"
+            android:textSize="@dimen/title_textSize"
             android:textStyle="bold"/>
 
         <TextView

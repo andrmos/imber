@@ -8,9 +8,12 @@
         android:id="@+id/announcements_card"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/card_height_course"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/card_margin"
+        android:layout_marginLeft="@dimen/card_margin"
+        android:layout_marginRight="@dimen/card_margin"
         card_view:cardBackgroundColor="@color/cardview_light_background"
-        card_view:cardElevation="6dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <LinearLayout
@@ -20,36 +23,56 @@
 
             <TextView
                 android:id="@+id/agendas_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_gravity="center_horizontal"
-                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/announcement_title_height"
+                android:layout_marginTop="@dimen/fab_margin"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:textSize="@dimen/title_textSize"
                 android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
                 android:text="@string/agenda_card_title"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:background="?android:attr/listDivider"/>
 
             <TextView
                 android:id="@+id/agenda1"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textStyle="bold"
-                android:layout_marginBottom="@dimen/fab_margin"/>
+                android:layout_height="@dimen/announcement_height"
+                android:layout_marginTop="@dimen/announcement_pad_top"
+                android:layout_marginLeft="@dimen/fab_margin" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:background="?android:attr/listDivider"/>
 
             <TextView
                 android:id="@+id/agenda2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textStyle="bold"
-                android:layout_marginBottom="@dimen/fab_margin"/>
+                android:layout_height="@dimen/announcement_height"
+                android:layout_marginTop="@dimen/announcement_pad_top"
+                android:layout_marginLeft="@dimen/fab_margin" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:background="?android:attr/listDivider"/>
 
             <TextView
                 android:id="@+id/agenda3"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textStyle="bold"/>
+                android:layout_height="@dimen/announcement_height"
+                android:layout_marginTop="@dimen/announcement_pad_top"
+                android:layout_marginLeft="@dimen/fab_margin" />
 
         </LinearLayout>
 

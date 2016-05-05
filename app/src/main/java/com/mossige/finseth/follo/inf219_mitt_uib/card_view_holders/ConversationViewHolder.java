@@ -11,12 +11,12 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 public class ConversationViewHolder extends GeneralViewHolder {
     // each data item is just a string
     public TextView conversation_subject;
-    public TextView conversation_lastMessageFrom;
+    public TextView conversation_participants;
 
     public ConversationViewHolder(View v) {
         super(v);
         conversation_subject = (TextView) v.findViewById(R.id.conversation_subject);
-        conversation_lastMessageFrom = (TextView) v.findViewById(R.id.conversation_lastMessageFrom);
+        conversation_participants = (TextView) v.findViewById(R.id.conversation_participants);
 
     }
 }

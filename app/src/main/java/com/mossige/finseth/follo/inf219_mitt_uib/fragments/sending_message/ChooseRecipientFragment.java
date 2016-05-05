@@ -41,6 +41,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -325,6 +326,8 @@ public class ChooseRecipientFragment extends Fragment {
                 } catch (JSONException e) {
                     // TODO handle exception
                     Log.i(TAG, "JSONException");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
 
                 progressBar.setVisibility(View.GONE);

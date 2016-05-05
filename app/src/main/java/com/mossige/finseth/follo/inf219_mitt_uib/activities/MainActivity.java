@@ -46,6 +46,7 @@ import org.json.JSONObject;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener, ShowSnackbar.ShowToastListener{
@@ -99,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 } catch (JSONException e) {
                     // TODO handle exception
                     Log.i(TAG, "JSONException " + e);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
 
             }
@@ -327,10 +330,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         snackbar.show();
 
     }
-
-    //private void showSnackbar(String message) {
-        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    //}
 
 
 }

@@ -11,10 +11,13 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 public class SingleAnnouncementViewHolder extends GeneralViewHolder {
 
     public TextView title;
+    public TextView messagePeak;
 
     public SingleAnnouncementViewHolder(View v){
         super(v);
+
         title = (TextView) v.findViewById(R.id.announcement_title);
+        messagePeak = (TextView) v.findViewById(R.id.announcement_messagePeak);
     }
 
 }

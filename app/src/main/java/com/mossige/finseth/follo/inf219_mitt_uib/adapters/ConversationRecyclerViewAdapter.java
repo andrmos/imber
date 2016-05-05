@@ -11,6 +11,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.CourseViewHol
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
 
 import java.util.ArrayList;
 
@@ -40,13 +41,19 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Genera
         // set text of text view in card
         //TODO
         ConversationViewHolder conversationHolder = (ConversationViewHolder) holder;
-        conversationHolder.conversation_subject.setText(data.get(position).getSubject());
 
-//        CourseViewHolder courseHolder = (CourseViewHolder) holder;
-//        courseHolder.course_code.setText(data.get(position).getCourseCode());
-//        courseHolder.course_title.setText(data.get(position).getName());
-//        courseHolder.course_id.setText("" + data.get(position).getId());
-//        courseHolder.calendar_url.setText(data.get(position).getCalenderUrl());
+        //Capitalize first char in subject
+        String capSubject = data.get(position).getSubject().substring(0,1).toUpperCase() + data.get(position).getSubject().substring(1);
+        String participants = "";
+        for(Participant p : data.get(position).getParticipants()){
+            participants +=  p.getName() + ", ";
+        }
+
+        participants = participants.trim();
+        participants = participants.substring(0,participants.length()-1);
+
+        conversationHolder.conversation_subject.setText(capSubject);
+        conversationHolder.conversation_participants.setText(participants);
     }
 
     @Override

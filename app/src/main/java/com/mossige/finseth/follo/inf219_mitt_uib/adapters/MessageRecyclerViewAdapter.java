@@ -35,11 +35,10 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<GeneralView
 
     @Override
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
-        // set text of text view in card
-        //TODO
         MessageViewHolder singleConversationHolder = (MessageViewHolder) holder;
-        singleConversationHolder.conversation_message.setText(data.get(position).getMessage());
-
+        singleConversationHolder.conversation_author.setText(data.get(position).getAuthor());
+        singleConversationHolder.conversation_time.setText(data.get(position).getDate());
+        singleConversationHolder.conversation_message.setText(data.get(position).getMessage().trim());
     }
 
     @Override

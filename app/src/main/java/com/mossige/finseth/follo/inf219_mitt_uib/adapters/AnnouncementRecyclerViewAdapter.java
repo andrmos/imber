@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.SingleAnnouncementViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,9 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Genera
 
     private static final String TAG = "AnnouncementRecyclerViewAdapter: ";
 
-    private ArrayList<String> data;
+    private ArrayList<Announcement> data;
 
-    public AnnouncementRecyclerViewAdapter (ArrayList<String> data) {
+    public AnnouncementRecyclerViewAdapter (ArrayList<Announcement> data) {
         this.data = data;
     }
 
@@ -37,7 +38,8 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Genera
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
         SingleAnnouncementViewHolder announcementHolder = (SingleAnnouncementViewHolder) holder;
-        announcementHolder.title.setText(data.get(position));
+        announcementHolder.title.setText(data.get(position).getTitle());
+        announcementHolder.messagePeak.setText(data.get(position).getMessage());
     }
 
     @Override

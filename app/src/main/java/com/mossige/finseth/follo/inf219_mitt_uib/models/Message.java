@@ -2,11 +2,14 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
 import java.util.ArrayList;
 
+import hirondelle.date4j.DateTime;
+
 /**
  * Created by Follo on 16.02.2016.
  */
 public class Message {
 
+    private String author;
     private String authorID;
     private String date;
     private String message;
@@ -21,9 +24,10 @@ public class Message {
         this.body = body;
     }
 
-    public Message(String authorID, String date, String message) {
+    public Message(String authorID, String date, String message, String author) {
+        this.author = author;
         this.authorID = authorID;
-        this.date = date;
+        this.date = trimDate(date);
         this.message = message;
     }
 
@@ -33,6 +37,24 @@ public class Message {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getAuthor(){
+        return author;
+    }
+
+    private static String trimDate(String date){
+        String dateToString = "";
+
+        String year = date.substring(0, 4);
+        String month = date.substring(5,7);
+        String day = date.substring(8,10);
+        String hour = date.substring(11,13);
+        String min = date.substring(14,16);
+
+        dateToString = day + "/" + month + "-" + year + "  " + hour + ":" + min;
+
+        return dateToString;
     }
 
     public void setMessage(String message) {

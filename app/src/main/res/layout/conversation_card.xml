@@ -5,32 +5,39 @@
 
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/card_margin"
+        android:layout_marginLeft="@dimen/card_margin"
+        android:layout_marginRight="@dimen/card_margin"
         card_view:cardBackgroundColor="@color/cardview_light_background"
-        card_view:cardElevation="6dp"
+        card_view:cardElevation="2dp"
         card_view:cardUseCompatPadding="true">
 
         <TextView
             android:id="@+id/conversation_subject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="@dimen/course_code_height"
+            android:layout_marginTop="@dimen/agenda_card_margin"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_size_course_code"
-            android:textStyle="bold"/>
+            android:textSize="@dimen/title_textSize"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
         <TextView
-            android:id="@+id/conversation_lastMessageFrom"
+            android:id="@+id/conversation_participants"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:paddingTop="@dimen/course_name_height"
-            android:textColor="@color/cardview_dark_background"/>
-
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/agenda_card_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
     </android.support.v7.widget.CardView>
 

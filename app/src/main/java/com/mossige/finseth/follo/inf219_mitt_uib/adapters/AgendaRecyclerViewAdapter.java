@@ -50,7 +50,7 @@ public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
     private String getFormatDate(int position){
         //Gives time two digits
         String date = String.format("%02d",data.get(position).getStartDate().getHour()) + ":";
-        date += String.format("%02d",data.get(position).getStartDate().getMinute()) + "-";
+        date += String.format("%02d",data.get(position).getStartDate().getMinute()) + " - ";
         date += String.format("%02d",data.get(position).getEndDate().getHour()) + ":";
         date += String.format("%02d",data.get(position).getEndDate().getMinute());
 

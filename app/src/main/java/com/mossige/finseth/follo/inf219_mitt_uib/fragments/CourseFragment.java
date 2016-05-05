@@ -143,9 +143,11 @@ public class CourseFragment extends Fragment {
                     ArrayList<String> announcementMessages = new ArrayList<>();
                     ArrayList<String> announcementSender =  new ArrayList<>();
                     ArrayList<String> announcementDates =  new ArrayList<>();
+                    ArrayList<String> announcementIds = new ArrayList<>();
 
                     //Make list with all announcement titles
                     for(Announcement a : announcements){
+                        announcementIds.add(a.getId());
                         announcementTitles.add(a.getTitle());
                         announcementMessages.add(android.text.Html.fromHtml(a.getMessage()).toString());
                         announcementSender.add(a.getUserName());
@@ -157,6 +159,8 @@ public class CourseFragment extends Fragment {
                     args.putStringArrayList("announcementMessages", announcementMessages);
                     args.putStringArrayList("announcementSender", announcementSender);
                     args.putStringArrayList("announcementDates", announcementDates);
+                    args.putStringArrayList("announcementIds", announcementIds);
+                    args.putString("course_code", course.getCourseCode());
                     announcementFragment.setArguments(args);
 
                     transaction.commit();

@@ -20,7 +20,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/fab_margin"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_size_course_code"
+            android:textSize="@dimen/title_textSize"
             android:textStyle="bold"/>
 
         <CheckBox

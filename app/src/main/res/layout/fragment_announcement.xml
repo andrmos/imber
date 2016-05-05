@@ -7,38 +7,56 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/single_announcement_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:textSize="18dp"
-                android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/single_announcement_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:textSize="@dimen/title_textSize"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/single_announcement_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/single_announcement_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/single_announcement_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:gravity="center"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:background="?android:attr/listDivider"/>
 
-            <TextView
-                android:id="@+id/single_announcement_sender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/single_announcement_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:gravity="left"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:background="?android:attr/listDivider"/>
+
+        <TextView
+            android:id="@+id/single_announcement_sender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginTop="@dimen/fab_margin"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 </ScrollView>

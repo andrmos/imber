@@ -11,12 +11,14 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 public class MessageViewHolder extends GeneralViewHolder {
     // each data item is just a string
     public TextView conversation_message;
-    public TextView message_authorID;
+    public TextView conversation_author;
+    public TextView conversation_time;
 
     public MessageViewHolder(View v) {
         super(v);
-        conversation_message = (TextView) v.findViewById(R.id.conversation_message);
-        message_authorID = (TextView) v.findViewById(R.id.message_authorID);
+        conversation_author = (TextView) v.findViewById(R.id.message_author);
+        conversation_time = (TextView) v.findViewById(R.id.message_time);
+        conversation_message = (TextView) v.findViewById(R.id.message);
 
     }
 }

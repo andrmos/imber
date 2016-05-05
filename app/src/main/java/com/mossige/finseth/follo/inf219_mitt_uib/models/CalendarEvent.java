@@ -1,5 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
+import android.util.Log;
+
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
@@ -22,7 +24,7 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
         this.mStartDate = startDate.changeTimeZone(oldTimeZone, newTimeZone);
         this.mEndDate = endDate.changeTimeZone(oldTimeZone, newTimeZone);
 
-        this.location = location;
+        this.location = trimLocation(location);
     }
 
     public String getName(){
@@ -66,6 +68,23 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
         }
 
         return trimedName;
+    }
+
+    private String trimLocation(String location){
+        String trimmedLocation = location.trim();
+
+        if(trimmedLocation.startsWith("(")){
+            Log.i(TAG, "trimLocation: ");
+            trimmedLocation = trimmedLocation.substring(1,trimmedLocation.length());
+
+            if(location.endsWith(")")){
+                trimmedLocation = trimmedLocation.substring(0, trimmedLocation.length() - 1);
+                return trimmedLocation;
+            }
+        }
+
+
+        return location.trim();
     }
 
     @Override

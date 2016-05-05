@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AnnouncementRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 
 import java.util.ArrayList;
 
@@ -30,10 +31,7 @@ public class AnnouncementFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private View rootView;
-    private ArrayList<String> announcementTitles;
-    private ArrayList<String> announcementMessages;
-    private ArrayList<String> announcementSender;
-    private ArrayList<String> announcementDates;
+    private ArrayList<Announcement> announcements;
 
     public AnnouncementFragment() { }
 
@@ -41,18 +39,8 @@ public class AnnouncementFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        announcementTitles = new ArrayList<>();
-        announcementMessages = new ArrayList<>();
-        announcementSender = new ArrayList<>();
-        announcementDates = new ArrayList<>();
-
         // Set label for toolbar
-        getActivity().setTitle(R.string.announcements_title);
-
-        announcementTitles = getArguments().getStringArrayList("announcementTitles");
-        announcementMessages = getArguments().getStringArrayList("announcementMessages");
-        announcementSender = getArguments().getStringArrayList("announcementSender");
-        announcementDates = getArguments().getStringArrayList("announcementDates");
+        getActivity().setTitle(getString(R.string.announcements_title) + " - " + getArguments().getString("course_code"));
 
         initRecycleView(rootView);
 
@@ -60,6 +48,23 @@ public class AnnouncementFragment extends Fragment {
 
         return rootView;
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        announcements = new ArrayList<>();
+
+        ArrayList<String> announcementIds = getArguments().getStringArrayList("announcementIds");
+        ArrayList<String> announcementTitles = getArguments().getStringArrayList("announcementTitles");
+        ArrayList<String> announcementSender = getArguments().getStringArrayList("announcementSender");
+        ArrayList<String> announcementDates= getArguments().getStringArrayList("announcementDates");
+        ArrayList<String> announcementMessages = getArguments().getStringArrayList("announcementMessages");
+
+        for(int i = 0; i < announcementTitles.size(); i++){
+            announcements.add(new Announcement(announcementIds.get(i),announcementTitles.get(i), announcementSender.get(i), announcementDates.get(i),announcementMessages.get(i),true));
+        }
     }
 
     private void initRecycleView(View rootView) {
@@ -72,7 +77,7 @@ public class AnnouncementFragment extends Fragment {
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new AnnouncementRecyclerViewAdapter(announcementTitles);
+        mAdapter = new AnnouncementRecyclerViewAdapter(announcements);
         mainList.setAdapter(mAdapter);
 
     }

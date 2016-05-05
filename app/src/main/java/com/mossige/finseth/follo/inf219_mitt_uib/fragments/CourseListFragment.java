@@ -54,8 +54,6 @@ public class CourseListFragment extends Fragment {
 
     private boolean filterInstituteCourses;
 
-    private CourseBank courseBank;
-
     ShowSnackbar.ShowToastListener mCallback;
 
     public CourseListFragment() {}
@@ -66,7 +64,6 @@ public class CourseListFragment extends Fragment {
 
         loaded = false;
         courses = new ArrayList<>();
-        courseBank = new CourseBank(getContext());
 
         //Check settings before intitializing courses
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -151,13 +148,7 @@ public class CourseListFragment extends Fragment {
             public void onResponse(JSONArray response) {
                 try {
                     courses.clear();
-                    ArrayList<Course> tmpListCourses = JSONParser.parseAllCourses(response, filterInstituteCourses);
-
-                    if (!filterInstituteCourses) {
-                        courses.addAll(tmpListCourses);
-                    } else {
-                        setCoursesWithInstituteFilter(tmpListCourses);
-                    }
+                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses));
 
                     loaded = true;
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
@@ -188,27 +179,5 @@ public class CourseListFragment extends Fragment {
         });
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
-    }
-
-    private void setCoursesWithInstituteFilter(ArrayList<Course> courses) throws FileNotFoundException {
-        List<String> mLines = courseBank.readLine("Courses_without_number.txt");
-
-        //Checking for number inn course_code
-        for(Course c : courses){
-            if(c.getCourseCode().matches("[a-zA-Z ]*\\d+.*")){
-                this.courses.add(c);
-            }else{
-                //Checking for match in text file
-                for(String s : mLines){
-                    if(c.getCourseCode().equals(s)){
-                        this.courses.add(c);
-                    }
-                }
-            }
-        }
-    }
-
-    private void showToast() {
-        Toast.makeText(getContext(), R.string.error_course_list, Toast.LENGTH_SHORT).show();
     }
 }
