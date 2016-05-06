@@ -78,7 +78,7 @@ public class ChooseRecipientFragment extends Fragment {
     private boolean loaded;
     private ArrayList<Course> courses;
 
-    private ArrayList<String> nextLinks;
+    private String nextLink;
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
@@ -104,43 +104,46 @@ public class ChooseRecipientFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.send) {
-            Iterator hashMapIterator = recipientsChecked.entrySet().iterator();
-            ArrayList<String> tmpList = new ArrayList<String>();
-
-            //Make arraylist with ids from hashmap
-            while (hashMapIterator.hasNext()) {
-                Map.Entry<String, Boolean> pair = (Map.Entry<String, Boolean>) hashMapIterator.next();
-
-                if (pair.getValue()) {
-                    tmpList.add(pair.getKey());
-                    Log.i(TAG, "onClick: added " + pair.getKey());
-                }
-            }
-
-            //If recipients are choosen write new message. If not show toast message
-            if(tmpList.size() > 0) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
-                transaction.replace(R.id.content_frame, composeMessageFragment);
-
-                transaction.addToBackStack(null);
-
-                //Bundles all parameters needed for showing one announcement
-                Bundle args = new Bundle();
-                args.putStringArrayList("recipientIDs", tmpList);
-                composeMessageFragment.setArguments(args);
-
-
-                transaction.commit();
-            }else{
-                Toast.makeText(getContext(), "Ingen mottakere valgt", Toast.LENGTH_SHORT).show();
-            }
+            initComposeMessageFragment();
 
             return true;
         }
 
 
         return false;
+    }
+
+    private void initComposeMessageFragment() {
+        Iterator hashMapIterator = recipientsChecked.entrySet().iterator();
+        ArrayList<String> tmpList = new ArrayList<>();
+
+        //Make arraylist with ids from hashmap
+        while (hashMapIterator.hasNext()) {
+            Map.Entry<String, Boolean> pair = (Map.Entry<String, Boolean>) hashMapIterator.next();
+
+            if (pair.getValue()) {
+                tmpList.add(pair.getKey());
+            }
+        }
+
+        //If recipients are choosen write new message. If not show toast message
+        if(tmpList.size() > 0) {
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
+            transaction.replace(R.id.content_frame, composeMessageFragment);
+
+            transaction.addToBackStack(null);
+
+            //Bundles all parameters needed for showing one announcement
+            Bundle args = new Bundle();
+            args.putStringArrayList("recipientIDs", tmpList);
+            composeMessageFragment.setArguments(args);
+
+
+            transaction.commit();
+        }else{
+            Toast.makeText(getContext(), "Ingen mottakere valgt", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -304,7 +307,6 @@ public class ChooseRecipientFragment extends Fragment {
                 recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
                 String url = UrlEndpoints.getRecipientsByGroup(null, recipientGroup.getId());
 
-
                 requestRecipients(recipientGroup, url, "recipient");
 
                 progressBarRecipient.setVisibility(View.VISIBLE);
@@ -315,7 +317,7 @@ public class ChooseRecipientFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                Log.i(TAG, "onNothingSelected: nothing");
             }
         });
     }
@@ -418,9 +420,10 @@ public class ChooseRecipientFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(recipientGroupReq);
     }
 
-    private void requestRecipients(final RecipientGroup rg, String url, String tag) {
+    private void requestRecipients(final RecipientGroup rg, String url, final String tag) {
 
-        nextLinks = new ArrayList<>();
+//        nextLinks = new ArrayList<>();
+        nextLink = "";
 
         final JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
             @Override
@@ -429,10 +432,10 @@ public class ChooseRecipientFragment extends Fragment {
                     ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
 
                     // If there exists a link to the next recipients page, start request with new url
-                    if (nextLinks.size() > 0) {
+                    if (!nextLink.isEmpty()) {
                         // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
                         // TODO Cancel the requests when going to a new activity/chooses a recipient to send to
-                        requestRecipients(rg, nextLinks.get(0), "recipient");
+                        requestRecipients(rg, nextLink, tag);
                     }
 
                     for (Recipient r : tmp) {
@@ -465,8 +468,10 @@ public class ChooseRecipientFragment extends Fragment {
         }) {
             @Override
             protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
-                // TODO nextLinks should be a String
-                nextLinks.clear();
+                // Canvas API limits each response to a certain amount of recipients per response.
+                // This extracts the url to the next page from the response.
+
+                nextLink = "";
 
                 String linkKey = "Link";
                 if (response.headers.containsKey(linkKey)) {
@@ -484,7 +489,9 @@ public class ChooseRecipientFragment extends Fragment {
                             link = link.substring(0, link.indexOf(">"));
                             link += "&access_token=" + PrivateConstants.ACCESS_TOKEN;
 
-                            nextLinks.add(link);
+                            nextLink = link;
+                            // There is only one 'rel=next' link in each response
+                            break;
                         }
                     }
                 }

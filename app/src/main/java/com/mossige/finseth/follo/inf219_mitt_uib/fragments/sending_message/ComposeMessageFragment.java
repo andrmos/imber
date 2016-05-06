@@ -1,33 +1,27 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message;
 
 import android.content.Context;
-import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.RecipientGroup;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
@@ -36,8 +30,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by folb 31.03.16
@@ -45,44 +37,68 @@ import java.util.Map;
 public class ComposeMessageFragment extends Fragment {
 
     private static final String TAG = "ComposeMessageFragment";
+    public static final int SUBJECT_MAX_LENGTH = 255;
+    public static final int BODY_MIN_Length = 1;
 
     private View rootView;
 
     private EditText subject;
-    private EditText message;
-    private Button sendMessageBtn;
+    private EditText body;
+    private TextInputLayout subjectInputLayout;
+    private TextInputLayout bodyInputLayout;
 
     ShowSnackbar.ShowToastListener mCallback;
 
     public ComposeMessageFragment() { }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             final Bundle savedInstanceState) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.options_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.send) {
+            postMessageRequest(getArguments().getStringArrayList("recipientIDs"), subject.getText().toString(), body.getText().toString());
+        }
+
+        return false;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_compose_message, container, false);
 
-        sendMessageBtn = (Button) rootView.findViewById(R.id.sendButton);
+        setHasOptionsMenu(true);
 
-        //Set click listener for send message button
-        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        //TODO add group checkbox
+        subject = (EditText) rootView.findViewById(R.id.subject);
+        body = (EditText) rootView.findViewById(R.id.body);
 
-                //TODO add group checkbox and constraints for subject and message
-                subject = (EditText) rootView.findViewById(R.id.subject);
-                message = (EditText) rootView.findViewById(R.id.message);
+        subjectInputLayout = (TextInputLayout)rootView.findViewById(R.id.subject_input_layout);
+        subjectInputLayout.setErrorEnabled(true);
 
-                try {
-
-                    //Call method with fields and arguments
-                    postMessageRequest(getArguments().getStringArrayList("recipientIDs"),subject.getText().toString(),message.getText().toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        bodyInputLayout = (TextInputLayout) rootView.findViewById(R.id.body_input_layout);
+        bodyInputLayout.setErrorEnabled(true);
 
         return rootView;
+    }
+
+    private boolean validateMessage(String subject, String body) {
+        boolean subjectOk = subject.length() <= SUBJECT_MAX_LENGTH;
+        boolean bodyOk = body.length() >= BODY_MIN_Length;
+
+        if (!subjectOk) {
+            subjectInputLayout.setError(getString(R.string.subject_length_error));
+        }
+        if (!bodyOk) {
+            bodyInputLayout.setError(getString(R.string.body_length_error));
+        }
+
+        return subjectOk && bodyOk;
+
     }
 
     @Override
@@ -97,43 +113,51 @@ public class ComposeMessageFragment extends Fragment {
 
     private void cleanTextFields(){
         subject.setText("");
-        message.setText("");
+        body.setText("");
     }
+    private void postMessageRequest(final ArrayList<String> recipients, final String subject, final String body) {
 
-    private void postMessageRequest(final ArrayList<String> recipients, final String subject, final String message) throws JSONException {
+        if (validateMessage(subject, body)) {
 
-        //Create json object
-        JSONObject postJSONObject = new JSONObject();
-        postJSONObject.put("body", message);
-        postJSONObject.put("subject", subject);
+            try {
 
-        //Accumulate all recipients
-        for(int i = 0 ; i < recipients.size(); i++){
-            postJSONObject.accumulate("recipients", recipients.get(i));
+                //Create json object
+                JSONObject postJSONObject = new JSONObject();
+                postJSONObject.put("body", body);
+                postJSONObject.put("subject", subject);
+                //Accumulate all recipients
+                for (int i = 0; i < recipients.size(); i++) {
+                    postJSONObject.accumulate("recipients", recipients.get(i));
+                }
+                //Request post method
+                JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(), postJSONObject, new Response.Listener<JSONArray>() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        mCallback.showSnackbar("Melding sendt!", null);
+                        cleanTextFields();
+
+                        replaceFragment();
+
+                    }
+
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i(TAG, "onErrorResponse: " + error.toString());
+                    }
+                });
+
+                RequestQueueHandler.getInstance(this.getContext()).addToRequestQueue(postMessage);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
         }
 
-        //Request post method
-        JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(), postJSONObject, new Response.Listener<JSONArray>() {
 
-
-            @Override
-            public void onResponse(JSONArray response) {
-                mCallback.showSnackbar("Melding sendt!", null);
-                cleanTextFields();
-
-                replaceFragment();
-
-            }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error.toString());
-            }
-        });
-
-        //Add to queue
-        RequestQueueHandler.getInstance(this.getContext()).addToRequestQueue(postMessage);
     }
 
     private void replaceFragment (){
