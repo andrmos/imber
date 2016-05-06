@@ -1,8 +1,11 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.android.volley.Request;
@@ -18,6 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
@@ -43,6 +47,8 @@ public class ComposeMessageFragment extends Fragment {
     private TextInputLayout subjectInputLayout;
     private TextInputLayout bodyInputLayout;
 
+    ShowSnackbar.ShowToastListener mCallback;
+
     public ComposeMessageFragment() { }
 
     @Override
@@ -55,7 +61,7 @@ public class ComposeMessageFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.send) {
-            postMessageRequest(getArguments().getStringArrayList("recipientIDs"),subject.getText().toString(), body.getText().toString());
+            postMessageRequest(getArguments().getStringArrayList("recipientIDs"), subject.getText().toString(), body.getText().toString());
         }
 
         return false;
@@ -92,9 +98,23 @@ public class ComposeMessageFragment extends Fragment {
         }
 
         return subjectOk && bodyOk;
+
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mCallback = (ShowSnackbar.ShowToastListener) context;
+        }catch (ClassCastException e){
+            Log.i(TAG, "onAttach: " + e.toString());
+        }
+    }
 
+    private void cleanTextFields(){
+        subject.setText("");
+        body.setText("");
+    }
     private void postMessageRequest(final ArrayList<String> recipients, final String subject, final String body) {
 
         if (validateMessage(subject, body)) {
@@ -112,10 +132,13 @@ public class ComposeMessageFragment extends Fragment {
                 //Request post method
                 JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(), postJSONObject, new Response.Listener<JSONArray>() {
 
-
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.i(TAG, "onResponse: " + response.toString());
+                        mCallback.showSnackbar("Melding sendt!", null);
+                        cleanTextFields();
+
+                        replaceFragment();
+
                     }
 
                 }, new Response.ErrorListener() {
@@ -134,6 +157,18 @@ public class ComposeMessageFragment extends Fragment {
 
         }
 
+
+    }
+
+    private void replaceFragment (){
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        boolean popped = fm.popBackStackImmediate("inbox", 0);
+
+        if (!popped){
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.content_frame, new ConversationFragment());
+            ft.commit();
+        }
 
     }
 
