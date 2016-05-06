@@ -81,18 +81,20 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
         if (agendas.size() >= 1) {
             agendasViewHolder.agenda1.setText(getEvent(0));
-        }
 
-        if (agendas.size() >= 2) {
-            agendasViewHolder.agenda2.setText(getEvent(1));
-        }else{
-            //agendasViewHolder.dividerAgenda1.setVisibility(View.INVISIBLE);
-        }
+            if (agendas.size() >= 2) {
+                agendasViewHolder.agenda2.setText(getEvent(1));
 
-        if (agendas.size() >= 3) {
-            agendasViewHolder.agenda3.setText(getEvent(2));
-        }else{
-            //agendasViewHolder.dividerAgenda2.setVisibility(View.INVISIBLE);
+                if (agendas.size() >= 3) {
+                    agendasViewHolder.agenda3.setText(getEvent(2));
+                }else{
+                    agendasViewHolder.dividerAgenda2.setVisibility(View.GONE);
+                }
+
+            }else{
+                agendasViewHolder.dividerAgenda1.setVisibility(View.GONE);
+                agendasViewHolder.dividerAgenda2.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -123,18 +125,20 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
         if (announcements.size() >= 1) {
             announcementsViewHolder.announcements1.setText(announcements.get(0).getTitle());
-        }
 
-        if (announcements.size() >= 2) {
-            announcementsViewHolder.announcements2.setText(announcements.get(1).getTitle());
-        }else{
-            //announcementsViewHolder.dividerAnn1.setVisibility(View.INVISIBLE);
-        }
+            if (announcements.size() >= 2) {
+                announcementsViewHolder.announcements2.setText(announcements.get(1).getTitle());
 
-        if (announcements.size() >= 3) {
-            announcementsViewHolder.announcements3.setText(announcements.get(2).getTitle());
-        }else{
-            //announcementsViewHolder.dividerAnn2.setVisibility(View.INVISIBLE);
+                if (announcements.size() >= 3) {
+                    announcementsViewHolder.announcements3.setText(announcements.get(2).getTitle());
+                }else{
+                    announcementsViewHolder.dividerAnn2.setVisibility(View.GONE);
+                }
+
+            }else{
+                announcementsViewHolder.dividerAnn1.setVisibility(View.GONE);
+                announcementsViewHolder.dividerAnn2.setVisibility(View.GONE);
+            }
         }
     }
 
