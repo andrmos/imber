@@ -199,8 +199,7 @@ public class ChooseRecipientFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                onQueryTextChange(query);
-                return true;
+                return onQueryTextChange(query);
             }
 
             @Override
@@ -212,15 +211,18 @@ public class ChooseRecipientFragment extends Fragment {
                     recipients.clear();
 
                     // ÆØÅ Not supported by API
-                    requestRecipients(recipientGroup, url);
+                    requestRecipients(recipientGroup, url, newText);
 
                 } else {
                     Log.i(TAG, "onQueryTextChange: recipientGroup is null");
                 }
 
-                // TODO Cancel old request
-                // Put tag on request
-
+                // Do not cancel requests with empty tag
+                if (newText.length() > 1) {
+                    String oldTag = newText.substring(0, newText.length() - 1);
+                    // Cancel old request
+                    cancelRequest(oldTag);
+                }
                 return true;
             }
         });
@@ -232,17 +234,21 @@ public class ChooseRecipientFragment extends Fragment {
     @Override
     public void onPause() {
         // Cancel all recipients requests when navigating away from fragment
+        cancelRequest("recipient");
+
+        super.onPause();
+    }
+
+    private void cancelRequest(final String tag) {
         RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
             @Override
             public boolean apply(Request<?> request) {
                 if (request.getTag() != null) {
-                    return request.getTag().equals("recipient");
+                    return request.getTag().equals(tag);
                 }
                 return false;
             }
         });
-
-        super.onPause();
     }
 
     @Override
@@ -297,7 +303,9 @@ public class ChooseRecipientFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
                 String url = UrlEndpoints.getRecipientsByGroup(null, recipientGroup.getId());
-                requestRecipients(recipientGroup, url);
+
+
+                requestRecipients(recipientGroup, url, "recipient");
 
                 progressBarRecipient.setVisibility(View.VISIBLE);
 
@@ -410,7 +418,7 @@ public class ChooseRecipientFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(recipientGroupReq);
     }
 
-    private void requestRecipients(final RecipientGroup rg, String url) {
+    private void requestRecipients(final RecipientGroup rg, String url, String tag) {
 
         nextLinks = new ArrayList<>();
 
@@ -424,7 +432,7 @@ public class ChooseRecipientFragment extends Fragment {
                     if (nextLinks.size() > 0) {
                         // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
                         // TODO Cancel the requests when going to a new activity/chooses a recipient to send to
-                        requestRecipients(rg, nextLinks.get(0));
+                        requestRecipients(rg, nextLinks.get(0), "recipient");
                     }
 
                     for (Recipient r : tmp) {
@@ -485,7 +493,7 @@ public class ChooseRecipientFragment extends Fragment {
             }
         };
 
-        recipientsReq.setTag("recipient");
+        recipientsReq.setTag(tag);
         recipientsReq.setRetryPolicy(new DefaultRetryPolicy(5000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
