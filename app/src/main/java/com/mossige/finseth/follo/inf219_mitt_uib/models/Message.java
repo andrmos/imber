@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
 import java.util.ArrayList;
+import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
@@ -18,21 +19,15 @@ public class Message {
     private String subject;
     private String body;
 
-    public Message(ArrayList<String> recipiants, String subject, String body) {
-        this.recipiants = recipiants;
-        this.subject = subject;
-        this.body = body;
-    }
-
     public Message(String authorID, String date, String message, String author) {
+
+        //Make datetime object with string - subststring removes 'z' in date format
+        DateTime dt = new DateTime(date.substring(0,date.length()-1));
+        dt = dt.changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo"));
         this.author = author;
         this.authorID = authorID;
-        this.date = trimDate(date);
+        this.date = trimDate(dt.toString());
         this.message = message;
-    }
-
-    public String getAuthorID() {
-        return authorID;
     }
 
     public String getMessage() {

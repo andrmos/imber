@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -21,7 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.activities.MainActivity;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.MessageRecyclerViewAdapter;
-import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -51,14 +50,14 @@ public class SingleConversationFragment extends Fragment {
 
     private boolean loaded;
 
-    ShowSnackbar.ShowToastListener mCallback;
+    MainActivityListener.ShowToastListener mCallback;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try{
-            mCallback = (ShowSnackbar.ShowToastListener) context;
+            mCallback = (MainActivityListener.ShowToastListener) context;
         }catch(ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }

@@ -21,7 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
@@ -47,7 +47,7 @@ public class ComposeMessageFragment extends Fragment {
     private TextInputLayout subjectInputLayout;
     private TextInputLayout bodyInputLayout;
 
-    ShowSnackbar.ShowToastListener mCallback;
+    MainActivityListener.ShowToastListener mCallback;
 
     public ComposeMessageFragment() { }
 
@@ -105,7 +105,7 @@ public class ComposeMessageFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mCallback = (ShowSnackbar.ShowToastListener) context;
+            mCallback = (MainActivityListener.ShowToastListener) context;
         }catch (ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }
