@@ -63,8 +63,7 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
             trimedName += course_code;
             trimedName += " " + splitArray[1];
         }else{
-            trimedName += splitArray[0];
-            trimedName += " " + splitArray [1];
+            trimedName = name;
         }
 
         return trimedName;

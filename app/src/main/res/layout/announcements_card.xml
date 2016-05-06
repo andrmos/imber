@@ -45,9 +45,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/announcement_height"
                 android:layout_marginTop="@dimen/announcement_pad_top"
-                android:layout_marginLeft="@dimen/fab_margin" />
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:maxLines="1"/>
 
             <View
+                android:id="@+id/dividerAnn1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="@dimen/fab_margin"
@@ -59,9 +62,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/announcement_height"
                 android:layout_marginTop="@dimen/announcement_pad_top"
-                android:layout_marginLeft="@dimen/fab_margin" />
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:maxLines="1"/>
 
             <View
+                android:id="@+id/dividerAnn2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="@dimen/fab_margin"
@@ -74,7 +80,9 @@
                 android:layout_height="@dimen/announcement_height"
                 android:layout_marginTop="@dimen/announcement_pad_top"
                 android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_marginLeft="@dimen/fab_margin" />
+                android:layout_marginLeft="@dimen/fab_margin"
+                android:layout_marginRight="@dimen/fab_margin"
+                android:maxLines="1"/>
 
         </LinearLayout>
 

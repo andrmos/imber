@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -27,7 +26,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
@@ -35,8 +33,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -104,7 +100,15 @@ public class CourseFragment extends Fragment {
         String course_name = getArguments().getString("name");
         getActivity().setTitle(course_name);
 
+        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
         initRecycleView(rootView);
+
+        // Hide progress bar if data is already loaded
+        if (isLoaded()) {
+            spinner.setVisibility(View.GONE);
+        } else {
+            spinner.setVisibility(View.VISIBLE);
+        }
 
         return rootView;
     }
@@ -113,8 +117,7 @@ public class CourseFragment extends Fragment {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        // Hide content before everything is loaded
-        //mainList.setVisibility(View.GONE);
+        mainList.setVisibility(View.GONE);
 
         // Create the LayoutManager that holds all the views
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -141,12 +144,12 @@ public class CourseFragment extends Fragment {
                     //Temporary lists for bundling announcement object
                     ArrayList<String> announcementTitles = new ArrayList<>();
                     ArrayList<String> announcementMessages = new ArrayList<>();
-                    ArrayList<String> announcementSender =  new ArrayList<>();
-                    ArrayList<String> announcementDates =  new ArrayList<>();
+                    ArrayList<String> announcementSender = new ArrayList<>();
+                    ArrayList<String> announcementDates = new ArrayList<>();
                     ArrayList<String> announcementIds = new ArrayList<>();
 
                     //Make list with all announcement titles
-                    for(Announcement a : announcements){
+                    for (Announcement a : announcements) {
                         announcementIds.add(a.getId());
                         announcementTitles.add(a.getTitle());
                         announcementMessages.add(android.text.Html.fromHtml(a.getMessage()).toString());
@@ -185,7 +188,6 @@ public class CourseFragment extends Fragment {
                     announcements.addAll(JSONParser.parseAllAnouncements(response));
 
                     loaded[0] = true;
-                    mAdapter.notifyDataSetChanged();
 
                 } catch (JSONException e) {
                     Log.i(TAG, "JSONException requesting announcements");
@@ -218,10 +220,6 @@ public class CourseFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(announcementsRequest);
     }
 
-    private void showToast() {
-        Toast.makeText(getContext(), R.string.error_course_info, Toast.LENGTH_SHORT).show();
-    }
-
     /**
      * @return Returns true if all data is loaded
      */
@@ -231,7 +229,6 @@ public class CourseFragment extends Fragment {
         }
         return true;
     }
-
 
     private void requestAgendas() {
         Log.i(TAG, "requestAgendas");
@@ -263,24 +260,32 @@ public class CourseFragment extends Fragment {
 
                 try {
 
-                    ArrayList<CalendarEvent> tmpList = JSONParser.parseAllCalendarEvents(response);
                     agendas.clear();
-                    for(int i = 0; i < tmpList.size() && i < 3; i++){
-                        agendas.add(tmpList.get(i));
-                    }
+                    agendas.addAll(JSONParser.parseAllCalendarEvents(response));
 
-                    Log.i(TAG, "onResponse: " + agendas.size());
+                    loaded[1] = true;
 
                 } catch (JSONException e) {
                     Log.i(TAG, "exception: " + e);
                 }
 
+                if (isLoaded()) {
+                    mainList.setVisibility(View.VISIBLE);
+                    spinner.setVisibility(View.GONE);
+                }
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error);
+                if (spinner != null) spinner.setVisibility(View.GONE);
+                mCallback.showSnackbar("Error requesting agendas", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestAgendas();
+                    }
+                });
             }
         });
 

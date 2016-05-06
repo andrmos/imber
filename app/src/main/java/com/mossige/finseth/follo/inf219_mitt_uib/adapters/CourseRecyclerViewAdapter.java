@@ -46,7 +46,11 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
         View v;
 
         if (viewType == 0) { // Announcements card
-            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.announcements_card, parent, false);
+            if(announcements.size() == 0) {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.nodata,parent,false);
+            }else {
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.announcements_card, parent, false);
+            }
             holder = new AnnouncementsViewHolder(v);
 
         } else if (viewType == 1) { // agendas card
@@ -81,10 +85,14 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
         if (agendas.size() >= 2) {
             agendasViewHolder.agenda2.setText(getEvent(1));
+        }else{
+            //agendasViewHolder.dividerAgenda1.setVisibility(View.INVISIBLE);
         }
 
         if (agendas.size() >= 3) {
             agendasViewHolder.agenda3.setText(getEvent(2));
+        }else{
+            //agendasViewHolder.dividerAgenda2.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -119,10 +127,14 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
         if (announcements.size() >= 2) {
             announcementsViewHolder.announcements2.setText(announcements.get(1).getTitle());
+        }else{
+            //announcementsViewHolder.dividerAnn1.setVisibility(View.INVISIBLE);
         }
 
         if (announcements.size() >= 3) {
             announcementsViewHolder.announcements3.setText(announcements.get(2).getTitle());
+        }else{
+            //announcementsViewHolder.dividerAnn2.setVisibility(View.INVISIBLE);
         }
     }
 
