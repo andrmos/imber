@@ -39,6 +39,14 @@
     <string name="search_title">Søk</string>
     <string name="search_hint">Mottaker</string>
 
+    <!-- Compose message -->
+    <string name="subject_hint">Emne</string>
+    <string name="body_hint">Melding</string>
+    <string name="message_button">Send melding</string>
+    <string name="subject_length_error">Maks 255 tegn</string>
+    <string name="body_length_error">Meldingen er tom</string>
+
+
     <!-- Error messages -->
     <string name="error_profile">Feil ved lasting av profil…</string>
     <string name="error_course_list">Feil ved lasting av fag…</string>
