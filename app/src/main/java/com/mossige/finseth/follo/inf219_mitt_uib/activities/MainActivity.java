@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if(id == R.id.nav_inbox) {
             ConversationFragment conversationFragment = new ConversationFragment();
             transaction.replace(R.id.content_frame, conversationFragment);
+            transaction.addToBackStack("inbox");
             transaction.commit();
 
             drawerLayout.closeDrawer(navigationView);
@@ -324,9 +325,13 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public void showSnackbar(String toastMessage, View.OnClickListener listener) {
         Snackbar snackbar =  Snackbar.make(findViewById(R.id.content_frame), toastMessage,
-                Snackbar.LENGTH_INDEFINITE);
-        snackbar.setActionTextColor(Color.GREEN);
-        snackbar.setAction("Reload", listener);
+                Snackbar.LENGTH_SHORT);
+
+        if(listener != null) {
+            snackbar.setActionTextColor(Color.GREEN);
+            snackbar.setAction("Reload", listener);
+        }
+
         snackbar.show();
 
     }
