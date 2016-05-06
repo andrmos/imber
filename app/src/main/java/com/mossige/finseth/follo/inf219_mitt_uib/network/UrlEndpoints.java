@@ -3,6 +3,9 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network;
 import android.print.PrinterCapabilitiesInfo;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +14,8 @@ import java.util.ArrayList;
  * Helper class for getting the URL endpoints for the Canvas API.
  */
 public class UrlEndpoints {
+
+    public static final String TAG = "URLEndpoints";
 
     // Parameters
     public static final String ACCESS_TOKEN_KEY = "access_token=";
@@ -68,7 +73,9 @@ public class UrlEndpoints {
             return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
 
         } else {
-            return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+            String hex = getHex(search);
+            Log.i(TAG, "getRecipientsByGroup: " + BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + hex + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN);
+            return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + hex + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
         }
     }
 
@@ -164,6 +171,19 @@ public class UrlEndpoints {
      */
     public static String getUnreadCountURL(){
         return BASE_URL + CONVERSATIONS + UNREAD_COUNT + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    }
+
+    private static String getHex(String s) {
+
+        String hex = "";
+
+        try {
+            hex = java.net.URLEncoder.encode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        return hex;
     }
 
 }
