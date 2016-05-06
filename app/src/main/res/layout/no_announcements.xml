@@ -22,7 +22,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/agendas_title"
+                android:id="@+id/announcement_title"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/announcement_title_height"
                 android:layout_marginTop="@dimen/fab_margin"
@@ -40,10 +40,19 @@
                 android:background="?android:attr/listDivider"/>
 
             <ImageView
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:padding="20dp"
                 android:src="@drawable/nodata"
                 android:layout_gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/agenda_card_margin"
+                android:text="Ingen kunngjøringer for faget"
+                android:textColor="@color/colorPrimaryLight"/>
 
         </LinearLayout>
 

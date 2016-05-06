@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +23,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
-import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
@@ -58,14 +59,14 @@ public class CourseFragment extends Fragment {
     /* If data is loaded */
     private boolean[] loaded;
 
-    ShowSnackbar.ShowToastListener mCallback;
+    MainActivityListener.ShowToastListener mCallback;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try{
-            mCallback = (ShowSnackbar.ShowToastListener) context;
+            mCallback = (MainActivityListener.ShowToastListener) context;
         }catch(ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }
@@ -134,8 +135,8 @@ public class CourseFragment extends Fragment {
         ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                if (position == 0) {
 
+                if (position == 0) {
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     AnnouncementFragment announcementFragment = new AnnouncementFragment();
                     transaction.replace(R.id.content_frame, announcementFragment);
@@ -169,6 +170,13 @@ public class CourseFragment extends Fragment {
                     transaction.commit();
                 } else {
                     Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");
+                }
+
+                if(position == 1){
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+                    mCallback.initCalendar();
                 }
             }
         });

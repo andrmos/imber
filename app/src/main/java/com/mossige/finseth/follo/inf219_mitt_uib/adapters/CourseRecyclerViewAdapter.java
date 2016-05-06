@@ -47,7 +47,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
         if (viewType == 0) { // Announcements card
             if(announcements.size() == 0) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.nodata,parent,false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_announcements,parent,false);
             }else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.announcements_card, parent, false);
             }
@@ -55,7 +55,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
         } else if (viewType == 1) { // agendas card
             if(agendas.size() == 0) {
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.nodata,parent,false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_agenda,parent,false);
             }else{
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agendas_card, parent, false);
             }

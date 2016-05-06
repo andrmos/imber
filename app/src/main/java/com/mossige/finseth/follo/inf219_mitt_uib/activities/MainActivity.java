@@ -32,7 +32,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
@@ -49,7 +49,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener, ShowSnackbar.ShowToastListener{
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener, MainActivityListener.ShowToastListener{
 
     private static final String TAG = "MainActivity";
 
@@ -296,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
     }
 
-    private void initCalendarFragment() {
+    public void initCalendarFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         CalendarFragment calendarFragment = new CalendarFragment();
 
@@ -334,6 +334,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         snackbar.show();
 
+    }
+
+    @Override
+    public void initCalendar() {
+        initCalendarFragment();
     }
 
 

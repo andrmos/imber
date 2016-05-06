@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -21,9 +20,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.courseBank.CourseBank;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
-import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
@@ -34,7 +32,6 @@ import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -54,7 +51,7 @@ public class CourseListFragment extends Fragment {
 
     private boolean filterInstituteCourses;
 
-    ShowSnackbar.ShowToastListener mCallback;
+    MainActivityListener.ShowToastListener mCallback;
 
     public CourseListFragment() {}
 
@@ -77,7 +74,7 @@ public class CourseListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mCallback = (ShowSnackbar.ShowToastListener) context;
+            mCallback = (MainActivityListener.ShowToastListener) context;
         }catch (ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }

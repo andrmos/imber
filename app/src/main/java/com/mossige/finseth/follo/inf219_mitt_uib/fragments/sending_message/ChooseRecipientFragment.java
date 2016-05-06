@@ -32,7 +32,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecipientRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
-import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ShowSnackbar;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.RecipientGroup;
@@ -86,7 +86,7 @@ public class ChooseRecipientFragment extends Fragment {
 
     private HashMap<String,Boolean> recipientsChecked;
 
-    ShowSnackbar.ShowToastListener mCallback;
+    MainActivityListener.ShowToastListener mCallback;
     private int courseId;
     private RecipientGroup recipientGroup;
 
@@ -168,7 +168,7 @@ public class ChooseRecipientFragment extends Fragment {
         super.onAttach(context);
 
         try {
-            mCallback = (ShowSnackbar.ShowToastListener) context;
+            mCallback = (MainActivityListener.ShowToastListener) context;
         } catch (ClassCastException e) {
             Log.i(TAG, "Class cast exception");
         }
