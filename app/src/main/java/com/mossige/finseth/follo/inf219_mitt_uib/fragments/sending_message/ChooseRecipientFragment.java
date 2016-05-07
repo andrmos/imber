@@ -35,7 +35,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.RecipientGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
@@ -61,19 +60,15 @@ public class ChooseRecipientFragment extends Fragment {
     private ProgressBar progressBar;
     private ProgressBar progressBarRecipient;
 
-    private ArrayList<RecipientGroup> recipientGroups;
     private ArrayList<Recipient> recipients;
 
     //Dropdownlists
     private Spinner courseSpinner;
-    private Spinner groupSpinner;
 
     //Adapters to the dropdownlists above
     private ArrayAdapter<String> courseAdapter;
-    private ArrayAdapter<String> groupAdapter;
 
     private ArrayList<String> courseCodes;
-    private ArrayList<String> groups;
 
     private boolean loaded;
     private ArrayList<Course> courses;
@@ -87,10 +82,6 @@ public class ChooseRecipientFragment extends Fragment {
 
     MainActivityListener.ShowToastListener mCallback;
     private int courseId;
-
-    private RecipientGroup recipientGroup;
-
-    private boolean firstRun;
 
     public ChooseRecipientFragment() {
     }
@@ -149,10 +140,8 @@ public class ChooseRecipientFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        recipientGroups = new ArrayList<>();
         courses = new ArrayList<>();
         courseCodes = new ArrayList<>();
-        groups = new ArrayList<>();
         recipients = new ArrayList<>();
         recipientsChecked = new HashMap<>();
 
@@ -172,14 +161,10 @@ public class ChooseRecipientFragment extends Fragment {
         }
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.choose_recipient, container, false);
         getActivity().setTitle("Velg mottaker");
-
-        firstRun = true;
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         progressBarRecipient = (ProgressBar) rootView.findViewById(R.id.progressBarRecipient);
@@ -190,7 +175,7 @@ public class ChooseRecipientFragment extends Fragment {
         }
 
         initRecycleView();
-        initSpinners();
+        initCourseSpinner();
         initSearchView();
 
         return rootView;
@@ -207,18 +192,13 @@ public class ChooseRecipientFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (recipientGroup != null) {
-                    String url = UrlEndpoints.getRecipientsByGroup(newText, recipientGroup.getId());
+                String url = UrlEndpoints.getRecipients(newText, courseId);
 
-                    // Clear results to fill with new data
-                    recipients.clear();
+                // Clear results to fill with new data
+                recipients.clear();
 
-                    // ÆØÅ Not supported by API
-                    requestRecipients(recipientGroup, url, newText);
-
-                } else {
-                    Log.i(TAG, "onQueryTextChange: recipientGroup is null");
-                }
+                // ÆØÅ Not supported by API
+                requestRecipients(url, newText);
 
                 // Do not cancel requests with empty tag
                 if (newText.length() > 1) {
@@ -229,8 +209,6 @@ public class ChooseRecipientFragment extends Fragment {
                 return true;
             }
         });
-
-
     }
 
 
@@ -253,11 +231,6 @@ public class ChooseRecipientFragment extends Fragment {
         });
     }
 
-    private void initSpinners() {
-        initCourseSpinner();
-        initGroupSpinner();
-    }
-
     private void initCourseSpinner() {
         courseSpinner = (Spinner) rootView.findViewById(R.id.course_selector);
 
@@ -270,10 +243,10 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
                 recipients.clear();
-                mAdapter.notifyDataSetChanged();
 
                 courseId = courses.get(parent.getSelectedItemPosition()).getId();
-                requestRecipientGroups(courseId);
+                String url = UrlEndpoints.getRecipients(null, courseId);
+                requestRecipients(url, "recipient");
             }
 
             @Override
@@ -281,44 +254,6 @@ public class ChooseRecipientFragment extends Fragment {
                 Log.i(TAG, "onNothingSelected: ");
             }
         });
-    }
-
-
-    private void initGroupSpinner() {
-        groupSpinner = (Spinner) rootView.findViewById(R.id.group_selector);
-
-        groupAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, groups);
-        groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        groupSpinner.setAdapter(groupAdapter);
-
-        groupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                if (!firstRun) {
-                    recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
-                    RecipientGroup recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
-                    handleGroupSelection(recipientGroup);
-//                } else {
-//                    firstRun = false;
-//                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.i(TAG, "onNothingSelected: nothing");
-            }
-        });
-    }
-
-    private void handleGroupSelection(RecipientGroup recipientGroup) {
-        // Clear content of recipients, to allow filling with new recipients
-        recipients.clear();
-        mAdapter.notifyDataSetChanged();
-
-        String url = UrlEndpoints.getRecipientsByGroup(null, recipientGroup.getId());
-        requestRecipients(recipientGroup, url, "recipient");
-
-        progressBarRecipient.setVisibility(View.VISIBLE);
     }
 
     private void initRecycleView() {
@@ -344,8 +279,7 @@ public class ChooseRecipientFragment extends Fragment {
             public void onResponse(JSONArray response) {
 
                 try {
-                    boolean filterInstituteCourses = false;
-                    courses = JSONParser.parseAllCourses(response, filterInstituteCourses, getContext());
+                    courses = JSONParser.parseAllCourses(response, false, getContext());
 
                     courseCodes.clear();
                     for (Course c : courses) {
@@ -380,64 +314,7 @@ public class ChooseRecipientFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
     }
 
-    private void requestRecipientGroups(final int courseID) {
-
-        final JsonArrayRequest recipientGroupReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getRecipientGroups(courseID), (String) null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
-                    recipientGroups.clear();
-                    recipientGroups = JSONParser.parseAllRecipientGroups(response);
-
-                    groups.clear();
-                    for (RecipientGroup g : recipientGroups) {
-                        groups.add(g.getName());
-                    }
-
-                    groupAdapter.notifyDataSetChanged();
-
-                    // TODO Bug:
-                    // 1. Click Om in navigation drawer
-                    // 2. Click MAT102
-                    // 3. Click Studenter
-                    // 4. Click INF219
-                    // Mari is in Studenter list...
-
-                    // Possible fix:
-                    // get current group spinner selection
-
-                    if (!firstRun) {
-//                        RecipientGroup rg = (RecipientGroup) groupSpinner.getSelectedItem();
-                        RecipientGroup rg = recipientGroups.get(0);
-                        handleGroupSelection(rg);
-
-                    } else {
-                        firstRun = false;
-                    }
-
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-                //mCallback.showSnackbar("Error requesting recipient groups");
-            }
-
-        });
-
-        recipientGroupReq.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(recipientGroupReq);
-    }
-
-    private void requestRecipients(final RecipientGroup rg, String url, final String tag) {
+    private void requestRecipients(String url, final String tag) {
         nextLink = "";
 
         final JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
@@ -449,11 +326,10 @@ public class ChooseRecipientFragment extends Fragment {
                     // If there exists a link to the next recipients page, start request with new url
                     if (!nextLink.isEmpty()) {
                         // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
-                        requestRecipients(rg, nextLink, tag);
+                        requestRecipients(nextLink, tag);
                     }
 
                     for (Recipient r : tmp) {
-                        r.setGroup(rg.getName());
                         if (recipientsChecked.containsKey(r.getId())) {
                             r.setChecked(recipientsChecked.get(r.getId()));
                         }

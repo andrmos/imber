@@ -11,7 +11,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.RecipientGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 
 import org.json.JSONArray;
@@ -79,27 +78,6 @@ public class JSONParser {
                 parsed.add(parseOneCalendarEvent(obj));
             }
 
-        }
-
-        return parsed;
-    }
-
-    /**
-     * Parses the different recipient groups
-     * @param unParsed JSONArray you get onResponse with the request
-     * @return An ArrayList containing the different {@link RecipientGroup recipient groups}
-     * @throws JSONException
-     */
-    public static ArrayList<RecipientGroup> parseAllRecipientGroups(JSONArray unParsed) throws JSONException {
-        ArrayList<RecipientGroup> parsed = new ArrayList<>();
-
-        for (int i = 0; i < unParsed.length(); i++) {
-            JSONObject obj = unParsed.getJSONObject(i);
-
-            RecipientGroup recipientGroup = parseOneRecipientsGroup(obj);
-            if (recipientGroup != null) {
-                parsed.add(recipientGroup);
-            }
         }
 
         return parsed;
@@ -198,19 +176,6 @@ public class JSONParser {
         String name = obj.getString("name");
 
         return new Recipient(id, name);
-    }
-
-    private static RecipientGroup parseOneRecipientsGroup(JSONObject obj) throws JSONException {
-        String id = obj.getString("id");
-        String name = obj.getString("name");
-
-        // Only parse chosen groups
-        if (name.equals("Forelesere") || name.equals("Læringsassistenter") || name.equals("Studenter")) {
-            String size = obj.getString("user_count");
-            return new RecipientGroup(id, name, size);
-        } else {
-            return null;
-        }
     }
 
     private static Conversation getLastMessage(JSONObject obj) throws JSONException {
