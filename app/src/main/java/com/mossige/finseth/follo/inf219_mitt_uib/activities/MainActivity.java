@@ -266,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
     }
 
+    @Override
     public void requestUnreadCount() {
 
         final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUnreadCountURL(), (String) null, new Response.Listener<JSONObject>() {

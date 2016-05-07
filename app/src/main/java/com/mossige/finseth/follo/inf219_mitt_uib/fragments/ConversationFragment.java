@@ -34,6 +34,8 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
 /**
  * Created by Follo on 15.03.2016.
  */
@@ -47,7 +49,7 @@ public class ConversationFragment extends Fragment {
     private ArrayList<Conversation> conversations;
     private ArrayList<String> conversationIDs;
 
-    private ProgressBar spinner;
+    private SmoothProgressBar progressbar;
 
     /* If data is loaded */
     private boolean loaded;
@@ -82,13 +84,13 @@ public class ConversationFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
         getActivity().setTitle(R.string.conversation_title);
 
-        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
 
         if (loaded) {
-            spinner.setVisibility(View.GONE);
+            progressbar.setVisibility(View.GONE);
         } else {
-            spinner.setVisibility(View.VISIBLE);
+            progressbar.setVisibility(View.VISIBLE);
         }
 
         return rootView;
@@ -115,12 +117,12 @@ public class ConversationFragment extends Fragment {
                     Log.i(TAG, "JSONException");
                 }
 
-                spinner.setVisibility(View.GONE);
+                progressbar.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                spinner.setVisibility(View.GONE);
+                progressbar.setVisibility(View.GONE);
                 mCallback.showSnackbar(getString(R.string.error_conversation), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
