@@ -10,6 +10,7 @@ public class MainActivityListener {
     public interface ShowToastListener {
         void showSnackbar(String toastMessage, View.OnClickListener listener);
         void initCalendar();
+        void requestUnreadCount();
     }
 
 }

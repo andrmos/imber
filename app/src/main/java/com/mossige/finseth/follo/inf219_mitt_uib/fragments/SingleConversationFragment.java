@@ -32,6 +32,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
 
 /**
  * Created by Follo on 15.03.2016.
@@ -43,7 +45,7 @@ public class SingleConversationFragment extends Fragment {
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
 
-    private ProgressBar spinner;
+    private SmoothProgressBar progressbar;
 
     private Conversation conversation;
     private ArrayList<Message> messages;
@@ -79,13 +81,13 @@ public class SingleConversationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        spinner = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressbar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
 
         if (loaded) {
-            spinner.setVisibility(View.GONE);
+            progressbar.setVisibility(View.GONE);
         } else {
-            spinner.setVisibility(View.VISIBLE);
+            progressbar.setVisibility(View.VISIBLE);
         }
 
         return rootView;
@@ -111,20 +113,19 @@ public class SingleConversationFragment extends Fragment {
                             mAdapter.notifyDataSetChanged();
 
                             //Update unread count in navigation drawer
-                            MainActivity mainActivity = (MainActivity) getActivity();
-                            mainActivity.requestUnreadCount();
+                            mCallback.requestUnreadCount();
 
                         } catch (JSONException e) {
                             // TODO handle exception
                             Log.i(TAG, "JSONException");
                         }
 
-                        spinner.setVisibility(View.GONE);
+                        progressbar.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                spinner.setVisibility(View.GONE);
+                progressbar.setVisibility(View.GONE);
                 mCallback.showSnackbar(getString(R.string.error_conversation), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

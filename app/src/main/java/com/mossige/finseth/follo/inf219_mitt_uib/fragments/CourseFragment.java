@@ -39,6 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -52,7 +54,7 @@ public class CourseFragment extends Fragment {
     private ArrayList<Announcement> announcements;
     private ArrayList<CalendarEvent> agendas;
 
-    private ProgressBar spinner;
+    private SmoothProgressBar progressbar;
 
     private Course course;
 
@@ -92,6 +94,7 @@ public class CourseFragment extends Fragment {
 
         requestAnnouncements("" + course.getId());
         requestAgendas();
+
     }
 
     @Override
@@ -101,14 +104,17 @@ public class CourseFragment extends Fragment {
         String course_name = getArguments().getString("name");
         getActivity().setTitle(course_name);
 
-        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
+        progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
+
+        Log.i(TAG, "onCreateView: " + announcements.size());
 
         // Hide progress bar if data is already loaded
         if (isLoaded()) {
-            spinner.setVisibility(View.GONE);
+            progressbar.setVisibility(View.GONE);
+            mainList.setVisibility(View.VISIBLE);
         } else {
-            spinner.setVisibility(View.VISIBLE);
+            progressbar.setVisibility(View.VISIBLE);
         }
 
         return rootView;
@@ -167,6 +173,7 @@ public class CourseFragment extends Fragment {
                     args.putString("course_code", course.getCourseCode());
                     announcementFragment.setArguments(args);
 
+                    transaction.addToBackStack(null);
                     transaction.commit();
                 } else {
                     Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");
@@ -204,14 +211,14 @@ public class CourseFragment extends Fragment {
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);
-                    spinner.setVisibility(View.GONE);
+                    progressbar.setVisibility(View.GONE);
                 }
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                spinner.setVisibility(View.GONE);
+                progressbar.setVisibility(View.GONE);
                 mCallback.showSnackbar("Error requesting announcements", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -279,7 +286,7 @@ public class CourseFragment extends Fragment {
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);
-                    spinner.setVisibility(View.GONE);
+                    progressbar.setVisibility(View.GONE);
                 }
 
             }
@@ -287,7 +294,7 @@ public class CourseFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error);
-                if (spinner != null) spinner.setVisibility(View.GONE);
+                if (progressbar != null) progressbar.setVisibility(View.GONE);
                 mCallback.showSnackbar("Error requesting agendas", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -3,23 +3,31 @@
     android:layout_height="match_parent"
     android:id="@+id/recycler_view_layout">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_centerInParent="true"
-        android:indeterminate="true"
-        android:max="100"
-        android:minHeight="30dp"
-        android:minWidth="150dp"
-        android:visibility="gone"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" >
     </android.support.v7.widget.RecyclerView>
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/progressbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        app:spb_sections_count="4"
+        app:spb_colors="@array/prgressbarColors"
+        app:spb_speed="1.0"
+        app:spb_stroke_width="4dp"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_reversed="false"
+        app:spb_mirror_mode="false"
+        app:spb_progressiveStart_activated="true"
+        app:spb_interpolator="spb_interpolator_acceleratedecelerate"
+        />
 
 </RelativeLayout>
