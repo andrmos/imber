@@ -65,8 +65,8 @@ public class ChooseRecipientFragment extends Fragment {
     private ArrayList<Recipient> recipients;
 
     //Dropdownlists
-    private Spinner course_spinner;
-    private Spinner group_spinner;
+    private Spinner courseSpinner;
+    private Spinner groupSpinner;
 
     //Adapters to the dropdownlists above
     private ArrayAdapter<String> courseAdapter;
@@ -82,13 +82,15 @@ public class ChooseRecipientFragment extends Fragment {
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private HashMap<String,Boolean> recipientsChecked;
 
     MainActivityListener.ShowToastListener mCallback;
     private int courseId;
+
     private RecipientGroup recipientGroup;
+
+    private boolean firstRun;
 
     public ChooseRecipientFragment() {
     }
@@ -100,15 +102,12 @@ public class ChooseRecipientFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
 
         if (id == R.id.send) {
             initComposeMessageFragment();
-
             return true;
         }
-
 
         return false;
     }
@@ -126,7 +125,7 @@ public class ChooseRecipientFragment extends Fragment {
             }
         }
 
-        //If recipients are choosen write new message. If not show toast message
+        //If recipients are choosen, write new message. If not show toast message
         if(tmpList.size() > 0) {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
@@ -138,7 +137,6 @@ public class ChooseRecipientFragment extends Fragment {
             Bundle args = new Bundle();
             args.putStringArrayList("recipientIDs", tmpList);
             composeMessageFragment.setArguments(args);
-
 
             transaction.commit();
         }else{
@@ -180,6 +178,8 @@ public class ChooseRecipientFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.choose_recipient, container, false);
         getActivity().setTitle("Velg mottaker");
+
+        firstRun = true;
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         progressBarRecipient = (ProgressBar) rootView.findViewById(R.id.progressBarRecipient);
@@ -238,7 +238,6 @@ public class ChooseRecipientFragment extends Fragment {
     public void onPause() {
         // Cancel all recipients requests when navigating away from fragment
         cancelRequest("recipient");
-
         super.onPause();
     }
 
@@ -254,34 +253,25 @@ public class ChooseRecipientFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onStop() {
-        Log.i(TAG, "onStop");
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        Log.i(TAG, "onDestroyView");
-        super.onDestroyView();
-    }
-
     private void initSpinners() {
         initCourseSpinner();
         initGroupSpinner();
     }
 
     private void initCourseSpinner() {
-        course_spinner = (Spinner) rootView.findViewById(R.id.course_selector);
+        courseSpinner = (Spinner) rootView.findViewById(R.id.course_selector);
 
         // TODO Make custom adapter so we don't need duplicate ArrayLists with String courseCodes
         courseAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, courseCodes);
         courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        course_spinner.setAdapter(courseAdapter);
+        courseSpinner.setAdapter(courseAdapter);
 
-        course_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
+                recipients.clear();
+                mAdapter.notifyDataSetChanged();
+
                 courseId = courses.get(parent.getSelectedItemPosition()).getId();
                 requestRecipientGroups(courseId);
             }
@@ -293,26 +283,24 @@ public class ChooseRecipientFragment extends Fragment {
         });
     }
 
+
     private void initGroupSpinner() {
-        group_spinner = (Spinner) rootView.findViewById(R.id.group_selector);
+        groupSpinner = (Spinner) rootView.findViewById(R.id.group_selector);
 
         groupAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, groups);
         groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        group_spinner.setAdapter(groupAdapter);
-        group_spinner.setEnabled(false);
+        groupSpinner.setAdapter(groupAdapter);
 
-        group_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        groupSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
-                String url = UrlEndpoints.getRecipientsByGroup(null, recipientGroup.getId());
-
-                requestRecipients(recipientGroup, url, "recipient");
-
-                progressBarRecipient.setVisibility(View.VISIBLE);
-
-                // Clear content of recipients spinner, to allow filling with new recipients
-                recipients.clear();
+//                if (!firstRun) {
+                    recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
+                    RecipientGroup recipientGroup = recipientGroups.get(parent.getSelectedItemPosition());
+                    handleGroupSelection(recipientGroup);
+//                } else {
+//                    firstRun = false;
+//                }
             }
 
             @Override
@@ -322,13 +310,24 @@ public class ChooseRecipientFragment extends Fragment {
         });
     }
 
+    private void handleGroupSelection(RecipientGroup recipientGroup) {
+        // Clear content of recipients, to allow filling with new recipients
+        recipients.clear();
+        mAdapter.notifyDataSetChanged();
+
+        String url = UrlEndpoints.getRecipientsByGroup(null, recipientGroup.getId());
+        requestRecipients(recipientGroup, url, "recipient");
+
+        progressBarRecipient.setVisibility(View.VISIBLE);
+    }
+
     private void initRecycleView() {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
@@ -396,7 +395,25 @@ public class ChooseRecipientFragment extends Fragment {
                     }
 
                     groupAdapter.notifyDataSetChanged();
-                    group_spinner.setEnabled(true);
+
+                    // TODO Bug:
+                    // 1. Click Om in navigation drawer
+                    // 2. Click MAT102
+                    // 3. Click Studenter
+                    // 4. Click INF219
+                    // Mari is in Studenter list...
+
+                    // Possible fix:
+                    // get current group spinner selection
+
+                    if (!firstRun) {
+//                        RecipientGroup rg = (RecipientGroup) groupSpinner.getSelectedItem();
+                        RecipientGroup rg = recipientGroups.get(0);
+                        handleGroupSelection(rg);
+
+                    } else {
+                        firstRun = false;
+                    }
 
                 } catch (JSONException e) {
                     // TODO handle exception
@@ -421,8 +438,6 @@ public class ChooseRecipientFragment extends Fragment {
     }
 
     private void requestRecipients(final RecipientGroup rg, String url, final String tag) {
-
-//        nextLinks = new ArrayList<>();
         nextLink = "";
 
         final JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
@@ -434,7 +449,6 @@ public class ChooseRecipientFragment extends Fragment {
                     // If there exists a link to the next recipients page, start request with new url
                     if (!nextLink.isEmpty()) {
                         // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
-                        // TODO Cancel the requests when going to a new activity/chooses a recipient to send to
                         requestRecipients(rg, nextLink, tag);
                     }
 
@@ -460,9 +474,7 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error.toString());
-                // TODO Is run when canceling requests.
-                // TODO Cannot show toast when in another fragment, so this will throw a nullpointer exception
-                //mCallback.showSnackbar("Error requesting recipients");
+//                mCallback.showSnackbar("Error requesting recipients");
             }
 
         }) {
