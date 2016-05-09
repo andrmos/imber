@@ -47,7 +47,7 @@ public class ComposeMessageFragment extends Fragment {
     private TextInputLayout subjectInputLayout;
     private TextInputLayout bodyInputLayout;
 
-    MainActivityListener.ShowToastListener mCallback;
+    MainActivityListener mCallback;
 
     public ComposeMessageFragment() { }
 
@@ -105,7 +105,7 @@ public class ComposeMessageFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mCallback = (MainActivityListener.ShowToastListener) context;
+            mCallback = (MainActivityListener) context;
         }catch (ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }

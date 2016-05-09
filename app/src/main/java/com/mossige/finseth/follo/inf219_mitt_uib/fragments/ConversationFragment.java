@@ -54,7 +54,7 @@ public class ConversationFragment extends Fragment {
     /* If data is loaded */
     private boolean loaded;
 
-    MainActivityListener.ShowToastListener mCallback;
+    MainActivityListener mCallback;
 
     public ConversationFragment() {}
 
@@ -63,7 +63,7 @@ public class ConversationFragment extends Fragment {
         super.onAttach(context);
 
         try {
-            mCallback = (MainActivityListener.ShowToastListener) context;
+            mCallback = (MainActivityListener) context;
         }catch(ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }

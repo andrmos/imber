@@ -49,14 +49,13 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener, MainActivityListener.ShowToastListener{
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener, MainActivityListener {
 
     private static final String TAG = "MainActivity";
 
     private User profile;
     private ArrayList<Course> courses;
     private NavigationView navigationView;
-    private int unreadCount;
 
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set main layout
         setContentView(R.layout.activity_main);
 
         requestProfile();
@@ -79,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        initNavigationDrawer(toolbar);
+    }
+
+    private void initNavigationDrawer(Toolbar toolbar) {
         // Setup navigation drawer
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(
@@ -88,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
     }
 
     private void requestCourses(final boolean filterInstituteCourses) {
@@ -275,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             public void onResponse(JSONObject response) {
 
                 try {
-                    unreadCount = JSONParser.parseUnreadCount(response);
+                    int unreadCount = JSONParser.parseUnreadCount(response);
 
                     setMenuCounter(R.id.nav_inbox, unreadCount);
 
@@ -319,22 +320,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         view.setText(count > 0 ? String.valueOf(count) : null);
     }
 
-    public int getUnreadCount() {
-        return unreadCount;
-    }
-
     @Override
     public void showSnackbar(String toastMessage, View.OnClickListener listener) {
-        Snackbar snackbar =  Snackbar.make(findViewById(R.id.content_frame), toastMessage,
-                Snackbar.LENGTH_SHORT);
+        Snackbar snackbar =  Snackbar.make(findViewById(R.id.content_frame), toastMessage, Snackbar.LENGTH_INDEFINITE);
+        int duration = 4000;
+        snackbar = snackbar.setDuration(duration); // Gives false syntax error...
 
         if(listener != null) {
-            snackbar.setActionTextColor(Color.GREEN);
-            snackbar.setAction("Reload", listener);
+            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            snackbar.setAction(getString(R.string.snackback_action_text), listener);
         }
 
         snackbar.show();
-
     }
 
     @Override

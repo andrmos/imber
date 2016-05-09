@@ -52,14 +52,14 @@ public class SingleConversationFragment extends Fragment {
 
     private boolean loaded;
 
-    MainActivityListener.ShowToastListener mCallback;
+    MainActivityListener mCallback;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try{
-            mCallback = (MainActivityListener.ShowToastListener) context;
+            mCallback = (MainActivityListener) context;
         }catch(ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }

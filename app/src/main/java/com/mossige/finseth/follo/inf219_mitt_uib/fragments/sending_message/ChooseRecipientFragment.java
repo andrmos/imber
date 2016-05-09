@@ -62,9 +62,6 @@ public class ChooseRecipientFragment extends Fragment {
 
     private ArrayList<Recipient> recipients;
 
-    //Dropdownlists
-    private Spinner courseSpinner;
-
     //Adapters to the dropdownlists above
     private ArrayAdapter<String> courseAdapter;
 
@@ -80,7 +77,7 @@ public class ChooseRecipientFragment extends Fragment {
 
     private HashMap<String,Boolean> recipientsChecked;
 
-    MainActivityListener.ShowToastListener mCallback;
+    MainActivityListener mCallback;
     private int courseId;
 
     public ChooseRecipientFragment() {
@@ -155,7 +152,7 @@ public class ChooseRecipientFragment extends Fragment {
         super.onAttach(context);
 
         try {
-            mCallback = (MainActivityListener.ShowToastListener) context;
+            mCallback = (MainActivityListener) context;
         } catch (ClassCastException e) {
             Log.i(TAG, "Class cast exception");
         }
@@ -197,7 +194,6 @@ public class ChooseRecipientFragment extends Fragment {
                 // Clear results to fill with new data
                 recipients.clear();
 
-                // ÆØÅ Not supported by API
                 requestRecipients(url, newText);
 
                 // Do not cancel requests with empty tag
@@ -232,7 +228,7 @@ public class ChooseRecipientFragment extends Fragment {
     }
 
     private void initCourseSpinner() {
-        courseSpinner = (Spinner) rootView.findViewById(R.id.course_selector);
+        Spinner courseSpinner = (Spinner) rootView.findViewById(R.id.course_selector);
 
         // TODO Make custom adapter so we don't need duplicate ArrayLists with String courseCodes
         courseAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, courseCodes);
