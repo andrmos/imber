@@ -107,8 +107,6 @@ public class CourseFragment extends Fragment {
         progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
 
-        Log.i(TAG, "onCreateView: " + announcements.size());
-
         // Hide progress bar if data is already loaded
         if (isLoaded()) {
             progressbar.setVisibility(View.GONE);
@@ -198,16 +196,11 @@ public class CourseFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
 
-                try {
-                    announcements.clear();
-                    announcements.addAll(JSONParser.parseAllAnouncements(response));
+                announcements.clear();
+                announcements.addAll(JSONParser.parseAllAnnouncements(response));
 
-                    loaded[0] = true;
+                loaded[0] = true;
 
-                } catch (JSONException e) {
-                    Log.i(TAG, "JSONException requesting announcements");
-                    e.printStackTrace();
-                }
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);
@@ -246,7 +239,6 @@ public class CourseFragment extends Fragment {
     }
 
     private void requestAgendas() {
-        Log.i(TAG, "requestAgendas");
 
         //Course ids for context_codes in url
         ArrayList<String> ids = new ArrayList<>();
@@ -267,24 +259,16 @@ public class CourseFragment extends Fragment {
         String start_date = df.format(cal.getTime());
         String end_date = df.format(cal.getTime());
 
-        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1));
         JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
+                agendas.clear();
+                agendas.addAll(JSONParser.parseAllCalendarEvents(response));
 
-                try {
+                loaded[1] = true;
 
-                    agendas.clear();
-                    agendas.addAll(JSONParser.parseAllCalendarEvents(response));
-
-                    loaded[1] = true;
-
-                    requestAssignments();
-
-                } catch (JSONException e) {
-                    Log.i(TAG, "exception: " + e);
-                }
+                requestAssignments();
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);
@@ -336,16 +320,9 @@ public class CourseFragment extends Fragment {
 
             @Override
             public void onResponse(JSONArray response) {
+                agendas.addAll(JSONParser.parseAllCalendarEvents(response));
 
-                try {
-
-                    agendas.addAll(JSONParser.parseAllCalendarEvents(response));
-
-                    loaded[2] = true;
-
-                } catch (JSONException e) {
-                    Log.i(TAG, "exception: " + e);
-                }
+                loaded[2] = true;
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);

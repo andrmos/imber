@@ -23,10 +23,12 @@ public class Message {
 
         //Make datetime object with string - subststring removes 'z' in date format
         DateTime dt = new DateTime(date.substring(0,date.length()-1));
-        dt = dt.changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo"));
+        if(!author.equals("FAILED")) {
+            dt = dt.changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo"));
+            this.date = trimDate(dt.toString());
+        }
         this.author = author;
         this.authorID = authorID;
-        this.date = trimDate(dt.toString());
         this.message = message;
     }
 
@@ -37,6 +39,8 @@ public class Message {
     public String getAuthor(){
         return author;
     }
+
+    public String getAuthorID() { return authorID; }
 
     private static String trimDate(String date){
         String dateToString = "";

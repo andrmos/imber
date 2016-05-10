@@ -98,17 +98,13 @@ public class ConversationFragment extends Fragment {
         final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getConversationsUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                try {
+
                     conversations.clear();
                     conversations.addAll(JSONParser.parseAllConversations(response));
 
                     loaded = true;
                     mAdapter.notifyDataSetChanged();
 
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
-                }
 
                 progressbar.setVisibility(View.GONE);
             }

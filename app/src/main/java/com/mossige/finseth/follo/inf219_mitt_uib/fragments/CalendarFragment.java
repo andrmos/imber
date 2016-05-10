@@ -236,14 +236,13 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
 
-                try {
-                    ArrayList<CalendarEvent> events = JSONParser.parseAllCalendarEvents(response);
-                    calendar.addEvents(events);
+                ArrayList<CalendarEvent> events = JSONParser.parseAllCalendarEvents(response);
+                calendar.addEvents(events);
 
-                    // If returned maximum amount of events, get events for next page
-                    if(events.size() == 50) {
-                        getCalendarEvents(year, month, page_num + 1);
-                    }
+                // If returned maximum amount of events, get events for next page
+                if(events.size() == 50) {
+                    getCalendarEvents(year, month, page_num + 1);
+                }
 
                     requestAssignments(year,month);
 
@@ -253,18 +252,13 @@ public class CalendarFragment extends Fragment {
 
                     DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
                     if (today.gteq(new DateTime(start_date)) && today.lteq(new DateTime(end_date))) {
-                        Log.i(TAG, "onResponse: else ja");
                         mCallback.setAgendas(calendar.getEventsForDate(today));
-
+                        
                     }
 
-                } catch (JSONException e) {
-                    Log.i(TAG, "exception: " + e);
-                    calendar.setLoaded(year, month, false);
                 }
 
 
-            }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {

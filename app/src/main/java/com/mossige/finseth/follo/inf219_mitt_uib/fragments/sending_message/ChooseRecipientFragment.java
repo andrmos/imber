@@ -285,9 +285,6 @@ public class ChooseRecipientFragment extends Fragment {
                     courseAdapter.notifyDataSetChanged();
                     loaded = true;
 
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -316,8 +313,7 @@ public class ChooseRecipientFragment extends Fragment {
         final JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                try {
-                    ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
+                ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
 
                     // If there exists a link to the next recipients page, start request with new url
                     if (!nextLink.isEmpty()) {
@@ -332,14 +328,8 @@ public class ChooseRecipientFragment extends Fragment {
                         recipients.add(r);
                     }
 
-                    progressBarRecipient.setVisibility(View.GONE);
-                    mAdapter.notifyDataSetChanged();
-
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
-                    e.printStackTrace();
-                }
+                progressBarRecipient.setVisibility(View.GONE);
+                mAdapter.notifyDataSetChanged();
 
             }
         }, new Response.ErrorListener() {
