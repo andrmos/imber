@@ -19,11 +19,11 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AgendaFragment extends Fragment {
+public class AgendaFragment extends Fragment{
 
     private static final String TAG = "AgendaFragment";
 
-    private RecyclerView.Adapter mAdapter;
+    private AgendaRecyclerViewAdapter mAdapter;
     private ArrayList<CalendarEvent> agendas;
 
     public AgendaFragment() {}
@@ -38,6 +38,7 @@ public class AgendaFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         initRecycleView(rootView);
+
         return rootView;
     }
 

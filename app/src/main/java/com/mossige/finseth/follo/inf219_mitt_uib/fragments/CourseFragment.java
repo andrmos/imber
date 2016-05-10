@@ -82,7 +82,7 @@ public class CourseFragment extends Fragment {
 
         announcements = new ArrayList<>();
         agendas = new ArrayList<>();
-        loaded = new boolean[2];
+        loaded = new boolean[3];
 
         // Get arguments from course list
         int course_id = getArguments().getInt("id");
@@ -279,6 +279,69 @@ public class CourseFragment extends Fragment {
                     agendas.addAll(JSONParser.parseAllCalendarEvents(response));
 
                     loaded[1] = true;
+
+                    requestAssignments();
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "exception: " + e);
+                }
+
+                if (isLoaded()) {
+                    mainList.setVisibility(View.VISIBLE);
+                    progressbar.setVisibility(View.GONE);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error);
+                if (progressbar != null) progressbar.setVisibility(View.GONE);
+                mCallback.showSnackbar("Error requesting agendas", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestAgendas();
+                    }
+                });
+            }
+        });
+
+        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
+    }
+
+    private void requestAssignments() {
+        Log.i(TAG, "requestAssignements");
+
+        //Course ids for context_codes in url
+        ArrayList<String> ids = new ArrayList<>();
+        ids.add("course_" + course.getId());
+
+        //What to exclude
+        ArrayList<String> exclude = new ArrayList<>();
+
+        //Type - event/assignment
+        String type = "assignment";
+
+        //Only 3 agendas for one course
+        String per_page = "3";
+
+        //Get todays date in right format
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        String start_date = df.format(cal.getTime());
+        String end_date = df.format(cal.getTime());
+
+        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1));
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+
+                try {
+
+                    agendas.addAll(JSONParser.parseAllCalendarEvents(response));
+
+                    loaded[2] = true;
 
                 } catch (JSONException e) {
                     Log.i(TAG, "exception: " + e);

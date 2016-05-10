@@ -245,6 +245,8 @@ public class CalendarFragment extends Fragment {
                         getCalendarEvents(year, month, page_num + 1);
                     }
 
+                    requestAssignments(year,month);
+
                     calendar.setLoaded(year, month, true);
 
                     setBackgrounds(events);
@@ -275,6 +277,65 @@ public class CalendarFragment extends Fragment {
         calendarEventsRequest.setRetryPolicy(new DefaultRetryPolicy(5000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
+    }
+
+    private void requestAssignments(int year, int month) {
+        Log.i(TAG, "requestAssignements");
+
+        //Course ids for context_codes in url
+        ArrayList<String> ids = new ArrayList<>();
+        for (Integer i : courseIds) {
+            ids.add("course_" + i);
+        }
+
+        //What to exclude
+        ArrayList<String> exclude = new ArrayList<>();
+
+        //Type - event/assignment
+        String type = "assignment";
+
+        // TODO Change to Date4j?
+        //Todays date
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        final Calendar cal = Calendar.getInstance();
+
+        cal.set(Calendar.YEAR, year);
+
+        // Set the date to the 1st
+        cal.set(Calendar.DATE, 1);
+        cal.set(Calendar.MONTH, month);
+        final String start_date = df.format(cal.getTime());
+
+        // Set date to last day of month
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        final String end_date = df.format(cal.getTime());
+
+        //Per page set to max
+        String per_page = "50";
+
+        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1));
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+
+                try {
+                    ArrayList<CalendarEvent> events = JSONParser.parseAllAssignments(response);
+                    calendar.addEvents(events);
+
+                } catch (JSONException e) {
+                    Log.i(TAG, "exception: " + e);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error.toString());
+            }
+        });
 
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
     }

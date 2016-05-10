@@ -83,6 +83,16 @@ public class JSONParser {
         return parsed;
     }
 
+    public static ArrayList<CalendarEvent> parseAllAssignments(JSONArray unparsed) throws JSONException{
+        ArrayList<CalendarEvent> parsed = new ArrayList<>();
+
+        for(int i = 0; i < unparsed.length(); i++){
+            JSONObject obj = unparsed.getJSONObject(i);
+            parsed.add(parseOneAssignment(obj));
+        }
+
+        return parsed;
+    }
     /**
      * Parses a user profile
      * @param unParsed JSONObject you get onResponse with the request
@@ -169,6 +179,16 @@ public class JSONParser {
         }
 
         return parsed;
+    }
+
+    private static CalendarEvent parseOneAssignment(JSONObject obj) throws JSONException{
+        String title = obj.getString("title");
+        String start = obj.getString("start_at");
+        String stop = obj.getString("end_at");
+
+        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+
+        return new CalendarEvent(title, parseDateString(start), parseDateString(stop), "Innleveringsfrist", timeZone);
     }
 
     private static Recipient parseOneRecipient(JSONObject obj) throws JSONException {
