@@ -95,7 +95,7 @@ public class JSONParser {
                     if (!hidden) {
                         current = parseOneCalendarEvent(obj);
                     } else {
-                        current = FAILED_CALENDAR_EVENT;
+                        continue;
                     }
                 } else {
                     current = parseOneCalendarEvent(obj);

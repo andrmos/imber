@@ -74,7 +74,6 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
         String trimmedLocation = location.trim();
 
         if(trimmedLocation.startsWith("(")){
-            Log.i(TAG, "trimLocation: ");
             trimmedLocation = trimmedLocation.substring(1,trimmedLocation.length());
 
             if(location.endsWith(")")){

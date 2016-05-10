@@ -39,7 +39,6 @@ public class MyCalendar {
 
         while(it.hasNext()){
             CalendarEvent event = (CalendarEvent) it.next();
-            Log.i(TAG, "getEventsForDate: " + event.getStartDate());
             if (date.isSameDayAs(event.getStartDate())) {
                 retCalendar.add(event);
             }

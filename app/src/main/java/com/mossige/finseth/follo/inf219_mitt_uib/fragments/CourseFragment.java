@@ -107,8 +107,6 @@ public class CourseFragment extends Fragment {
         progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
 
-        Log.i(TAG, "onCreateView: " + announcements.size());
-
         // Hide progress bar if data is already loaded
         if (isLoaded()) {
             progressbar.setVisibility(View.GONE);
@@ -241,7 +239,6 @@ public class CourseFragment extends Fragment {
     }
 
     private void requestAgendas() {
-        Log.i(TAG, "requestAgendas");
 
         //Course ids for context_codes in url
         ArrayList<String> ids = new ArrayList<>();
@@ -262,7 +259,6 @@ public class CourseFragment extends Fragment {
         String start_date = df.format(cal.getTime());
         String end_date = df.format(cal.getTime());
 
-        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1));
         JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
