@@ -252,7 +252,7 @@ public class CalendarFragment extends Fragment {
                     DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
                     if (today.gteq(new DateTime(start_date)) && today.lteq(new DateTime(end_date))) {
                         mCallback.setAgendas(calendar.getEventsForDate(today));
-
+                        
                     }
 
                 }
