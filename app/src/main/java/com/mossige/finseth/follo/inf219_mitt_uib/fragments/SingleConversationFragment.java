@@ -3,7 +3,11 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,9 +24,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.activities.MainActivity;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.MessageRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ComposeMessageFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
@@ -42,7 +50,6 @@ public class SingleConversationFragment extends Fragment {
 
     private static final String TAG = "ConversationFragment";
 
-    private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
 
     private SmoothProgressBar progressbar;
@@ -53,6 +60,7 @@ public class SingleConversationFragment extends Fragment {
     private boolean loaded;
 
     MainActivityListener mCallback;
+    private View rootView;
 
     @Override
     public void onAttach(Context context) {
@@ -79,16 +87,18 @@ public class SingleConversationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
 
         progressbar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
-        initRecycleView(rootView);
+        initRecycleView();
 
         if (loaded) {
             progressbar.setVisibility(View.GONE);
         } else {
             progressbar.setVisibility(View.VISIBLE);
         }
+
+        initFabButton();
 
         return rootView;
     }
@@ -126,12 +136,17 @@ public class SingleConversationFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressbar.setVisibility(View.GONE);
-                mCallback.showSnackbar(getString(R.string.error_conversation), new View.OnClickListener() {
+                Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
+                snackbar.setDuration(4000); // Gives false syntax error
+                snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestSingleConversation();
                     }
                 });
+                if (!snackbar.isShown()) {
+                    snackbar.show();
+                }
             }
         });
 
@@ -142,17 +157,53 @@ public class SingleConversationFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(singleConversationRequest);
     }
 
-    private void initRecycleView(View rootView) {
+    private void initFabButton() {
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_reply_white_24dp));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i(TAG, "onClick");
+
+                // TODO
+                // Create fragment transaction
+                // Construct ComposeMessage fragment
+                // Bundle recipient id(s)
+                // Commit transaction
+                // Add backstack tag
+
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
+                transaction.replace(R.id.content_frame, composeMessageFragment);
+
+                Bundle bundle = new Bundle();
+
+                ArrayList<String> ids = new ArrayList<>();
+                for (Participant p : conversation.getParticipants()) {
+                    Log.i(TAG, "onClick: added " + p.getName());
+                    ids.add(p.getId());
+                }
+
+                bundle.putStringArrayList("recipientIDs", ids);
+                composeMessageFragment.setArguments(bundle);
+
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+    }
+
+    private void initRecycleView() {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-        mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mainList.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
         mAdapter = new MessageRecyclerViewAdapter(messages);
-        mainList.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
     }
 }

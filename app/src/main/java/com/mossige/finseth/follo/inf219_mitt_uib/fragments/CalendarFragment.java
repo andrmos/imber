@@ -253,7 +253,7 @@ public class CalendarFragment extends Fragment {
                     if (today.gteq(new DateTime(start_date)) && today.lteq(new DateTime(end_date))) {
                         Log.i(TAG, "onResponse: else ja");
                         mCallback.setAgendas(calendar.getEventsForDate(today));
-
+                        
                     }
 
                 } catch (JSONException e) {
