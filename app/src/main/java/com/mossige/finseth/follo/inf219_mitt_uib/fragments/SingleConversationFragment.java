@@ -111,24 +111,19 @@ public class SingleConversationFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
 
-                            conversation = JSONParser.parseSingleConversation(response);
-                            messages.clear();
-                            messages.addAll(conversation.getMessages());
+                        conversation = JSONParser.parseSingleConversation(response);
+                        messages.clear();
+                        messages.addAll(conversation.getMessages());
 
-                            getActivity().setTitle(conversation.getSubject());
+                        getActivity().setTitle(conversation.getSubject());
 
-                            loaded = true;
-                            mAdapter.notifyDataSetChanged();
+                        loaded = true;
+                        mAdapter.notifyDataSetChanged();
 
                             //Update unread count in navigation drawer
                             mCallback.requestUnreadCount();
 
-                        } catch (JSONException e) {
-                            // TODO handle exception
-                            Log.i(TAG, "JSONException");
-                        }
 
                         progressbar.setVisibility(View.GONE);
                     }
