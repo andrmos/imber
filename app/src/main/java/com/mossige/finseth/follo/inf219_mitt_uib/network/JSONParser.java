@@ -121,7 +121,7 @@ public class JSONParser {
      * Parses a user profile
      * @param unParsed JSONObject you get onResponse with the request
      * @return if successful: a {@link User user}
-     * @return if not succesful: a {@link User user} with the format of {@link #FAILED_USER}
+     * @return if not successful: a {@link User user} with the format of {@link #FAILED_USER}
      */
     public static User parseUserProfile(JSONObject unParsed) {
         try {
@@ -180,6 +180,7 @@ public class JSONParser {
             String id = unParsed.getString("id");
             String subject = unParsed.getString("subject");
             ArrayList<Participant> participants = getParticipants(unParsed.getJSONArray("participants"));
+            //TODO Don't want to deny the whole conversation if one message is missing
             ArrayList<Message> messages = getMessages(unParsed.getJSONArray("messages"), participants);
 
             return new Conversation(id, subject, participants, messages);
@@ -286,7 +287,13 @@ public class JSONParser {
             String id = obj.getString("id");
             String subject = obj.getString("subject");
             ArrayList<Participant> participants = getParticipants(obj.getJSONArray("participants"));
-            String lastMessage = obj.getString("last_message");
+            String lastMessage;
+            if (obj.has("last_message")) {
+                lastMessage = obj.getString("last_message");
+            } else {
+                //TODO Don't hardcode!
+                lastMessage = "Kunne ikke laste melding";
+            }
 
             return new Conversation(id, subject, participants, lastMessage);
         } catch (JSONException e) {
@@ -331,7 +338,7 @@ public class JSONParser {
      * @param obj JSONObject containing a message
      * @param participants Participant list from conversation
      * @return if successful: a {@link Message message}
-     * @return if not successful: a {@link Message message} with the format {}
+     * @return if not successful: a {@link Message message} with the format {@link #FAILED_MESSAGE}
      */
     private static Message getSingleMessage(JSONObject obj, ArrayList<Participant> participants) {
         try {
@@ -412,9 +419,19 @@ public class JSONParser {
             String id = obj.getString("id");
             String title = obj.getString("title");
             String userName = obj.getString("user_name");
-            String postedAt = obj.getString("posted_at");
+            String postedAt;
+            if(obj.has("posted_at")) {
+                postedAt = obj.getString("posted_at");
+            } else {
+                postedAt = "";
+            }
             String message = obj.getString("message");
-            boolean unread = obj.getString("read_state").equals("true");
+            boolean unread;
+            if (obj.has("read_state")) {
+                unread = obj.getString("read_state").equals("true");
+            } else {
+                unread = false;
+            }
 
             return new Announcement(id, title, userName, postedAt, message, unread);
         } catch(JSONException e) {
@@ -452,12 +469,17 @@ public class JSONParser {
      * Parsing one calendar event
      * @param obj one {@link CalendarEvent calendar event}
      * @return if successful: a {@link CalendarEvent calendarEvent}
-     * @return if not successful: a {@link CalendarEvent calendarEvent} with the format {@see com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent#getFailedCalendarEvent}
+     * @return if not successful: a {@link CalendarEvent calendarEvent} with the format {@link FailedCalendarEvent}
      */
     private static CalendarEvent parseOneCalendarEvent(JSONObject obj) {
         try {
             String title = obj.getString("title");
-            String location = obj.getString("location_name");
+            String location;
+            if (obj.has("location_name")) {
+                location = obj.getString("location_name");
+            } else {
+                location = "";
+            }
             String start = obj.getString("start_at");
             String stop = obj.getString("end_at");
 
@@ -489,11 +511,22 @@ public class JSONParser {
         return -1;
     }
     private static DateTime parseDateString(String date){
-        int year = Integer.parseInt(date.substring(0,4));
-        int month = Integer.parseInt(date.substring(5,7));
-        int day = Integer.parseInt(date.substring(8,10));
-        int hour = Integer.parseInt(date.substring(11,13));
-        int min = Integer.parseInt(date.substring(14,16));
+        int year, month, day, hour, min = 0;
+
+        try {
+            year = Integer.parseInt(date.substring(0, 4));
+            month = Integer.parseInt(date.substring(5, 7));
+            day = Integer.parseInt(date.substring(8, 10));
+            hour = Integer.parseInt(date.substring(11, 13));
+            min = Integer.parseInt(date.substring(14, 16));
+        } catch(IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            year = 1970;
+            month = 1;
+            day = 1;
+            hour = 0;
+            min = 0;
+        }
         // TODO can use new DateTime(date)
 
         return new DateTime(year, month, day, hour, min, 0, 0);
@@ -518,6 +551,7 @@ public class JSONParser {
                 }
             }
         }
+
         return coursesWithFilter;
     }
 }
