@@ -1,11 +1,8 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
-import android.print.PrinterCapabilitiesInfo;
 import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 /**
@@ -37,9 +34,8 @@ public class UrlEndpoints {
 
     public static final String PER_PAGE = "per_page=";
     public static final String PERMISSIONS = "permissions[]=send_messages_all";
-    public static final String SYNTHETIC_CONTEXTS = "synthetic_contexts=true";
     public static final String CONTEXT = "context=";
-    public static final String COURSE = "course_";
+    public static final String COURSE_PREFIX = "course_";
     public static final String AND = "&";
     public static final String CALENDAR_EVENTS = "calendar_events";
     public static final String CONTEXT_CODE_KEY = "context_codes[]=";
@@ -50,33 +46,16 @@ public class UrlEndpoints {
     public static final String TYPE_KEY = "type=";
     public static final String PAGE = "page=";
     public static final String UNREAD_COUNT = "unread_count";
+    public static final String TYPE = "type=";
 
-    /**
-     * @param search textinput (name)
-     * @param courseID what course you wish to search within
-     * @return Request URL for getting possible recipients
-     */
-    public static String getRecipients(String search, int courseID) {
-        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE + "50"  + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
-    }
-    public static String getRecipientGroups(int courseID) {
-        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + COURSE + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
-    }
-
-    /**
-     * @param search textinput (name)
-     * @param courseID which group you want to search within
-     * @return Request URL for getting possible recipients
-     */
-    public static String getRecipientsByGroup(String search, String courseID) {
+    public static String getRecipients(String search, int courseId) {
         if (search == null) {
-            return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
-
+            search = "";
         } else {
-            String hex = getHex(search);
-            Log.i(TAG, "getRecipientsByGroup: " + BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + hex + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN);
-            return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + hex + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + SYNTHETIC_CONTEXTS + AND + CONTEXT + courseID + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+            search = getHex(search);
         }
+
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + CONTEXT + COURSE_PREFIX + courseId + AND + TYPE + "user" + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 
     /**

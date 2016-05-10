@@ -33,6 +33,8 @@ import org.json.JSONException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
 /**
  * A placeholder fragment containing a simple view.
  */
@@ -44,14 +46,14 @@ public class CourseListFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
 
     private ArrayList<Course> courses;
-    private ProgressBar spinner;
+    private SmoothProgressBar smoothProgressBar;
 
     /* If data is loaded */
     private boolean loaded;
 
     private boolean filterInstituteCourses;
 
-    MainActivityListener.ShowToastListener mCallback;
+    MainActivityListener mCallback;
 
     public CourseListFragment() {}
 
@@ -74,7 +76,7 @@ public class CourseListFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            mCallback = (MainActivityListener.ShowToastListener) context;
+            mCallback = (MainActivityListener) context;
         }catch (ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }
@@ -86,14 +88,14 @@ public class CourseListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         getActivity().setTitle(R.string.course_list_title);
 
-        spinner =  (ProgressBar) rootView.findViewById(R.id.progressBar);
+        smoothProgressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
 
         // Hide progress bar if data is already loaded
         if (loaded) {
-            spinner.setVisibility(View.GONE);
+            smoothProgressBar.setVisibility(View.GONE);
         } else {
-            spinner.setVisibility(View.VISIBLE);
+            smoothProgressBar.setVisibility(View.VISIBLE);
         }
 
         return rootView;
@@ -155,13 +157,13 @@ public class CourseListFragment extends Fragment {
                     Log.i(TAG, "onResponse: " + e);
                 }
 
-                if (spinner != null) spinner.setVisibility(View.GONE);
+                if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (spinner != null) spinner.setVisibility(View.GONE);
+                if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
                 mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

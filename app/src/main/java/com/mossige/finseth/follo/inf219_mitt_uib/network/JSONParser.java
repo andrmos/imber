@@ -106,8 +106,7 @@ public class JSONParser {
                 Log.i(TAG, "parseAllCalendarEvents: failed to parse a calendar event due to a JSONException");
             }
 
-            if (current.equals(FAILED_CALENDAR_EVENT
-            )) {
+            if (current.equals(FAILED_CALENDAR_EVENT)) {
                 Log.i(TAG, "parseAllCalendarEvents: failed to parse calendar event " + i);
             } else {
                 parsed.add(current);
@@ -469,7 +468,7 @@ public class JSONParser {
      * Parsing one calendar event
      * @param obj one {@link CalendarEvent calendar event}
      * @return if successful: a {@link CalendarEvent calendarEvent}
-     * @return if not successful: a {@link CalendarEvent calendarEvent} with the format {@link FailedCalendarEvent}
+     * @return if not successful: a {@link CalendarEvent calendarEvent} with the format {@link #FAILED_CALENDAR_EVENT}
      */
     private static CalendarEvent parseOneCalendarEvent(JSONObject obj) {
         try {

@@ -53,4 +53,6 @@
     <string name="error_course_info">Feil ved lasting av faginfo…</string>
     <string name="error_conversation">Feil ved lasting av samtaler…</string>
 
+    <string name="snackback_action_text">Prøv igjen</string>
+
 </resources>
