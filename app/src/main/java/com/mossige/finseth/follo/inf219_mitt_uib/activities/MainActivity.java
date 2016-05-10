@@ -1,7 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
@@ -331,7 +330,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             snackbar.setAction(getString(R.string.snackback_action_text), listener);
         }
 
-        snackbar.show();
+        if (!snackbar.isShown()) {
+            snackbar.show();
+        }
+
     }
 
     @Override

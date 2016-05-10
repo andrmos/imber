@@ -3,6 +3,8 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,14 +13,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.melnykov.fab.FloatingActionButton;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.ConversationRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
@@ -43,17 +44,14 @@ public class ConversationFragment extends Fragment {
 
     private static final String TAG = "ConversationFragment";
 
-    private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
-
     private ArrayList<Conversation> conversations;
-    private ArrayList<String> conversationIDs;
-
-    private SmoothProgressBar progressbar;
 
     /* If data is loaded */
     private boolean loaded;
+    private SmoothProgressBar progressbar;
 
+    private View rootView;
     MainActivityListener mCallback;
 
     public ConversationFragment() {}
@@ -73,7 +71,6 @@ public class ConversationFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         conversations = new ArrayList<>();
-        conversationIDs = new ArrayList<>();
 
         loaded = false;
         requestConversation();
@@ -81,7 +78,7 @@ public class ConversationFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
+        rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
         getActivity().setTitle(R.string.conversation_title);
 
         progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
@@ -103,11 +100,7 @@ public class ConversationFragment extends Fragment {
             public void onResponse(JSONArray response) {
                 try {
                     conversations.clear();
-                    ArrayList<Conversation> temp = JSONParser.parseAllConversations(response);
-                    for (Conversation c: temp) {
-                        conversations.add(c);
-                        conversationIDs.add(c.getId());
-                    }
+                    conversations.addAll(JSONParser.parseAllConversations(response));
 
                     loaded = true;
                     mAdapter.notifyDataSetChanged();
@@ -123,12 +116,18 @@ public class ConversationFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressbar.setVisibility(View.GONE);
-                mCallback.showSnackbar(getString(R.string.error_conversation), new View.OnClickListener() {
+
+                Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
+                snackbar.setDuration(4000); // Gives false syntax error
+                snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestConversation();
                     }
                 });
+                if (!snackbar.isShown()) {
+                    snackbar.show();
+                }
             }
         });
 
@@ -136,57 +135,74 @@ public class ConversationFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
+        coursesReq.setTag("conversations");
+
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
+    }
+
+    @Override
+    public void onPause() {
+        cancelRequest("conversations");
+        super.onPause();
+    }
+
+    private void cancelRequest(final String tag) {
+        RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                if (request.getTag() != null) {
+                    return request.getTag().equals(tag);
+                }
+                return false;
+            }
+        });
     }
 
 
     private void initRecycleView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-        mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-
-        initFabButton(rootView);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mainList.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
         mAdapter = new ConversationRecyclerViewAdapter(conversations);
-        mainList.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
 
-        initOnClickListener();
+        initOnClickListener(recyclerView);
+        initFabButton(rootView);
     }
 
-    private void initFabButton(View rootView) {
+    private void initFabButton(final View rootView) {
         FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
-        fab.attachToRecyclerView(mainList);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 ChooseRecipientFragment chooseRecipientFragment = new ChooseRecipientFragment();
                 transaction.replace(R.id.content_frame, chooseRecipientFragment);
-
                 transaction.addToBackStack(null);
+
                 transaction.commit();
             }
         });
     }
 
-    private void initOnClickListener() {
-        ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+    private void initOnClickListener(RecyclerView recyclerView) {
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 SingleConversationFragment singleConversationFragment = new SingleConversationFragment();
                 transaction.replace(R.id.content_frame, singleConversationFragment);
-
                 transaction.addToBackStack(null);
 
                 //Bundles all parameters needed for showing one announcement
                 Bundle args = new Bundle();
-                args.putString("conversationID", conversationIDs.get(position));
+                args.putString("conversationID", conversations.get(position).getId());
                 singleConversationFragment.setArguments(args);
 
                 transaction.commit();
