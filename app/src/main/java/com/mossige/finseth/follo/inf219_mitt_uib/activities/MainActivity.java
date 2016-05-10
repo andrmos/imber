@@ -95,14 +95,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-
                 try {
                     courses.clear();
                     courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getApplicationContext()));
-
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException " + e);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -231,21 +226,16 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             @Override
             public void onResponse(JSONObject response) {
 
-                try {
-                    profile = JSONParser.parseUserProfile(response);
 
-                    //Set name on navigation header
-                    TextView nameTV = (TextView) findViewById(R.id.name);
-                    nameTV.setText(profile.getName());
+                profile = JSONParser.parseUserProfile(response);
 
-                    //Set email on navigation header
-                    TextView emailTV = (TextView) findViewById(R.id.email);
-                    emailTV.setText(profile.getEmail());
+                //Set name on navigation header
+                TextView nameTV = (TextView) findViewById(R.id.name);
+                nameTV.setText(profile.getName());
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                //Set email on navigation header
+                TextView emailTV = (TextView) findViewById(R.id.email);
+                emailTV.setText(profile.getEmail());
             }
         }, new Response.ErrorListener() {
             @Override
@@ -273,15 +263,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             @Override
             public void onResponse(JSONObject response) {
 
-                try {
-                    unreadCount = JSONParser.parseUnreadCount(response);
+                unreadCount = JSONParser.parseUnreadCount(response);
 
-                    setMenuCounter(R.id.nav_inbox, unreadCount);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                setMenuCounter(R.id.nav_inbox, unreadCount);
             }
         }, new Response.ErrorListener() {
             @Override

@@ -151,10 +151,6 @@ public class CourseListFragment extends Fragment {
                     loaded = true;
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
 
-
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
                 } catch (FileNotFoundException e) {
                     Log.i(TAG, "onResponse: " + e);
                 }

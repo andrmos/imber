@@ -236,30 +236,23 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
 
-                try {
-                    ArrayList<CalendarEvent> events = JSONParser.parseAllCalendarEvents(response);
-                    calendar.addEvents(events);
+                ArrayList<CalendarEvent> events = JSONParser.parseAllCalendarEvents(response);
+                calendar.addEvents(events);
 
-                    // If returned maximum amount of events, get events for next page
-                    if(events.size() == 50) {
-                        getCalendarEvents(year, month, page_num + 1);
-                    }
+                // If returned maximum amount of events, get events for next page
+                if(events.size() == 50) {
+                    getCalendarEvents(year, month, page_num + 1);
+                }
 
-                    calendar.setLoaded(year, month, true);
+                calendar.setLoaded(year, month, true);
 
-                    setBackgrounds(events);
+                setBackgrounds(events);
 
-                    if (firstRequest) {
-                        DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
-                        Log.i(TAG, "onResponse: " + today);
-                        mCallback.setAgendas(calendar.getEventsForDate(today));
-                        firstRequest = !firstRequest;
-                    }
-
-                } catch (JSONException e) {
-                    Log.i(TAG, "exception: " + e);
-                    calendar.setLoaded(year, month, false);
-//                    calendar.removeEvents(year, month);
+                if (firstRequest) {
+                    DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
+                    Log.i(TAG, "onResponse: " + today);
+                    mCallback.setAgendas(calendar.getEventsForDate(today));
+                    firstRequest = !firstRequest;
                 }
 
 

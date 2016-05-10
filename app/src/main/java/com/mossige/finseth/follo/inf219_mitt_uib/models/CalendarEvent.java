@@ -12,12 +12,13 @@ import hirondelle.date4j.DateTime;
 public class CalendarEvent implements Comparable<CalendarEvent>{
 
     private static final String TAG = "CalendarEvent";
+    public static final String fail = "FAILED";
 
     private String name;
+
     private String location;
     private DateTime mStartDate;
     private DateTime mEndDate;
-
     public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location, TimeZone oldTimeZone) {
         this.name = trimEventName(name);
         TimeZone newTimeZone = TimeZone.getTimeZone("Europe/Oslo");
@@ -95,6 +96,10 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
         } else {
             return -1;
         }
+    }
+
+    public static CalendarEvent getFailedCalendarEvent() {
+        return new CalendarEvent(fail, new DateTime(1970, 1, 1, 0, 0, 0, 0), new DateTime(1970, 1, 1, 0, 0, 0, 0), fail, TimeZone.getTimeZone("UTC"));
     }
 
     @Override

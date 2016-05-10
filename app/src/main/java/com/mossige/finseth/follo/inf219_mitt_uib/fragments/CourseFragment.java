@@ -191,16 +191,11 @@ public class CourseFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
 
-                try {
-                    announcements.clear();
-                    announcements.addAll(JSONParser.parseAllAnouncements(response));
+                announcements.clear();
+                announcements.addAll(JSONParser.parseAllAnnouncements(response));
 
-                    loaded[0] = true;
+                loaded[0] = true;
 
-                } catch (JSONException e) {
-                    Log.i(TAG, "JSONException requesting announcements");
-                    e.printStackTrace();
-                }
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);
@@ -266,16 +261,10 @@ public class CourseFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
 
-                try {
+                agendas.clear();
+                agendas.addAll(JSONParser.parseAllCalendarEvents(response));
 
-                    agendas.clear();
-                    agendas.addAll(JSONParser.parseAllCalendarEvents(response));
-
-                    loaded[1] = true;
-
-                } catch (JSONException e) {
-                    Log.i(TAG, "exception: " + e);
-                }
+                loaded[1] = true;
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);

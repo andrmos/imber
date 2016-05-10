@@ -355,9 +355,6 @@ public class ChooseRecipientFragment extends Fragment {
                     courseAdapter.notifyDataSetChanged();
                     loaded = true;
 
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -385,41 +382,33 @@ public class ChooseRecipientFragment extends Fragment {
         final JsonArrayRequest recipientGroupReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getRecipientGroups(courseID), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                try {
-                    recipientGroups.clear();
-                    recipientGroups = JSONParser.parseAllRecipientGroups(response);
+                recipientGroups.clear();
+                recipientGroups = JSONParser.parseAllRecipientGroups(response);
 
-                    groups.clear();
-                    for (RecipientGroup g : recipientGroups) {
-                        groups.add(g.getName());
-                    }
-
-                    groupAdapter.notifyDataSetChanged();
-
-                    // TODO Bug:
-                    // 1. Click Om in navigation drawer
-                    // 2. Click MAT102
-                    // 3. Click Studenter
-                    // 4. Click INF219
-                    // Mari is in Studenter list...
-
-                    // Possible fix:
-                    // get current group spinner selection
-
-                    if (!firstRun) {
-//                        RecipientGroup rg = (RecipientGroup) groupSpinner.getSelectedItem();
-                        RecipientGroup rg = recipientGroups.get(0);
-                        handleGroupSelection(rg);
-
-                    } else {
-                        firstRun = false;
-                    }
-
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
+                groups.clear();
+                for (RecipientGroup g : recipientGroups) {
+                    groups.add(g.getName());
                 }
 
+                groupAdapter.notifyDataSetChanged();
+
+                // TODO Bug:
+                // 1. Click Om in navigation drawer
+                // 2. Click MAT102
+                // 3. Click Studenter
+                // 4. Click INF219
+                // Mari is in Studenter list...
+
+                // Possible fix:
+                // get current group spinner selection
+
+                if (!firstRun) {
+//                     RecipientGroup rg = (RecipientGroup) groupSpinner.getSelectedItem();
+                    RecipientGroup rg = recipientGroups.get(0);
+                    handleGroupSelection(rg);
+                } else {
+                    firstRun = false;
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -443,31 +432,24 @@ public class ChooseRecipientFragment extends Fragment {
         final JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                try {
-                    ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
+                ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
 
-                    // If there exists a link to the next recipients page, start request with new url
-                    if (!nextLink.isEmpty()) {
-                        // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
-                        requestRecipients(rg, nextLink, tag);
-                    }
-
-                    for (Recipient r : tmp) {
-                        r.setGroup(rg.getName());
-                        if (recipientsChecked.containsKey(r.getId())) {
-                            r.setChecked(recipientsChecked.get(r.getId()));
-                        }
-                        recipients.add(r);
-                    }
-
-                    progressBarRecipient.setVisibility(View.GONE);
-                    mAdapter.notifyDataSetChanged();
-
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
-                    e.printStackTrace();
+                // If there exists a link to the next recipients page, start request with new url
+                if (!nextLink.isEmpty()) {
+                    // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
+                    requestRecipients(rg, nextLink, tag);
                 }
+
+                for (Recipient r : tmp) {
+                    r.setGroup(rg.getName());
+                    if (recipientsChecked.containsKey(r.getId())) {
+                        r.setChecked(recipientsChecked.get(r.getId()));
+                    }
+                    recipients.add(r);
+                }
+
+                progressBarRecipient.setVisibility(View.GONE);
+                mAdapter.notifyDataSetChanged();
 
             }
         }, new Response.ErrorListener() {

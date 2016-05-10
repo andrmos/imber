@@ -99,21 +99,15 @@ public class ConversationFragment extends Fragment {
         final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getConversationsUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                try {
-                    conversations.clear();
-                    ArrayList<Conversation> temp = JSONParser.parseAllConversations(response);
-                    for (Conversation c: temp) {
-                        conversations.add(c);
-                        conversationIDs.add(c.getId());
-                    }
-
-                    loaded = true;
-                    mAdapter.notifyDataSetChanged();
-
-                } catch (JSONException e) {
-                    // TODO handle exception
-                    Log.i(TAG, "JSONException");
+                conversations.clear();
+                ArrayList<Conversation> temp = JSONParser.parseAllConversations(response);
+                for (Conversation c: temp) {
+                    conversations.add(c);
+                    conversationIDs.add(c.getId());
                 }
+
+                loaded = true;
+                mAdapter.notifyDataSetChanged();
 
                 spinner.setVisibility(View.GONE);
             }
