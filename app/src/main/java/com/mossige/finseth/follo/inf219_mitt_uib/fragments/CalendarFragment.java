@@ -222,11 +222,11 @@ public class CalendarFragment extends Fragment {
         // Set the date to the 1st
         cal.set(Calendar.DATE, 1);
         cal.set(Calendar.MONTH, month);
-        String start_date = df.format(cal.getTime());
+        final String start_date = df.format(cal.getTime());
 
         // Set date to last day of month
         cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-        String end_date = df.format(cal.getTime());
+        final String end_date = df.format(cal.getTime());
 
         //Per page set to max
         String per_page = "50";
@@ -249,17 +249,16 @@ public class CalendarFragment extends Fragment {
 
                     setBackgrounds(events);
 
-                    if (firstRequest) {
-                        DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
-                        Log.i(TAG, "onResponse: " + today);
+                    DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
+                    if (today.gteq(new DateTime(start_date)) && today.lteq(new DateTime(end_date))) {
+                        Log.i(TAG, "onResponse: else ja");
                         mCallback.setAgendas(calendar.getEventsForDate(today));
-                        firstRequest = !firstRequest;
+
                     }
 
                 } catch (JSONException e) {
                     Log.i(TAG, "exception: " + e);
                     calendar.setLoaded(year, month, false);
-//                    calendar.removeEvents(year, month);
                 }
 
 
@@ -269,8 +268,6 @@ public class CalendarFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error + " for month " + month + " (zero indexed)");
                 calendar.setLoaded(year, month, false);
-//                calendar.removeEvents(year, month);
-
                 // TODO Show error message
             }
         });
