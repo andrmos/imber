@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,14 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
+import com.roomorama.caldroid.CaldroidFragment;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AgendaFragment extends Fragment{
+public class AgendaFragment extends Fragment implements CalendarFragment.OnDateClickListener {
 
     private static final String TAG = "AgendaFragment";
 
@@ -38,10 +40,10 @@ public class AgendaFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         initRecycleView(rootView);
-
         return rootView;
     }
 
+    @Override
     public void setAgendas(ArrayList<CalendarEvent> events) {
         agendas.clear();
         agendas.addAll(events);

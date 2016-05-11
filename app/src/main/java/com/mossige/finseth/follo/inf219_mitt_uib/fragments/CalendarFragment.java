@@ -1,6 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -46,26 +45,14 @@ public class CalendarFragment extends Fragment {
     private CaldroidFragment caldroidFragment;
     private MyCalendar calendar;
     private ArrayList<Integer> courseIds;
-    private boolean firstRequest;
     private DateTime previousDateTime;
-
-    OnDateClickListener mCallback;
+    private OnDateClickListener callBack;
 
     public interface OnDateClickListener {
         void setAgendas(ArrayList<CalendarEvent> events);
     }
 
-    public CalendarFragment() {}
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        try {
-            mCallback = (OnDateClickListener) context;
-        } catch (ClassCastException e) {
-            Log.i(TAG, "Class cast exception");
-        }
+    public CalendarFragment() {
     }
 
     @Override
@@ -79,7 +66,6 @@ public class CalendarFragment extends Fragment {
             courseIds = new ArrayList<>(); // Empty ids
         }
 
-        firstRequest = true;
         calendar = new MyCalendar();
     }
 
@@ -88,13 +74,16 @@ public class CalendarFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         getActivity().setTitle(R.string.calendar_title);
 
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        caldroidFragment = initCalendarFragment();
-        ft.replace(R.id.calendar_container, caldroidFragment);
+        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
 
         AgendaFragment agendaFragment = new AgendaFragment();
+        // Init callback to allow communication with AgendaFragment
+        callBack = agendaFragment;
         agendaFragment.setArguments(getArguments());
         ft.replace(R.id.agenda_container, agendaFragment);
+
+        caldroidFragment = initCalendarFragment();
+        ft.replace(R.id.calendar_container, caldroidFragment);
 
         ft.commit();
         return rootView;
@@ -169,8 +158,8 @@ public class CalendarFragment extends Fragment {
                  */
                 DateTime dateTime = new DateTime(date.getYear() + 1900, date.getMonth() + 1, date.getDate(), 0, 0, 0, 0);
 
-                // Callback to main activity to notify agenda fragment to update its calendar events
-                mCallback.setAgendas(calendar.getEventsForDate(dateTime));
+                // Callback to agenda fragment to update its calendar events
+                callBack.setAgendas(calendar.getEventsForDate(dateTime));
 
                 setBackground(dateTime);
             }
@@ -180,6 +169,7 @@ public class CalendarFragment extends Fragment {
 
     /**
      * Sets background drawable for DateTime and clears previous selected date.
+     *
      * @param dateTime
      */
     private void setBackground(DateTime dateTime) {
@@ -196,8 +186,9 @@ public class CalendarFragment extends Fragment {
 
     /**
      * Get all calendar events for a month, and add them to the 'events' field.
-     * @param year The year to get the calendar events.
-     * @param month The month to get the calendar events. Zero indexed.
+     *
+     * @param year     The year to get the calendar events.
+     * @param month    The month to get the calendar events. Zero indexed.
      * @param page_num Page number of calendar event request. Declared final since it's accessed from inner class.
      */
     private void getCalendarEvents(final int year, final int month, final int page_num) {
@@ -231,7 +222,7 @@ public class CalendarFragment extends Fragment {
         //Per page set to max
         String per_page = "50";
 
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,page_num), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page, page_num), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -240,23 +231,29 @@ public class CalendarFragment extends Fragment {
                 calendar.addEvents(events);
 
                 // If returned maximum amount of events, get events for next page
-                if(events.size() == 50) {
+                if (events.size() == 50) {
                     getCalendarEvents(year, month, page_num + 1);
                 }
 
-                    requestAssignments(year,month);
+                requestAssignments(year, month);
 
-                    calendar.setLoaded(year, month, true);
+                calendar.setLoaded(year, month, true);
 
-                    setBackgrounds(events);
+                setBackgrounds(events);
 
-                    DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
-                    if (today.gteq(new DateTime(start_date)) && today.lteq(new DateTime(end_date))) {
-                        mCallback.setAgendas(calendar.getEventsForDate(today));
-                        
+                DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
+                if (today.gteq(new DateTime(start_date)) && today.lteq(new DateTime(end_date))) {
+
+                    if (callBack != null) {
+                        Log.i(TAG, "onResponse: not null");
+                        callBack.setAgendas(calendar.getEventsForDate(today));
+                    } else {
+                        Log.i(TAG, "onResponse: callback is null");
                     }
 
                 }
+
+            }
 
 
         }, new Response.ErrorListener() {
@@ -276,8 +273,6 @@ public class CalendarFragment extends Fragment {
     }
 
     private void requestAssignments(int year, int month) {
-        Log.i(TAG, "requestAssignements");
-
         //Course ids for context_codes in url
         ArrayList<String> ids = new ArrayList<>();
         for (Integer i : courseIds) {
@@ -309,8 +304,7 @@ public class CalendarFragment extends Fragment {
         //Per page set to max
         String per_page = "50";
 
-        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1));
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page, 1), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -336,11 +330,12 @@ public class CalendarFragment extends Fragment {
 
     /**
      * Sets backgrounds for dates.
+     *
      * @param events events containing an agenda
      */
     private void setBackgrounds(ArrayList<CalendarEvent> events) {
         Map<String, Object> extraData = caldroidFragment.getExtraData();
-        for(CalendarEvent e : events){
+        for (CalendarEvent e : events) {
             String key = e.getStartDate().getYear() + "-" + e.getStartDate().getMonth() + "-" + e.getStartDate().getDay();
             extraData.put(key, true);
         }

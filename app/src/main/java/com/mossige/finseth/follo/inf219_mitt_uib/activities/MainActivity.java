@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AgendaFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
@@ -40,7 +41,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
@@ -48,7 +48,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, CalendarFragment.OnDateClickListener, MainActivityListener {
+public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, MainActivityListener {
 
     private static final String TAG = "MainActivity";
 
@@ -159,6 +159,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // Reset back stack when navigating to a new fragment from the nav bar
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
+
+        // TODO Error in here?
+
         if(id == R.id.nav_course){
             initCourseListFragment();
 
@@ -174,9 +177,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
 
         if (id == R.id.nav_about) {
-//            AboutFragment aboutFragment = new AboutFragment();
-            ChooseRecipientFragment crf = new ChooseRecipientFragment();
-            transaction.replace(R.id.content_frame, crf);
+            AboutFragment aboutFragment = new AboutFragment();
+            transaction.replace(R.id.content_frame, aboutFragment);
             transaction.commit();
 
             drawerLayout.closeDrawer(navigationView);
@@ -209,14 +211,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
 
         return false;
-    }
-
-    @Override
-    public void setAgendas(ArrayList<CalendarEvent> events) {
-        AgendaFragment agendaFragment = (AgendaFragment) getSupportFragmentManager().findFragmentById(R.id.agenda_container);
-        if (agendaFragment != null) {
-            agendaFragment.setAgendas(events);
-        }
     }
 
     private void requestProfile() {
