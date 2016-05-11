@@ -1,5 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message;
 
+import android.animation.LayoutTransition;
+import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,7 +43,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -77,7 +78,6 @@ public class ChooseRecipientFragment extends Fragment {
 
     private HashMap<String,Boolean> recipientsChecked;
 
-    MainActivityListener mCallback;
     private int courseId;
 
     public ChooseRecipientFragment() {
@@ -86,6 +86,8 @@ public class ChooseRecipientFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.options_menu, menu);
+
+        initSearchView(menu);
     }
 
     @Override
@@ -95,6 +97,10 @@ public class ChooseRecipientFragment extends Fragment {
         if (id == R.id.send) {
             initComposeMessageFragment();
             return true;
+        }
+
+        if (id == R.id.search) {
+            // DO nothing
         }
 
         return false;
@@ -148,17 +154,6 @@ public class ChooseRecipientFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        try {
-            mCallback = (MainActivityListener) context;
-        } catch (ClassCastException e) {
-            Log.i(TAG, "Class cast exception");
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.choose_recipient, container, false);
         getActivity().setTitle("Velg mottaker");
@@ -173,14 +168,18 @@ public class ChooseRecipientFragment extends Fragment {
 
         initRecycleView();
         initCourseSpinner();
-        initSearchView();
 
         return rootView;
     }
 
-    private void initSearchView() {
-        SearchView searchView = (SearchView) rootView.findViewById(R.id.searchView);
+    private void initSearchView(Menu menu) {
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setLayoutTransition(new LayoutTransition());
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -315,18 +314,18 @@ public class ChooseRecipientFragment extends Fragment {
             public void onResponse(JSONArray response) {
                 ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
 
-                    // If there exists a link to the next recipients page, start request with new url
-                    if (!nextLink.isEmpty()) {
-                        // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
-                        requestRecipients(nextLink, tag);
-                    }
+                // If there exists a link to the next recipients page, start request with new url
+                if (!nextLink.isEmpty()) {
+                    // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
+                    requestRecipients(nextLink, tag);
+                }
 
-                    for (Recipient r : tmp) {
-                        if (recipientsChecked.containsKey(r.getId())) {
-                            r.setChecked(recipientsChecked.get(r.getId()));
-                        }
-                        recipients.add(r);
+                for (Recipient r : tmp) {
+                    if (recipientsChecked.containsKey(r.getId())) {
+                        r.setChecked(recipientsChecked.get(r.getId()));
                     }
+                    recipients.add(r);
+                }
 
                 progressBarRecipient.setVisibility(View.GONE);
                 mAdapter.notifyDataSetChanged();
