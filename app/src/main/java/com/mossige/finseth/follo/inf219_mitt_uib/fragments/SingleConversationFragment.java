@@ -61,6 +61,7 @@ public class SingleConversationFragment extends Fragment {
 
     MainActivityListener mCallback;
     private View rootView;
+    private FloatingActionButton fab;
 
     @Override
     public void onAttach(Context context) {
@@ -98,6 +99,8 @@ public class SingleConversationFragment extends Fragment {
             progressbar.setVisibility(View.VISIBLE);
         }
 
+
+
         initFabButton();
 
         return rootView;
@@ -113,6 +116,9 @@ public class SingleConversationFragment extends Fragment {
                     public void onResponse(JSONObject response) {
 
                         conversation = JSONParser.parseSingleConversation(response);
+
+                        setFabListener();
+
                         messages.clear();
                         messages.addAll(conversation.getMessages());
 
@@ -121,8 +127,8 @@ public class SingleConversationFragment extends Fragment {
                         loaded = true;
                         mAdapter.notifyDataSetChanged();
 
-                            //Update unread count in navigation drawer
-                            mCallback.requestUnreadCount();
+                        //Update unread count in navigation drawer
+                        mCallback.requestUnreadCount();
 
 
                         progressbar.setVisibility(View.GONE);
@@ -153,20 +159,14 @@ public class SingleConversationFragment extends Fragment {
     }
 
     private void initFabButton() {
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_reply_white_24dp));
+    }
+
+    private void setFabListener() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick");
-
-                // TODO
-                // Create fragment transaction
-                // Construct ComposeMessage fragment
-                // Bundle recipient id(s)
-                // Commit transaction
-                // Add backstack tag
-
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
                 transaction.replace(R.id.content_frame, composeMessageFragment);
