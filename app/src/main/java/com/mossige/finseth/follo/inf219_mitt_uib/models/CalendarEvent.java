@@ -19,6 +19,7 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
     private String location;
     private DateTime mStartDate;
     private DateTime mEndDate;
+
     public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location, TimeZone oldTimeZone) {
         this.name = trimEventName(name);
         TimeZone newTimeZone = TimeZone.getTimeZone("Europe/Oslo");

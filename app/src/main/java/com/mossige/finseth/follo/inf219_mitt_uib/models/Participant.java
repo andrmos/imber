@@ -20,4 +20,16 @@ public class Participant {
     public String getName() {
         return name;
     }
+
+    public boolean equals(Participant that) {
+        if (!this.getId().equals(that.getId())) {
+            return false;
+        }
+
+        if (!this.getName().equals(that.getName())) {
+            return false;
+        }
+
+        return true;
+    }
 }

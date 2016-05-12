@@ -42,4 +42,29 @@ public class User {
         return name;
     }
 
+    public boolean equals(User that) {
+
+        if(!this.getId().equals(that.getId())) {
+            return false;
+        }
+
+        if (!this.getLoginID().equals(that.getLoginID())) {
+            return false;
+        }
+
+        if (!this.getCalendar().equals(that.getCalendar())) {
+            return false;
+        }
+
+        if (!this.getEmail().equals(that.getEmail())) {
+            return false;
+        }
+
+        if (!this.getName().equals(that.getName())) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

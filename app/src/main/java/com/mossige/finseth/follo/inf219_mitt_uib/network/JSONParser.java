@@ -309,7 +309,7 @@ public class JSONParser {
      * @param participants List of participants for the conversation
      * @return a list containing of successfully parsed {@link Message messages}
      */
-    private static ArrayList<Message> getMessages(JSONArray unParsed, ArrayList<Participant> participants) {
+    public static ArrayList<Message> getMessages(JSONArray unParsed, ArrayList<Participant> participants) {
         ArrayList<Message> parsed = new ArrayList<>();
 
         Message current;
@@ -365,7 +365,7 @@ public class JSONParser {
      * @param unParsed JSONArray Containing a list of participants
      * @return a list of successfully parsed participants
      */
-    private static ArrayList<Participant> getParticipants(JSONArray unParsed) {
+    public static ArrayList<Participant> getParticipants(JSONArray unParsed) {
         ArrayList<Participant> participants = new ArrayList<>();
 
         Participant current;

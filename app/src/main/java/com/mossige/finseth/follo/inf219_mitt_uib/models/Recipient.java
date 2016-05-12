@@ -46,4 +46,16 @@ public class Recipient {
     public boolean getChecked() {
         return checked;
     }
+
+    public boolean equals(Recipient that) {
+        if (!this.getName().equals(that.getName())) {
+            return false;
+        }
+
+        if(!this.getId().equals(that.getId())) {
+            return false;
+        }
+
+        return true;
+    }
 }
