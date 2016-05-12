@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -47,6 +49,18 @@ public class CalendarFragment extends Fragment {
     private ArrayList<Integer> courseIds;
     private DateTime previousDateTime;
     private OnDateClickListener callBack;
+    private MainActivityListener mCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (MainActivityListener) context;
+        }catch(ClassCastException e){
+            //Do nothing
+        }
+    }
 
     public interface OnDateClickListener {
         void setAgendas(ArrayList<CalendarEvent> events);
@@ -259,9 +273,13 @@ public class CalendarFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error + " for month " + month + " (zero indexed)");
+                mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getCalendarEvents(year,month,page_num);
+                    }
+                });
                 calendar.setLoaded(year, month, false);
-                // TODO Show error message
             }
         });
 
@@ -272,7 +290,7 @@ public class CalendarFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
     }
 
-    private void requestAssignments(int year, int month) {
+    private void requestAssignments(final int year, final int month) {
         //Course ids for context_codes in url
         ArrayList<String> ids = new ArrayList<>();
         for (Integer i : courseIds) {
@@ -321,7 +339,12 @@ public class CalendarFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error.toString());
+                mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       requestAssignments(year,month);
+                    }
+                });
             }
         });
 

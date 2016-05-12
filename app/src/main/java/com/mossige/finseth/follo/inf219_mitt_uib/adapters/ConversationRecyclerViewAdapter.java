@@ -39,7 +39,6 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Genera
     @Override
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
-        //TODO
         ConversationViewHolder conversationHolder = (ConversationViewHolder) holder;
 
         //Capitalize first char in subject

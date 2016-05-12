@@ -26,17 +26,14 @@ public class AnnouncementFragment extends Fragment {
     private static final String TAG = "AnnouncementFragment";
 
     private RecyclerView mainList;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
-    private View rootView;
     private ArrayList<Announcement> announcements;
 
     public AnnouncementFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         // Set label for toolbar
         getActivity().setTitle(getString(R.string.announcements_title) + " - " + getArguments().getString("course_code"));
@@ -72,11 +69,11 @@ public class AnnouncementFragment extends Fragment {
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new AnnouncementRecyclerViewAdapter(announcements);
+        RecyclerView.Adapter mAdapter = new AnnouncementRecyclerViewAdapter(announcements);
         mainList.setAdapter(mAdapter);
 
     }
@@ -93,11 +90,26 @@ public class AnnouncementFragment extends Fragment {
 
                 //Bundles all parameters needed for showing one announcement
                 Bundle args = new Bundle();
-                args.putString("title", getArguments().getStringArrayList("announcementTitles").get(position));
-                args.putString("message", getArguments().getStringArrayList("announcementMessages").get(position));
-                args.putString("sender", getArguments().getStringArrayList("announcementSender").get(position));
-                args.putString("date", getArguments().getStringArrayList("announcementDates").get(position));
-                singleAnnouncementFragment.setArguments(args);
+
+                if(getArguments() != null) {
+                    if (getArguments().containsKey("announcementTitles")) {
+                        args.putString("title", getArguments().getStringArrayList("announcementTitles").get(position));
+                    }
+
+                    if(getArguments().containsKey("announcementMessages")) {
+                        args.putString("message", getArguments().getStringArrayList("announcementMessages").get(position));
+                    }
+
+                    if(getArguments().containsKey("announcementSender")) {
+                        args.putString("sender", getArguments().getStringArrayList("announcementSender").get(position));
+                    }
+
+                    if(getArguments().containsKey("announcementDates")) {
+                        args.putString("date", getArguments().getStringArrayList("announcementDates").get(position));
+                    }
+
+                    singleAnnouncementFragment.setArguments(args);
+                }
 
                 transaction.commit();
             }

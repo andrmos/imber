@@ -220,7 +220,7 @@ public class JSONParser {
      * @param unParsed JSONArray you get onResponse with the request
      * @return A list containing successfully parsed {@link Course courses}
      */
-    public static ArrayList<Course> parseAllCourses(JSONArray unParsed, boolean instituteFilter, Context context) throws FileNotFoundException {
+    public static ArrayList<Course> parseAllCourses(JSONArray unParsed, boolean instituteFilter, Context context) {
 
         ArrayList<Course> parsed = new ArrayList<>();
 
@@ -578,7 +578,7 @@ public class JSONParser {
     }
 
 
-    private static ArrayList<Course> getCoursesWithInstituteFilter(ArrayList<Course> courses, Context context) throws FileNotFoundException {
+    private static ArrayList<Course> getCoursesWithInstituteFilter(ArrayList<Course> courses, Context context) {
         courseBank = new CourseBank(context);
         List<String> mLines = courseBank.readLine("Courses_without_number.txt");
         ArrayList<Course> coursesWithFilter = new ArrayList<>();

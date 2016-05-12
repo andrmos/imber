@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +34,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecipientRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -42,7 +44,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
 import org.json.JSONArray;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,9 +79,22 @@ public class ChooseRecipientFragment extends Fragment {
 
     private HashMap<String,Boolean> recipientsChecked;
 
+    private MainActivityListener mCallback;
+
     private int courseId;
 
     public ChooseRecipientFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (MainActivityListener) context;
+        } catch (ClassCastException e) {
+            //Do nothing
+        }
     }
 
     @Override
@@ -100,7 +114,8 @@ public class ChooseRecipientFragment extends Fragment {
         }
 
         if (id == R.id.search) {
-            // DO nothing
+            // Do nothing
+            return true;
         }
 
         return false;
@@ -134,7 +149,7 @@ public class ChooseRecipientFragment extends Fragment {
 
             transaction.commit();
         }else{
-            Toast.makeText(getContext(), "Ingen mottakere valgt", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_recipients_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -227,7 +242,6 @@ public class ChooseRecipientFragment extends Fragment {
     private void initCourseSpinner() {
         Spinner courseSpinner = (Spinner) rootView.findViewById(R.id.course_selector);
 
-        // TODO Make custom adapter so we don't need duplicate ArrayLists with String courseCodes
         courseAdapter = new ArrayAdapter<>(this.getContext(), android.R.layout.simple_spinner_item, courseCodes);
         courseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         courseSpinner.setAdapter(courseAdapter);
@@ -244,7 +258,7 @@ public class ChooseRecipientFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Log.i(TAG, "onNothingSelected: ");
+                //Do nothing
             }
         });
     }
@@ -271,25 +285,29 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
 
-                try {
-                    courses = JSONParser.parseAllCourses(response, false, getContext());
+                courses = JSONParser.parseAllCourses(response, false, getContext());
 
-                    courseCodes.clear();
-                    for (Course c : courses) {
-                        courseCodes.add(c.getCourseCode());
-                    }
-
-                    courseAdapter.notifyDataSetChanged();
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                courseCodes.clear();
+                for (Course c : courses) {
+                    courseCodes.add(c.getCourseCode());
                 }
+
+                courseAdapter.notifyDataSetChanged();
 
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //mCallback.showSnackbar(getString(R.string.error_course_list));
+                if(progressBar != null){
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestCourses();
+                    }
+                });
             }
 
         });
@@ -301,7 +319,7 @@ public class ChooseRecipientFragment extends Fragment {
         RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
     }
 
-    private void requestRecipients(String url, final String tag) {
+    private void requestRecipients(final String url, final String tag) {
         nextLink = "";
 
         final JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
@@ -331,8 +349,16 @@ public class ChooseRecipientFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error.toString());
-//                mCallback.showSnackbar("Error requesting recipients");
+                if(progressBar != null){
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                mCallback.showSnackbar(getString(R.string.error_loading_recipients), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestRecipients(url,tag);
+                    }
+                });
             }
 
         }) {

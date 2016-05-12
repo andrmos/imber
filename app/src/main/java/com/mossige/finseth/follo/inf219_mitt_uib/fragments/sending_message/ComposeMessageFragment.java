@@ -112,7 +112,7 @@ public class ComposeMessageFragment extends Fragment {
         try {
             mCallback = (MainActivityListener) context;
         }catch (ClassCastException e){
-            Log.i(TAG, "onAttach: " + e.toString());
+            //Do nothing
         }
     }
 
@@ -155,14 +155,19 @@ public class ComposeMessageFragment extends Fragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i(TAG, "onErrorResponse: " + error.toString());
+                        mCallback.showSnackbar(getString(R.string.error_sending_message), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                postMessageRequest(recipients,subject,body);
+                            }
+                        });
                     }
                 });
 
                 RequestQueueHandler.getInstance(this.getContext()).addToRequestQueue(postMessage);
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "postMessageRequest: creating json object " + e);
             }
 
 

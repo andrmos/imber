@@ -16,8 +16,6 @@ public class RecipientViewHolder extends GeneralViewHolder {
     public TextView name;
     public CheckBox checkBox;
 
-    // TODO Textviews name and surname instead?
-
     public RecipientViewHolder(View v) {
         super(v);
         name = (TextView) v.findViewById(R.id.name);

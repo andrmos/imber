@@ -55,5 +55,12 @@
 
     <string name="snackback_action_text">Prøv igjen</string>
     <string name="message_sent">Melding sendt!</string>
+    <string name="request_courses_error">Kunne ikke laste fag</string>
+    <string name="no_recipients_error">Ingen mottakere valgt</string>
+    <string name="error_loading_recipients">Kunne ikke laste mottakere</string>
+    <string name="error_sending_message">Kunne ikke sende melding</string>
+    <string name="error_requesting_calendar">Kunne ikke laste kalender</string>
+    <string name="error_requesting_assignments">Kunne ikke laste innleveringer</string>
+    <string name="error_requesting_agendas">Kunne ikke laste agendaene</string>
 
 </resources>

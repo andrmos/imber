@@ -145,17 +145,12 @@ public class CourseListFragment extends Fragment {
         final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                try {
-                    courses.clear();
-                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getActivity().getApplicationContext()));
+                courses.clear();
+                courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getActivity().getApplicationContext()));
 
 
-                    loaded = true;
-                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
-
-                } catch (FileNotFoundException e) {
-                    Log.i(TAG, "onResponse: " + e);
-                }
+                loaded = true;
+                if (mAdapter != null) mAdapter.notifyDataSetChanged();
 
                 if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
 

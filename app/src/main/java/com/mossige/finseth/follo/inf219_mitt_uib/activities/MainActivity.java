@@ -95,18 +95,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                try {
-                    courses.clear();
-                    courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getApplicationContext()));
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-
+                courses.clear();
+                courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getApplicationContext()));
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error);
+                showSnackbar(getString(R.string.request_courses_error), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestCourses(filterInstituteCourses);
+                    }
+                });
             }
 
         });
@@ -158,9 +158,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         // Reset back stack when navigating to a new fragment from the nav bar
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-
-        // TODO Error in here?
 
         if(id == R.id.nav_course){
             initCourseListFragment();
@@ -265,6 +262,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                //Do nothing
             }
         });
 

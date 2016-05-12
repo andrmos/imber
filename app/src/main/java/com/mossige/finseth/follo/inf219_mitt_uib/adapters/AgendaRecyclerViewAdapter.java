@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
-    private static final String TAG = "AgendaRecuclerViewAdapter: ";
+    private static final String TAG = "AgendaRecyclerViewAdapter: ";
 
     private ArrayList<CalendarEvent> data;
 
