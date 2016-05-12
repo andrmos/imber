@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/progress_bar"/>
+
     <Spinner
         android:id="@+id/course_selector"
         android:layout_width="match_parent"
@@ -15,22 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"/>
-
-    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-        android:id="@+id/progressBar2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone"
-        app:spb_sections_count="4"
-        app:spb_colors="@array/prgressbarColors"
-        app:spb_speed="1.0"
-        app:spb_stroke_width="4dp"
-        app:spb_stroke_separator_length="4dp"
-        app:spb_reversed="false"
-        app:spb_mirror_mode="false"
-        app:spb_progressiveStart_activated="true"
-        app:spb_interpolator="spb_interpolator_acceleratedecelerate" />
 
     <RelativeLayout
         android:layout_width="match_parent"
