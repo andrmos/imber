@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.android.volley.Request;
@@ -61,7 +62,10 @@ public class ComposeMessageFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.send) {
+            item.setEnabled(false);
+            hideSoftKeyboard(rootView);
             postMessageRequest(getArguments().getStringArrayList("recipientIDs"), subject.getText().toString(), body.getText().toString());
+            return true;
         }
 
         return false;
@@ -115,6 +119,12 @@ public class ComposeMessageFragment extends Fragment {
         subject.setText("");
         body.setText("");
     }
+
+    public void hideSoftKeyboard(View view){
+        InputMethodManager imm =(InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     private void postMessageRequest(final ArrayList<String> recipients, final String subject, final String body) {
 
         if (validateMessage(subject, body)) {
@@ -134,7 +144,7 @@ public class ComposeMessageFragment extends Fragment {
 
                     @Override
                     public void onResponse(JSONArray response) {
-                        mCallback.showSnackbar("Melding sendt!", null);
+                        mCallback.showSnackbar(getString(R.string.message_sent), null);
                         cleanTextFields();
 
                         replaceFragment();
