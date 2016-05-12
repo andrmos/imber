@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         requestUnreadCount();
         requestCourses(false); // Need events in calendar
 
-        initCourseListFragment();
+        initFragment(new CourseListFragment(), getSupportFragmentManager().beginTransaction());
 
         // Setup toolbar and navigation drawer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -96,55 +97,49 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // Reset back stack when navigating to a new fragment from the nav bar
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        if(id == R.id.nav_course){
-            initCourseListFragment();
+        boolean fragmentTransaction = false;
 
+        switch(id){
+
+            case R.id.nav_course:
+                initFragment(new CourseListFragment(), transaction);
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_calendar:
+                initCalendarFragment();
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_about:
+                initFragment(new AboutFragment(),transaction);
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_settings:
+                initFragment(new SettingFragment(),transaction);
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_inbox:
+                transaction.addToBackStack("inbox");
+                initFragment(new ConversationFragment(), transaction);
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_signin:
+                Intent intent = new Intent(this,LoginActivity.class);
+                startActivity(intent);
+                fragmentTransaction = true;
+                break;
+
+        }
+
+        if(fragmentTransaction) {
             drawerLayout.closeDrawer(navigationView);
-            return true;
         }
 
-        if(id == R.id.nav_calendar){
-            initCalendarFragment();
-
-            drawerLayout.closeDrawer(navigationView);
-            return true;
-        }
-
-        if (id == R.id.nav_about) {
-            AboutFragment aboutFragment = new AboutFragment();
-            transaction.replace(R.id.content_frame, aboutFragment);
-            transaction.commit();
-
-            drawerLayout.closeDrawer(navigationView);
-            return true;
-        }
-
-        if(id == R.id.nav_settings) {
-            SettingFragment sf = new SettingFragment();
-            transaction.replace(R.id.content_frame, sf);
-            transaction.commit();
-
-            drawerLayout.closeDrawer(navigationView);
-            return true;
-        }
-
-        if(id == R.id.nav_inbox) {
-            ConversationFragment conversationFragment = new ConversationFragment();
-            transaction.replace(R.id.content_frame, conversationFragment);
-            transaction.addToBackStack("inbox");
-            transaction.commit();
-
-            drawerLayout.closeDrawer(navigationView);
-            return true;
-        }
-
-        if(id == R.id.nav_signin){
-            Intent intent = new Intent(this,LoginActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return false;
+        return fragmentTransaction;
     }
 
     private void initNavigationDrawer(Toolbar toolbar) {
@@ -157,14 +152,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void initCourseListFragment() {
-        CourseListFragment courseListFragment = new CourseListFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.content_frame, courseListFragment);
-        transaction.commit();
     }
 
     public void initCalendarFragment() {
@@ -185,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void requestCourses(final boolean filterInstituteCourses) {
-        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 courses.clear();
@@ -209,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private void requestProfile() {
 
-        final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(), (String) null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(), (String) null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -294,5 +281,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public void initCalendar() {
         initCalendarFragment();
+    }
+
+    private void initFragment(Fragment fragment, FragmentTransaction transaction){
+        transaction.replace(R.id.content_frame, fragment);
+        transaction.commit();
     }
 }
