@@ -92,16 +92,18 @@ public class SingleConversationFragment extends Fragment {
 
         progressbar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView();
+        initFabButton();
 
         if (loaded) {
+            fab.setEnabled(true);
             progressbar.setVisibility(View.GONE);
         } else {
+            fab.setEnabled(false);
             progressbar.setVisibility(View.VISIBLE);
         }
 
 
 
-        initFabButton();
 
         return rootView;
     }
@@ -116,13 +118,15 @@ public class SingleConversationFragment extends Fragment {
                     public void onResponse(JSONObject response) {
 
                         conversation = JSONParser.parseSingleConversation(response);
-
-                        setFabListener();
+                        fab.setEnabled(true);
 
                         messages.clear();
                         messages.addAll(conversation.getMessages());
 
-                        getActivity().setTitle(conversation.getSubject());
+                        if (getActivity() != null) {
+                            getActivity().setTitle(conversation.getSubject());
+                        }
+
 
                         loaded = true;
                         mAdapter.notifyDataSetChanged();
@@ -161,6 +165,7 @@ public class SingleConversationFragment extends Fragment {
     private void initFabButton() {
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_reply_white_24dp));
+        setFabListener();
     }
 
     private void setFabListener() {

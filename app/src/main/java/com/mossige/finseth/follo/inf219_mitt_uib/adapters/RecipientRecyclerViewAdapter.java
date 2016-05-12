@@ -45,9 +45,9 @@ public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralVi
 
 
     @Override
-    public void onBindViewHolder(GeneralViewHolder holder, final int position) {
+    public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
-        final RecipientViewHolder recipientHolder = (RecipientViewHolder) holder;
+        RecipientViewHolder recipientHolder = (RecipientViewHolder) holder;
         recipientHolder.name.setText(data.get(position).getName());
         recipientHolder.checkBox.setChecked(data.get(position).getChecked());
     }

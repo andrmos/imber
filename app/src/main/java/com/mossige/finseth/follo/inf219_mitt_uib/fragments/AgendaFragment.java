@@ -46,6 +46,7 @@ public class AgendaFragment extends Fragment implements CalendarFragment.OnDateC
     @Override
     public void setAgendas(ArrayList<CalendarEvent> events) {
         agendas.clear();
+        mAdapter.notifyDataSetChanged();
         agendas.addAll(events);
         mAdapter.notifyDataSetChanged();
     }

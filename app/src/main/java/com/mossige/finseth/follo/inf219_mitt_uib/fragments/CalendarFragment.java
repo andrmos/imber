@@ -259,10 +259,8 @@ public class CalendarFragment extends Fragment {
                 if (today.gteq(new DateTime(start_date)) && today.lteq(new DateTime(end_date))) {
 
                     if (callBack != null) {
-                        Log.i(TAG, "onResponse: not null");
+//                        Log.i(TAG, "onResponse: not null");
                         callBack.setAgendas(calendar.getEventsForDate(today));
-                    } else {
-                        Log.i(TAG, "onResponse: callback is null");
                     }
 
                 }

@@ -100,7 +100,6 @@ public class ChooseRecipientFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.options_menu, menu);
-
         initSearchView(menu);
     }
 
@@ -190,7 +189,7 @@ public class ChooseRecipientFragment extends Fragment {
         SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
 
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setLayoutTransition(new LayoutTransition());
+        menu.findItem(R.id.search).setVisible(true);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -250,9 +249,11 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
                 recipients.clear();
+                mAdapter.notifyDataSetChanged();
 
                 courseId = courses.get(parent.getSelectedItemPosition()).getId();
                 String url = UrlEndpoints.getRecipients(null, courseId);
+
                 requestRecipients(url, "recipient");
             }
 
@@ -270,6 +271,8 @@ public class ChooseRecipientFragment extends Fragment {
 
         // Create the LayoutManager that holds all the views
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+//        RecyclerView.LayoutManager mLayoutManager = new MyLinearLayoutManager(getActivity());
+//        MyLinearLayoutManager myLinearLayoutManager = new MyLinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
@@ -409,10 +412,14 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkBox);
-                boolean checked = !checkBox.isChecked();
-                checkBox.setChecked(checked);
-                recipients.get(position).setChecked(checked);
-                recipientsChecked.put(recipients.get(position).getId(), checked);
+
+                // Ensure position is not out of bounds
+                if (position >= 0 && position < recipients.size()) {
+                    boolean checked = !checkBox.isChecked();
+                    checkBox.setChecked(checked);
+                    recipients.get(position).setChecked(checked);
+                    recipientsChecked.put(recipients.get(position).getId(), checked);
+                }
             }
         });
     }
