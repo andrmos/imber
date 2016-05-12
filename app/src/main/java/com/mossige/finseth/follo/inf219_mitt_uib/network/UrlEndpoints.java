@@ -53,13 +53,14 @@ public class UrlEndpoints {
     public static final String TYPE = "type=";
 
     public static String getRecipients(String search, int courseId, Context context) {
+        int perPage = 10;
         if (search == null) {
             search = "";
         } else {
             search = getHex(search);
         }
 
-        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + CONTEXT + COURSE_PREFIX + courseId + AND + TYPE + "user" + AND + ACCESS_TOKEN_KEY + access_token(context);
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + perPage + AND + PERMISSIONS + AND + CONTEXT + COURSE_PREFIX + courseId + AND + TYPE + "user" + AND + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     /**
@@ -179,7 +180,7 @@ public class UrlEndpoints {
         String access_token = "";
 
         try {
-            Class cls = Class.forName("com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstan");
+            Class cls = Class.forName("com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants");
 
             if (cls.getClass() != null) {
                 if (PrivateConstants.ACCESS_TOKEN != "") {
@@ -191,6 +192,7 @@ public class UrlEndpoints {
             }
 
         } catch (ClassNotFoundException e) {
+            Log.i(TAG, "access_token: class not found");
             SharedPreferences sharedPreferences = context.getSharedPreferences("preference_file_key", Context.MODE_PRIVATE);
             access_token = sharedPreferences.getString("access_token", "");
         }

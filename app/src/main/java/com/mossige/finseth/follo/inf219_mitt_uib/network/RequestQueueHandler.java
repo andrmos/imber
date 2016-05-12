@@ -51,7 +51,8 @@ public class RequestQueueHandler {
             @Override
             public boolean apply(Request<?> request) {
                 if (request.getTag() != null) {
-                    return request.getTag().equals(tag);
+                    boolean equals = request.getTag().equals(tag);
+                    return equals;
                 }
                 return false;
             }
