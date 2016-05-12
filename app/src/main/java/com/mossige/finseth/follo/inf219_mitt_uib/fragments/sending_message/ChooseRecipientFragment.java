@@ -211,7 +211,7 @@ public class ChooseRecipientFragment extends Fragment {
                 if (newText.length() > 1) {
                     String oldTag = newText.substring(0, newText.length() - 1);
                     // Cancel old request
-                    cancelRequest(oldTag);
+                    RequestQueueHandler.getInstance(getContext()).cancelRequest(oldTag);
                 }
                 return true;
             }
@@ -221,21 +221,9 @@ public class ChooseRecipientFragment extends Fragment {
 
     @Override
     public void onPause() {
-        // Cancel all recipients requests when navigating away from fragment
-        cancelRequest("recipient");
+        // Cancel all recipient requests when navigating away from fragment
+        RequestQueueHandler.getInstance(getContext()).cancelRequest("recipient");
         super.onPause();
-    }
-
-    private void cancelRequest(final String tag) {
-        RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
-            @Override
-            public boolean apply(Request<?> request) {
-                if (request.getTag() != null) {
-                    return request.getTag().equals(tag);
-                }
-                return false;
-            }
-        });
     }
 
     private void initCourseSpinner() {
