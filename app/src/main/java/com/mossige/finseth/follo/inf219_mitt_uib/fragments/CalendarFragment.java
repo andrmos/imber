@@ -29,10 +29,7 @@ import com.roomorama.caldroid.CaldroidListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
@@ -110,17 +107,13 @@ public class CalendarFragment extends Fragment {
      */
     private CaldroidFragment initCalendarFragment() {
         CaldroidFragment caldroidFragment = new CustomCaldroidFragment();
+        DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
 
-        // Calendar is used to get current date
-        Calendar cal = Calendar.getInstance();
         // Bundle Caldroid arguments to initialize calendar
         Bundle args = new Bundle();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1); // January = 0
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        args.putInt(CaldroidFragment.MONTH, today.getMonth());
+        args.putInt(CaldroidFragment.YEAR, today.getYear());
         args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
-        args.putBoolean(CaldroidFragment.SHOW_NAVIGATION_ARROWS, true);
-        args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false);
-        args.putBoolean(CaldroidFragment.ENABLE_CLICK_ON_DISABLED_DATES, false);
         caldroidFragment.setArguments(args);
 
         // Set listeners
@@ -141,20 +134,15 @@ public class CalendarFragment extends Fragment {
 
                 if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth() - 1)) { // Zero indexed month
                     getCalendarEvents(curMonth.getYear(), curMonth.getMonth() - 1, 1);
-                } else {
-                    // Already loaded, do nothing
+
                 }
 
                 if (!calendar.loaded(nextMonth.getYear(), nextMonth.getMonth() - 1)) { // Zero indexed month
                     getCalendarEvents(nextMonth.getYear(), nextMonth.getMonth() - 1, 1);
-                } else {
-                    // Already loaded, do nothing
                 }
 
                 if (!calendar.loaded(prevMonth.getYear(), prevMonth.getMonth() - 1)) { // Zero indexed month
                     getCalendarEvents(prevMonth.getYear(), prevMonth.getMonth() - 1, 1);
-                } else {
-                    // Already loaded, do nothing
                 }
             }
 
@@ -215,28 +203,19 @@ public class CalendarFragment extends Fragment {
         //What to exlude
         ArrayList<String> exclude = new ArrayList<>();
         exclude.add("child_events");
+
         String type = "event";
 
-        // TODO Change to Date4j?
-        //Todays date
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        final Calendar cal = Calendar.getInstance();
+        final DateTime startDate = DateTime.forDateOnly(year, month + 1, 1);
+        final DateTime endDate = startDate.getEndOfMonth();
 
-        cal.set(Calendar.YEAR, year);
-
-        // Set the date to the 1st
-        cal.set(Calendar.DATE, 1);
-        cal.set(Calendar.MONTH, month);
-        final String start_date = df.format(cal.getTime());
-
-        // Set date to last day of month
-        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-        final String end_date = df.format(cal.getTime());
+        String startDateString = startDate.toString();
+        String endDateString = endDate.format("YYYY-MM-DD");
 
         //Per page set to max
         String per_page = "50";
 
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page, page_num,getContext()), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, startDateString, endDateString, per_page, page_num, getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -250,19 +229,15 @@ public class CalendarFragment extends Fragment {
                 }
 
                 requestAssignments(year, month);
-
                 calendar.setLoaded(year, month, true);
-
                 setBackgrounds(events);
 
+                // If in current month, set todays agendas
                 DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
-                if (today.gteq(new DateTime(start_date)) && today.lteq(new DateTime(end_date))) {
-
+                if (today.gteq(startDate) && today.lteq(endDate)) {
                     if (callBack != null) {
-//                        Log.i(TAG, "onResponse: not null");
                         callBack.setAgendas(calendar.getEventsForDate(today));
                     }
-
                 }
 
             }
@@ -301,26 +276,16 @@ public class CalendarFragment extends Fragment {
         //Type - event/assignment
         String type = "assignment";
 
-        // TODO Change to Date4j?
-        //Todays date
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        final Calendar cal = Calendar.getInstance();
+        DateTime startDate = DateTime.forDateOnly(year, month + 1, 1);
+        DateTime endDate = startDate.getEndOfMonth();
 
-        cal.set(Calendar.YEAR, year);
-
-        // Set the date to the 1st
-        cal.set(Calendar.DATE, 1);
-        cal.set(Calendar.MONTH, month);
-        final String start_date = df.format(cal.getTime());
-
-        // Set date to last day of month
-        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-        final String end_date = df.format(cal.getTime());
+        String startDateString = startDate.toString();
+        String endDateString = endDate.format("YYYY-MM-DD");
 
         //Per page set to max
         String per_page = "50";
 
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page, 1, getContext()), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, startDateString, endDateString, per_page, 1, getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -340,7 +305,7 @@ public class CalendarFragment extends Fragment {
                 mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       requestAssignments(year,month);
+                        requestAssignments(year,month);
                     }
                 });
             }
@@ -362,6 +327,4 @@ public class CalendarFragment extends Fragment {
         }
         caldroidFragment.refreshView();
     }
-
-
 }
