@@ -71,7 +71,6 @@ public class ConversationFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         conversations = new ArrayList<>();
-
         loaded = false;
         requestConversation();
     }
@@ -83,7 +82,6 @@ public class ConversationFragment extends Fragment {
 
         progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
-
         if (loaded) {
             progressbar.setVisibility(View.GONE);
         } else {

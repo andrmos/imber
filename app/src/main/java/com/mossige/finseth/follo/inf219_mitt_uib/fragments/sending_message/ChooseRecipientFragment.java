@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,7 +33,6 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecipientRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
-import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -50,6 +48,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
 /**
  * Created by Follo on 20.03.2016.
  */
@@ -58,8 +58,8 @@ public class ChooseRecipientFragment extends Fragment {
     private static final String TAG = "ChooseRecipientFragment";
 
     private View rootView;
-    private ProgressBar progressBar;
-    private ProgressBar progressBarRecipient;
+
+    private SmoothProgressBar progressBar;
 
     private ArrayList<Recipient> recipients;
 
@@ -157,17 +157,15 @@ public class ChooseRecipientFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.choose_recipient, container, false);
         getActivity().setTitle("Velg mottaker");
+        initCourseSpinner();
+        initRecycleView();
 
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-        progressBarRecipient = (ProgressBar) rootView.findViewById(R.id.progressBarRecipient);
+        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressBar2);
         if (loaded) {
             progressBar.setVisibility(View.GONE);
         } else {
             progressBar.setVisibility(View.VISIBLE);
         }
-
-        initRecycleView();
-        initCourseSpinner();
 
         return rootView;
     }
@@ -282,18 +280,15 @@ public class ChooseRecipientFragment extends Fragment {
                     }
 
                     courseAdapter.notifyDataSetChanged();
-                    loaded = true;
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
 
-                progressBar.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                progressBar.setVisibility(View.GONE);
                 //mCallback.showSnackbar(getString(R.string.error_course_list));
             }
 
@@ -327,7 +322,9 @@ public class ChooseRecipientFragment extends Fragment {
                     recipients.add(r);
                 }
 
-                progressBarRecipient.setVisibility(View.GONE);
+                loaded = true;
+
+                progressBar.setVisibility(View.GONE);
                 mAdapter.notifyDataSetChanged();
 
             }
