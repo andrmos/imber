@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -34,6 +35,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // No course filter, need all events in calendar
         requestCourses(false);
 
-        initCourseListFragment();
+        initFragment(new CourseListFragment(), getSupportFragmentManager().beginTransaction());
 
         // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -114,14 +116,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(coursesReq);
     }
 
-    private void initCourseListFragment() {
-        CourseListFragment courseListFragment = new CourseListFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        transaction.replace(R.id.content_frame, courseListFragment);
-        transaction.commit();
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -159,55 +153,49 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // Reset back stack when navigating to a new fragment from the nav bar
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        if(id == R.id.nav_course){
-            initCourseListFragment();
+        boolean fragmentTransaction = false;
 
+        switch(id){
+
+            case R.id.nav_course:
+                initFragment(new CourseListFragment(), transaction);
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_calendar:
+                initCalendarFragment();
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_about:
+                initFragment(new AboutFragment(),transaction);
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_settings:
+                initFragment(new SettingFragment(),transaction);
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_inbox:
+                transaction.addToBackStack("inbox");
+                initFragment(new ConversationFragment(), transaction);
+                fragmentTransaction = true;
+                break;
+
+            case R.id.nav_signin:
+                Intent intent = new Intent(this,LoginActivity.class);
+                startActivity(intent);
+                fragmentTransaction = true;
+                break;
+
+        }
+
+        if(fragmentTransaction) {
             drawerLayout.closeDrawer(navigationView);
-            return true;
         }
 
-        if(id == R.id.nav_calendar){
-            initCalendarFragment();
-
-            drawerLayout.closeDrawer(navigationView);
-            return true;
-        }
-
-        if (id == R.id.nav_about) {
-            AboutFragment aboutFragment = new AboutFragment();
-            transaction.replace(R.id.content_frame, aboutFragment);
-            transaction.commit();
-
-            drawerLayout.closeDrawer(navigationView);
-            return true;
-        }
-
-        if(id == R.id.nav_settings) {
-            SettingFragment sf = new SettingFragment();
-            transaction.replace(R.id.content_frame, sf);
-            transaction.commit();
-
-            drawerLayout.closeDrawer(navigationView);
-            return true;
-        }
-
-        if(id == R.id.nav_inbox) {
-            ConversationFragment conversationFragment = new ConversationFragment();
-            transaction.replace(R.id.content_frame, conversationFragment);
-            transaction.addToBackStack("inbox");
-            transaction.commit();
-
-            drawerLayout.closeDrawer(navigationView);
-            return true;
-        }
-
-        if(id == R.id.nav_signin){
-            Intent intent = new Intent(this,LoginActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return false;
+        return fragmentTransaction;
     }
 
     private void requestProfile() {
@@ -317,5 +305,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         initCalendarFragment();
     }
 
+    private void initFragment(Fragment fragment, FragmentTransaction transaction){
+        transaction.replace(R.id.content_frame, fragment);
+        transaction.commit();
+    }
 
 }
