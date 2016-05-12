@@ -93,7 +93,7 @@ public class ConversationFragment extends Fragment {
 
     private void requestConversation() {
 
-        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getConversationsUrl(), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getConversationsUrl(getContext()), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 

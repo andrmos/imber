@@ -200,7 +200,7 @@ public class ChooseRecipientFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                String url = UrlEndpoints.getRecipients(newText, courseId);
+                String url = UrlEndpoints.getRecipients(newText, courseId, getContext());
 
                 // Clear results to fill with new data
                 recipients.clear();
@@ -240,7 +240,7 @@ public class ChooseRecipientFragment extends Fragment {
                 mAdapter.notifyDataSetChanged();
 
                 courseId = courses.get(parent.getSelectedItemPosition()).getId();
-                String url = UrlEndpoints.getRecipients(null, courseId);
+                String url = UrlEndpoints.getRecipients(null, courseId,getContext());
 
                 requestRecipients(url, "recipient");
             }
@@ -283,7 +283,7 @@ public class ChooseRecipientFragment extends Fragment {
 
     private void requestCourses() {
 
-        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(getContext()), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
 

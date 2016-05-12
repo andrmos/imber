@@ -1,6 +1,10 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.mossige.finseth.follo.inf219_mitt_uib.R;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -48,70 +52,68 @@ public class UrlEndpoints {
     public static final String UNREAD_COUNT = "unread_count";
     public static final String TYPE = "type=";
 
-    public static String getRecipients(String search, int courseId) {
-
+    public static String getRecipients(String search, int courseId, Context context) {
         int perPage = 10;
-
         if (search == null) {
             search = "";
         } else {
             search = getHex(search);
         }
 
-        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + perPage + AND + PERMISSIONS + AND + CONTEXT + COURSE_PREFIX + courseId + AND + TYPE + "user" + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + perPage + AND + PERMISSIONS + AND + CONTEXT + COURSE_PREFIX + courseId + AND + TYPE + "user" + AND + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     /**
      * @return Request URL for getting the users profile
      */
-    public static String getUserProfileURL() {
-        return BASE_URL + USERS + SELF + "/" + PROFILE + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    public static String getUserProfileURL(Context context) {
+        return BASE_URL + USERS + SELF + "/" + PROFILE + "?" + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     /**
      * @return Request URL for a getting list of active courses for current user.
      */
-    public static String getCoursesListUrl() {
-        return BASE_URL + COURSES + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    public static String getCoursesListUrl(Context context) {
+        return BASE_URL + COURSES + "?" + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     /**
      * @return Request URL for getting a list of conversations, with last sent messages only, for current user.
      */
-    public static String getConversationsUrl() {
-        return BASE_URL + CONVERSATIONS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    public static String getConversationsUrl(Context context) {
+        return BASE_URL + CONVERSATIONS + "?" + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     /**
      * @param conversation_id The id of the conversation.
      * @return Request URL for getting a single conversation with all its messages.
      */
-    public static String getSingleConversationUrl(String conversation_id) {
-        return BASE_URL + CONVERSATIONS + conversation_id + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    public static String getSingleConversationUrl(String conversation_id, Context context) {
+        return BASE_URL + CONVERSATIONS + conversation_id + "?" + ACCESS_TOKEN_KEY +  access_token(context);
     }
 
     /**
      * @param course_id The id of the course.
      * @return Request URL for getting a list of announcements for a course.
      */
-    public static String getCourseAnnouncementsUrl(String course_id) {
+    public static String getCourseAnnouncementsUrl(String course_id, Context context) {
         return BASE_URL + COURSES + course_id + "/" + DISCUSSION_TOPICS + "?" + ONLY_ANNOUNCEMENTS_KEY + "true" +
-                "&" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+                "&" + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     /**
      * @param user_id The id of the user.
      * @return Request URL for getting grades for a user.
      */
-    public static String getUserGradesUrl(String user_id) {
-        return BASE_URL + USERS + user_id + "/" + ENROLLMENTS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    public static String getUserGradesUrl(String user_id, Context context) {
+        return BASE_URL + USERS + user_id + "/" + ENROLLMENTS + "?" + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     /**
      * @return Request URL posting new message.
      */
-    public static String postNewMessageUrl() {
-        return BASE_URL + CONVERSATIONS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    public static String postNewMessageUrl(Context context) {
+        return BASE_URL + CONVERSATIONS + "?" + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     /**
@@ -123,8 +125,8 @@ public class UrlEndpoints {
      * @param end_date Format: YYYY-MM-DD
      * @return
      */
-    public static String getCalendarEventsUrl(ArrayList<String> context_codes, ArrayList<String> excludes, String type, String start_date, String end_date, String per_page, int page_num) {
-        String url = BASE_URL + CALENDAR_EVENTS + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN + "&";
+    public static String getCalendarEventsUrl(ArrayList<String> context_codes, ArrayList<String> excludes, String type, String start_date, String end_date, String per_page, int page_num, Context context) {
+        String url = BASE_URL + CALENDAR_EVENTS + "?" + ACCESS_TOKEN_KEY + access_token(context) + "&";
 
         for (String context_code : context_codes) {
             url += CONTEXT_CODE_KEY + context_code + "&";
@@ -151,8 +153,10 @@ public class UrlEndpoints {
      * Return url for unread count
      * @return
      */
-    public static String getUnreadCountURL(){
-        return BASE_URL + CONVERSATIONS + UNREAD_COUNT + "?" + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+    public static String getUnreadCountURL(Context context){
+
+
+        return BASE_URL + CONVERSATIONS + UNREAD_COUNT + "?" + ACCESS_TOKEN_KEY + access_token(context);
     }
 
     private static String getHex(String s) {
@@ -168,4 +172,31 @@ public class UrlEndpoints {
         return hex;
     }
 
+    public static String validateTokenURL(String token){
+        return BASE_URL + COURSES + "?" + ACCESS_TOKEN_KEY + token;
+    }
+
+    private static String access_token(Context context) {
+        String access_token = "";
+
+        try {
+            Class cls = Class.forName("com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants");
+
+            if (cls.getClass() != null) {
+                if (PrivateConstants.ACCESS_TOKEN != "") {
+                    access_token =  PrivateConstants.ACCESS_TOKEN;
+                }else{
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("preference_file_key",Context.MODE_PRIVATE);
+                    access_token = sharedPreferences.getString("access_token", "");
+                }
+            }
+
+        } catch (ClassNotFoundException e) {
+            Log.i(TAG, "access_token: class not found");
+            SharedPreferences sharedPreferences = context.getSharedPreferences("preference_file_key", Context.MODE_PRIVATE);
+            access_token = sharedPreferences.getString("access_token", "");
+        }
+
+        return access_token;
+    }
 }
