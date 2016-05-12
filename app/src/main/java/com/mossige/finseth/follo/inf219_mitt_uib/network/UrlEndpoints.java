@@ -49,13 +49,16 @@ public class UrlEndpoints {
     public static final String TYPE = "type=";
 
     public static String getRecipients(String search, int courseId) {
+
+        int perPage = 10;
+
         if (search == null) {
             search = "";
         } else {
             search = getHex(search);
         }
 
-        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + "50" + AND + PERMISSIONS + AND + CONTEXT + COURSE_PREFIX + courseId + AND + TYPE + "user" + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
+        return BASE_URL + SEARCH + RECIPIENTS + "?" + SEARCH_ARG + search + AND + PER_PAGE  + perPage + AND + PERMISSIONS + AND + CONTEXT + COURSE_PREFIX + courseId + AND + TYPE + "user" + AND + ACCESS_TOKEN_KEY + PrivateConstants.ACCESS_TOKEN;
     }
 
     /**

@@ -1,11 +1,9 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message;
 
-import android.animation.LayoutTransition;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,12 +25,12 @@ import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecipientRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
@@ -64,21 +62,19 @@ public class ChooseRecipientFragment extends Fragment {
 
     private ArrayList<Recipient> recipients;
 
-    //Adapters to the dropdownlists above
+    private ArrayList<Course> courses;
+    private ArrayList<String> courseCodes;
+    //Adapter to course spinner
     private ArrayAdapter<String> courseAdapter;
 
-    private ArrayList<String> courseCodes;
-
     private boolean loaded;
-    private ArrayList<Course> courses;
 
     private String nextLink;
 
-    private RecyclerView mainList;
+    private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
 
     private HashMap<String,Boolean> recipientsChecked;
-
     private MainActivityListener mCallback;
 
     private int courseId;
@@ -135,21 +131,25 @@ public class ChooseRecipientFragment extends Fragment {
 
         //If recipients are choosen, write new message. If not show toast message
         if(tmpList.size() > 0) {
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
-            transaction.replace(R.id.content_frame, composeMessageFragment);
-
-            transaction.addToBackStack(null);
-
-            //Bundles all parameters needed for showing one announcement
-            Bundle args = new Bundle();
-            args.putStringArrayList("recipientIDs", tmpList);
-            composeMessageFragment.setArguments(args);
-
-            transaction.commit();
+            initComposeMessageFragment(tmpList);
         }else{
             Toast.makeText(getContext(), R.string.no_recipients_error, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void initComposeMessageFragment(ArrayList<String> tmpList) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
+        transaction.replace(R.id.content_frame, composeMessageFragment);
+
+        transaction.addToBackStack(null);
+
+        //Bundles all parameters needed for showing one announcement
+        Bundle args = new Bundle();
+        args.putStringArrayList("recipientIDs", tmpList);
+        composeMessageFragment.setArguments(args);
+
+        transaction.commit();
     }
 
     @Override
@@ -204,7 +204,7 @@ public class ChooseRecipientFragment extends Fragment {
 
                 // Clear results to fill with new data
                 recipients.clear();
-
+                mAdapter.notifyDataSetChanged();
                 requestRecipients(url, newText);
 
                 // Do not cancel requests with empty tag
@@ -255,20 +255,31 @@ public class ChooseRecipientFragment extends Fragment {
     private void initRecycleView() {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-        mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-//        RecyclerView.LayoutManager mLayoutManager = new MyLinearLayoutManager(getActivity());
-//        MyLinearLayoutManager myLinearLayoutManager = new MyLinearLayoutManager(getActivity());
-        mainList.setLayoutManager(mLayoutManager);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                // If not end of list
+                if (!nextLink.isEmpty()) {
+                    requestRecipients(nextLink, "recipient");
+                }
+            }
+        });
 
         // Create adapter that binds the views with some content
         mAdapter = new RecipientRecyclerViewAdapter(recipients);
-        mainList.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
+
 
         initOnClickListener();
     }
+
+
 
     private void requestCourses() {
 
@@ -277,7 +288,6 @@ public class ChooseRecipientFragment extends Fragment {
             public void onResponse(JSONArray response) {
 
                 courses = JSONParser.parseAllCourses(response, false, getContext());
-
                 courseCodes.clear();
                 for (Course c : courses) {
                     courseCodes.add(c.getCourseCode());
@@ -317,12 +327,7 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
                 ArrayList<Recipient> tmp = JSONParser.parseAllRecipients(response);
-
-                // If there exists a link to the next recipients page, start request with new url
-                if (!nextLink.isEmpty()) {
-                    // TODO Fetches ALL recipients in a group. Might be a lot of data to fetch.
-                    requestRecipients(nextLink, tag);
-                }
+                int currentSize = mAdapter.getItemCount();
 
                 for (Recipient r : tmp) {
                     if (recipientsChecked.containsKey(r.getId())) {
@@ -331,11 +336,10 @@ public class ChooseRecipientFragment extends Fragment {
                     recipients.add(r);
                 }
 
-                loaded = true;
-
                 progressBar.setVisibility(View.GONE);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemRangeChanged(currentSize, recipients.size() - 1);
 
+                loaded = true;
             }
         }, new Response.ErrorListener() {
             @Override
@@ -357,7 +361,6 @@ public class ChooseRecipientFragment extends Fragment {
             protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
                 // Canvas API limits each response to a certain amount of recipients per response.
                 // This extracts the url to the next page from the response.
-
                 nextLink = "";
 
                 String linkKey = "Link";
@@ -396,7 +399,7 @@ public class ChooseRecipientFragment extends Fragment {
     }
 
     private void initOnClickListener() {
-        ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkBox);
