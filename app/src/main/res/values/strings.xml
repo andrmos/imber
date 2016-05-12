@@ -54,5 +54,6 @@
     <string name="error_conversation">Feil ved lasting av samtaler…</string>
 
     <string name="snackback_action_text">Prøv igjen</string>
+    <string name="message_sent">Melding sendt!</string>
 
 </resources>
