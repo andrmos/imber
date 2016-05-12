@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void requestCourses(final boolean filterInstituteCourses) {
-        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(this), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 courses.clear();
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 break;
 
             case R.id.nav_signin:
-                Intent intent = new Intent(this,LoginActivity.class);
+                Intent intent = new Intent(this,LoginActivityWithAccessToken.class);
                 startActivity(intent);
                 fragmentTransaction = true;
                 break;
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private void requestProfile() {
 
-        final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(), (String) null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(this), (String) null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public void requestUnreadCount() {
 
-        final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUnreadCountURL(), (String) null, new Response.Listener<JSONObject>() {
+        final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUnreadCountURL(this), (String) null, new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {

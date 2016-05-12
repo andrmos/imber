@@ -206,7 +206,7 @@ public class CourseFragment extends Fragment {
 
     private void requestAnnouncements(final String course_id) {
 
-        final JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id, getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -274,7 +274,7 @@ public class CourseFragment extends Fragment {
         String start_date = df.format(cal.getTime());
         String end_date = df.format(cal.getTime());
 
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1,getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -330,8 +330,8 @@ public class CourseFragment extends Fragment {
         String start_date = df.format(cal.getTime());
         String end_date = df.format(cal.getTime());
 
-        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1));
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
+        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1,getContext()));
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1,getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {

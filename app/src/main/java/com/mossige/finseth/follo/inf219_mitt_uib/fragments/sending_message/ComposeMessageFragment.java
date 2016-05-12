@@ -141,7 +141,7 @@ public class ComposeMessageFragment extends Fragment {
                     postJSONObject.accumulate("recipients", recipients.get(i));
                 }
                 //Request post method
-                JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(), postJSONObject, new Response.Listener<JSONArray>() {
+                JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(getContext()), postJSONObject, new Response.Listener<JSONArray>() {
 
                     @Override
                     public void onResponse(JSONArray response) {

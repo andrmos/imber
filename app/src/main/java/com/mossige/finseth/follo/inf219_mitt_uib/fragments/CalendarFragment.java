@@ -236,7 +236,7 @@ public class CalendarFragment extends Fragment {
         //Per page set to max
         String per_page = "50";
 
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page, page_num), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page, page_num,getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -320,7 +320,7 @@ public class CalendarFragment extends Fragment {
         //Per page set to max
         String per_page = "50";
 
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page, 1), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page, 1, getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {

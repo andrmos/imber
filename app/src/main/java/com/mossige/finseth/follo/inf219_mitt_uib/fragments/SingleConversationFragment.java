@@ -111,7 +111,7 @@ public class SingleConversationFragment extends Fragment {
     private void requestSingleConversation() {
 
         JsonObjectRequest singleConversationRequest = new JsonObjectRequest(Request.Method.GET,
-                UrlEndpoints.getSingleConversationUrl(getArguments().getString("conversationID")),
+                UrlEndpoints.getSingleConversationUrl(getArguments().getString("conversationID"),getContext()),
                 (String) null,
                 new Response.Listener<JSONObject>() {
                     @Override

@@ -142,7 +142,7 @@ public class CourseListFragment extends Fragment {
 
     private void requestCourses(final boolean filterInstituteCourses) {
 
-        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(getContext()), (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 courses.clear();
