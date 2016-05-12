@@ -55,6 +55,7 @@ public class ComposeMessageFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.options_menu, menu);
+        menu.findItem(R.id.search).setEnabled(true);
     }
 
     @Override
