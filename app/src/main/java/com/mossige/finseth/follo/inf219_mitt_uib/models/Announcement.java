@@ -39,7 +39,4 @@ public class Announcement {
         return message;
     }
 
-    public boolean isUnread() {
-        return unread;
-    }
 }

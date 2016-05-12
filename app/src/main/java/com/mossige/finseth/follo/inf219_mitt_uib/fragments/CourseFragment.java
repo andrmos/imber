@@ -70,7 +70,7 @@ public class CourseFragment extends Fragment {
         try{
             mCallback = (MainActivityListener) context;
         }catch(ClassCastException e){
-            Log.i(TAG, "onAttach: " + e.toString());
+            //Do nothing
         }
     }
 
@@ -82,15 +82,30 @@ public class CourseFragment extends Fragment {
 
         announcements = new ArrayList<>();
         agendas = new ArrayList<>();
-        loaded = new boolean[2];
+        loaded = new boolean[3];
 
         // Get arguments from course list
         int course_id = getArguments().getInt("id");
-        String calendar_url = getArguments().getString("calendar_url");
-        String name = getArguments().getString("name");
-        String course_code = getArguments().getString("course_code");
 
-        course = new Course(course_id,name,calendar_url,course_code);
+        if(getArguments() != null) {
+            String calendar_url = "";
+            String name = "";
+            String course_code = "";
+
+            if (getArguments().containsKey("calendar_url")) {
+                calendar_url = getArguments().getString("calendar_url");
+            }
+
+            if(getArguments().containsKey("name")) {
+                name = getArguments().getString("name");
+            }
+
+            if(getArguments().containsKey("course_code")) {
+                course_code = getArguments().getString("course_code");
+            }
+
+            course = new Course(course_id,name,calendar_url,course_code);
+        }
 
         requestAnnouncements("" + course.getId());
         requestAgendas();
@@ -191,7 +206,7 @@ public class CourseFragment extends Fragment {
 
     private void requestAnnouncements(final String course_id) {
 
-        final JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id), (String) null, new Response.Listener<JSONArray>() {
+        final JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id, getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
@@ -212,7 +227,7 @@ public class CourseFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressbar.setVisibility(View.GONE);
-                mCallback.showSnackbar("Error requesting announcements", new View.OnClickListener() {
+                mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestAnnouncements(course_id);
@@ -259,15 +274,16 @@ public class CourseFragment extends Fragment {
         String start_date = df.format(cal.getTime());
         String end_date = df.format(cal.getTime());
 
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1), (String) null, new Response.Listener<JSONArray>() {
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1,getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
             public void onResponse(JSONArray response) {
-
                 agendas.clear();
                 agendas.addAll(JSONParser.parseAllCalendarEvents(response));
 
                 loaded[1] = true;
+
+                requestAssignments();
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);
@@ -280,7 +296,61 @@ public class CourseFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error);
                 if (progressbar != null) progressbar.setVisibility(View.GONE);
-                mCallback.showSnackbar("Error requesting agendas", new View.OnClickListener() {
+                mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestAgendas();
+                    }
+                });
+            }
+        });
+
+        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
+    }
+
+    private void requestAssignments() {
+        Log.i(TAG, "requestAssignements");
+
+        //Course ids for context_codes in url
+        ArrayList<String> ids = new ArrayList<>();
+        ids.add("course_" + course.getId());
+
+        //What to exclude
+        ArrayList<String> exclude = new ArrayList<>();
+
+        //Type - event/assignment
+        String type = "assignment";
+
+        //Only 3 agendas for one course
+        String per_page = "3";
+
+        //Get todays date in right format
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        String start_date = df.format(cal.getTime());
+        String end_date = df.format(cal.getTime());
+
+        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1,getContext()));
+        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1,getContext()), (String) null, new Response.Listener<JSONArray>() {
+
+            @Override
+            public void onResponse(JSONArray response) {
+                agendas.addAll(JSONParser.parseAllCalendarEvents(response));
+
+                loaded[2] = true;
+
+                if (isLoaded()) {
+                    mainList.setVisibility(View.VISIBLE);
+                    progressbar.setVisibility(View.GONE);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i(TAG, "onErrorResponse: " + error);
+                if (progressbar != null) progressbar.setVisibility(View.GONE);
+                mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestAgendas();

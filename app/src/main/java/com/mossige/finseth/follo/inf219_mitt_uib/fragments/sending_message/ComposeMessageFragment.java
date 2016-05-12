@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.android.volley.Request;
@@ -54,6 +55,7 @@ public class ComposeMessageFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.options_menu, menu);
+        menu.findItem(R.id.search).setVisible(false);
     }
 
     @Override
@@ -61,7 +63,10 @@ public class ComposeMessageFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.send) {
+            item.setEnabled(false);
+            hideSoftKeyboard(rootView);
             postMessageRequest(getArguments().getStringArrayList("recipientIDs"), subject.getText().toString(), body.getText().toString());
+            return true;
         }
 
         return false;
@@ -107,7 +112,7 @@ public class ComposeMessageFragment extends Fragment {
         try {
             mCallback = (MainActivityListener) context;
         }catch (ClassCastException e){
-            Log.i(TAG, "onAttach: " + e.toString());
+            //Do nothing
         }
     }
 
@@ -115,6 +120,12 @@ public class ComposeMessageFragment extends Fragment {
         subject.setText("");
         body.setText("");
     }
+
+    public void hideSoftKeyboard(View view){
+        InputMethodManager imm =(InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
     private void postMessageRequest(final ArrayList<String> recipients, final String subject, final String body) {
 
         if (validateMessage(subject, body)) {
@@ -130,11 +141,11 @@ public class ComposeMessageFragment extends Fragment {
                     postJSONObject.accumulate("recipients", recipients.get(i));
                 }
                 //Request post method
-                JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(), postJSONObject, new Response.Listener<JSONArray>() {
+                JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(getContext()), postJSONObject, new Response.Listener<JSONArray>() {
 
                     @Override
                     public void onResponse(JSONArray response) {
-                        mCallback.showSnackbar("Melding sendt!", null);
+                        mCallback.showSnackbar(getString(R.string.message_sent), null);
                         cleanTextFields();
 
                         replaceFragment();
@@ -144,14 +155,19 @@ public class ComposeMessageFragment extends Fragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i(TAG, "onErrorResponse: " + error.toString());
+                        mCallback.showSnackbar(getString(R.string.error_sending_message), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                postMessageRequest(recipients,subject,body);
+                            }
+                        });
                     }
                 });
 
                 RequestQueueHandler.getInstance(this.getContext()).addToRequestQueue(postMessage);
 
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(TAG, "postMessageRequest: creating json object " + e);
             }
 
 

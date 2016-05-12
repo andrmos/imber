@@ -30,7 +30,6 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.i(TAG, "created about view");
 
         getActivity().setTitle(R.string.about_title);
 

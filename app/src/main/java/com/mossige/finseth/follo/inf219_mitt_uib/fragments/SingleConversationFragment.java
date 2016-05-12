@@ -61,6 +61,7 @@ public class SingleConversationFragment extends Fragment {
 
     MainActivityListener mCallback;
     private View rootView;
+    private FloatingActionButton fab;
 
     @Override
     public void onAttach(Context context) {
@@ -91,14 +92,18 @@ public class SingleConversationFragment extends Fragment {
 
         progressbar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView();
+        initFabButton();
 
         if (loaded) {
+            fab.setEnabled(true);
             progressbar.setVisibility(View.GONE);
         } else {
+            fab.setEnabled(false);
             progressbar.setVisibility(View.VISIBLE);
         }
 
-        initFabButton();
+
+
 
         return rootView;
     }
@@ -106,23 +111,28 @@ public class SingleConversationFragment extends Fragment {
     private void requestSingleConversation() {
 
         JsonObjectRequest singleConversationRequest = new JsonObjectRequest(Request.Method.GET,
-                UrlEndpoints.getSingleConversationUrl(getArguments().getString("conversationID")),
+                UrlEndpoints.getSingleConversationUrl(getArguments().getString("conversationID"),getContext()),
                 (String) null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
 
                         conversation = JSONParser.parseSingleConversation(response);
+                        fab.setEnabled(true);
+
                         messages.clear();
                         messages.addAll(conversation.getMessages());
 
-                        getActivity().setTitle(conversation.getSubject());
+                        if (getActivity() != null) {
+                            getActivity().setTitle(conversation.getSubject());
+                        }
+
 
                         loaded = true;
                         mAdapter.notifyDataSetChanged();
 
-                            //Update unread count in navigation drawer
-                            mCallback.requestUnreadCount();
+                        //Update unread count in navigation drawer
+                        mCallback.requestUnreadCount();
 
 
                         progressbar.setVisibility(View.GONE);
@@ -153,20 +163,15 @@ public class SingleConversationFragment extends Fragment {
     }
 
     private void initFabButton() {
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_reply_white_24dp));
+        setFabListener();
+    }
+
+    private void setFabListener() {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick");
-
-                // TODO
-                // Create fragment transaction
-                // Construct ComposeMessage fragment
-                // Bundle recipient id(s)
-                // Commit transaction
-                // Add backstack tag
-
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 ComposeMessageFragment composeMessageFragment = new ComposeMessageFragment();
                 transaction.replace(R.id.content_frame, composeMessageFragment);

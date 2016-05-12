@@ -42,8 +42,6 @@ public class CourseListRecyclerViewAdapter extends RecyclerView.Adapter<GeneralV
         CourseViewHolder courseHolder = (CourseViewHolder) holder;
         courseHolder.course_code.setText(data.get(position).getCourseCode());
         courseHolder.course_title.setText(data.get(position).getName());
-        courseHolder.course_id.setText("" + data.get(position).getId());
-        courseHolder.calendar_url.setText(data.get(position).getCalenderUrl());
     }
 
     @Override

@@ -101,9 +101,4 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
     public static CalendarEvent getFailedCalendarEvent() {
         return new CalendarEvent(fail, new DateTime(1970, 1, 1, 0, 0, 0, 0), new DateTime(1970, 1, 1, 0, 0, 0, 0), fail, TimeZone.getTimeZone("UTC"));
     }
-
-    @Override
-    public String toString(){
-        return   name + "\t" + mStartDate + "\t" + mEndDate;
-    }
 }

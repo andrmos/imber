@@ -1,6 +1,8 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -38,5 +40,33 @@ public class RequestQueueHandler {
 
     public <T> void addToRequestQueue(Request<T> req) {
         getRequestQueue().add(req);
+    }
+
+    /**
+     *
+     * @param tag
+     */
+    public void cancelRequest(final String tag) {
+        requestQueue.cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                if (request.getTag() != null) {
+                    return request.getTag().equals(tag);
+                }
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Cancels all requests currently in the request queue.
+     */
+    public void cancelAll() {
+        requestQueue.cancelAll(new RequestQueue.RequestFilter() {
+            @Override
+            public boolean apply(Request<?> request) {
+                return true;
+            }
+        });
     }
 }

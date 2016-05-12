@@ -1,8 +1,12 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.activities.MainActivity;
 import com.mossige.finseth.follo.inf219_mitt_uib.courseBank.CourseBank;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
@@ -46,6 +50,7 @@ public class JSONParser {
     public static final Conversation FAILED_CONVERSATION = new Conversation(fail, fail, new ArrayList<Participant>(), fail);
     public static final Recipient FAILED_RECIPIENT = new Recipient(fail, fail);
     public static final User FAILED_USER = new User(fail, fail, fail, fail, fail);
+
 
     public JSONParser() {}
 
@@ -116,6 +121,29 @@ public class JSONParser {
         return parsed;
     }
 
+    /**
+     * Parses all assignments
+     * @param unparsed JSONArray containing all assignments
+     * @return if succesful a list with all assignments
+     */
+    public static ArrayList<CalendarEvent> parseAllAssignments(JSONArray unparsed) throws JSONException{
+        ArrayList<CalendarEvent> parsed = new ArrayList<>();
+
+        CalendarEvent current;
+        for(int i = 0; i < unparsed.length(); i++){
+            try {
+                JSONObject obj = unparsed.getJSONObject(i);
+                current = parseOneAssignment(obj);
+                parsed.add(current);
+            }catch(JSONException e){
+                current = FAILED_CALENDAR_EVENT;
+                Log.e(TAG, "parseAllCalendarEvents: ", e);
+                Log.i(TAG, "parseAllCalendarEvents: failed to parse a calendar event due to a JSONException");
+            }
+        }
+
+        return parsed;
+    }
     /**
      * Parses a user profile
      * @param unParsed JSONObject you get onResponse with the request
@@ -197,7 +225,7 @@ public class JSONParser {
      * @param unParsed JSONArray you get onResponse with the request
      * @return A list containing successfully parsed {@link Course courses}
      */
-    public static ArrayList<Course> parseAllCourses(JSONArray unParsed, boolean instituteFilter, Context context) throws FileNotFoundException {
+    public static ArrayList<Course> parseAllCourses(JSONArray unParsed, boolean instituteFilter, Context context) {
 
         ArrayList<Course> parsed = new ArrayList<>();
 
@@ -252,6 +280,29 @@ public class JSONParser {
         }
 
         return parsed;
+    }
+
+    /**
+     * Parses an assignment
+     * @param obj JSONObject containing an assignment
+     * @return if succesful: a {@link CalendarEvent calendarEvent}
+     * @return if not succesful: a {@link CalendarEvent calendarEvent} with the format {@link #FAILED_CALENDAR_EVENT}
+     */
+    private static CalendarEvent parseOneAssignment(JSONObject obj){
+        try {
+            String title = obj.getString("title");
+            String start = obj.getString("start_at");
+            String stop = obj.getString("end_at");
+
+            TimeZone timeZone = TimeZone.getTimeZone("UTC");
+
+            return new CalendarEvent(title, parseDateString(start), parseDateString(stop), "Innleveringsfrist", timeZone);
+        } catch(JSONException e){
+            Log.e(TAG, "parseOneAssignment: ", e);
+            Log.i(TAG, "parseOneAssignment: failed to load one assignment");
+        }
+
+        return FAILED_CALENDAR_EVENT;
     }
 
     /**
@@ -532,7 +583,7 @@ public class JSONParser {
     }
 
 
-    private static ArrayList<Course> getCoursesWithInstituteFilter(ArrayList<Course> courses, Context context) throws FileNotFoundException {
+    private static ArrayList<Course> getCoursesWithInstituteFilter(ArrayList<Course> courses, Context context) {
         courseBank = new CourseBank(context);
         List<String> mLines = courseBank.readLine("Courses_without_number.txt");
         ArrayList<Course> coursesWithFilter = new ArrayList<>();
@@ -553,4 +604,5 @@ public class JSONParser {
 
         return coursesWithFilter;
     }
+
 }

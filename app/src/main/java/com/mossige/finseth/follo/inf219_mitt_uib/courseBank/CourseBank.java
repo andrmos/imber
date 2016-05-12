@@ -2,8 +2,10 @@ package com.mossige.finseth.follo.inf219_mitt_uib.courseBank;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,8 +35,11 @@ public class CourseBank {
 
             while ((line = reader.readLine()) != null)
                 mLines.add(line);
+        } catch (FileNotFoundException fe){
+            //Institute filter doesn't work properly
+            Log.e("CourseBank", "readLine: Institute filter doesn't work properly");
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("CourseBank", "readLine: Institute filter doesn't work properly");
         }
 
         return mLines;

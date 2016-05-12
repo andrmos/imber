@@ -15,7 +15,6 @@ public class SingleAnnouncementViewHolder extends GeneralViewHolder {
 
     public SingleAnnouncementViewHolder(View v){
         super(v);
-
         title = (TextView) v.findViewById(R.id.announcement_title);
         messagePeak = (TextView) v.findViewById(R.id.announcement_messagePeak);
     }

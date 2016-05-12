@@ -53,7 +53,6 @@ public class SettingFragment extends PreferenceFragmentCompat {
                     checkBoxPreference.setChecked(courseFilter);
                 }
 
-//                editor.commit();
                 editor.apply();
 
                 return courseFilter;

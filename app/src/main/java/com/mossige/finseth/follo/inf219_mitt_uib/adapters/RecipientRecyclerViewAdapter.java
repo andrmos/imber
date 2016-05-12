@@ -25,7 +25,7 @@ import java.util.HashMap;
  *
  * Created by André on 12.02.2016.
  */
-public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> implements SectionIndexer {
+public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder>{
 
     private final static String TAG = "RecipientAdapter";
 
@@ -45,9 +45,9 @@ public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralVi
 
 
     @Override
-    public void onBindViewHolder(GeneralViewHolder holder, final int position) {
+    public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
-        final RecipientViewHolder recipientHolder = (RecipientViewHolder) holder;
+        RecipientViewHolder recipientHolder = (RecipientViewHolder) holder;
         recipientHolder.name.setText(data.get(position).getName());
         recipientHolder.checkBox.setChecked(data.get(position).getChecked());
     }
@@ -57,24 +57,4 @@ public class RecipientRecyclerViewAdapter extends RecyclerView.Adapter<GeneralVi
         return data.size();
     }
 
-    @Override
-    public Object[] getSections() {
-        return data.toArray();
-    }
-
-    @Override
-    public int getPositionForSection(int sectionIndex) {
-        // Is never run?
-        Log.i(TAG, "getPositionForSection");
-        return 0;
-    }
-
-    @Override
-    public int getSectionForPosition(int position) {
-        if (position >= data.size()) {
-            return data.size() - 1;
-        }
-
-        return position;
-    }
 }

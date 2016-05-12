@@ -13,14 +13,12 @@ public class Course {
     private String name;
     private String calender;
     private String courseCode;
-//    private ArrayList<Announcement> announcements;
 
     public Course(int id, String name, String calender, String courseCode){
         this.id = id;
         this.name = trimName(name,courseCode);
         this.calender = calender;
         this.courseCode = courseCode;
-//        announcements = new ArrayList<Announcementmcmd>(id);
     }
 
     public int getId(){
@@ -50,9 +48,5 @@ public class Course {
 
         return trimmedName;
     }
-//
-//    public ArrayList<Announcement> getAnnouncement(){
-//        return announcements;
-//    }
 
 }

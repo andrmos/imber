@@ -74,10 +74,6 @@ public class MyCalendar {
     }
 
     public void addEvents(ArrayList<CalendarEvent> events) {
-        // TODO Ensure no duplicates are added...
-        // Maybe change data structure?
-        // Using HashSet? It does not add duplicates.
-        // Would handle everything automatically.
         this.calendar.addAll(events);
     }
 

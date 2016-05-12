@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendasViewHolder;
@@ -47,6 +48,8 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
         if (viewType == 0) { // Announcements card
             if(announcements.size() == 0) {
+
+                //Inflate no announcements picture
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_announcements,parent,false);
             }else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.announcements_card, parent, false);
@@ -55,6 +58,8 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
         } else if (viewType == 1) { // agendas card
             if(agendas.size() == 0) {
+
+                //Inflate no agendas picture
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_agenda,parent,false);
             }else{
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agendas_card, parent, false);
