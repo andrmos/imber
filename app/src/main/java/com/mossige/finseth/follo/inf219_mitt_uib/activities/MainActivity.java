@@ -168,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private void requestCourses(final boolean filterInstituteCourses) {
 
         JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(this), (String) null, new Response.Listener<JSONArray>() {
-
             @Override
             public void onResponse(JSONArray response) {
                 courses.clear();
