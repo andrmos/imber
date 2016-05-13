@@ -6,21 +6,16 @@ import android.content.SharedPreferences;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
@@ -43,20 +38,14 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_activity_with_access_token);
 
-        try {
-            Class cls = Class.forName ("com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants");
-
-            if(cls.getClass() != null) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-            }
-
-        } catch (ClassNotFoundException e) {
+        if(!PrivateConstants.ACCESS_TOKEN.equals("")) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }else{
             sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
             if(sharedPreferences.contains("access_token")) {
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                validateAccessToken(sharedPreferences.getString("access_token",""));
             }
         }
 

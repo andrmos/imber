@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -377,7 +376,7 @@ public class ChooseRecipientFragment extends Fragment {
                             // Get next link url and add access token
                             String link = line.substring(line.indexOf("<") + 1);
                             link = link.substring(0, link.indexOf(">"));
-                            link += "&access_token=" + PrivateConstants.ACCESS_TOKEN;
+                            link += "&access_token=" + UrlEndpoints.access_token(getContext());
 
                             nextLink = link;
                             // There is only one 'rel=next' link in each response

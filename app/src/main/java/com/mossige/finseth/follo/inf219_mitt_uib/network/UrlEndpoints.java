@@ -176,26 +176,15 @@ public class UrlEndpoints {
         return BASE_URL + COURSES + "?" + ACCESS_TOKEN_KEY + token;
     }
 
-    private static String access_token(Context context) {
+    public static String access_token(Context context) {
         String access_token = "";
 
-        try {
-            Class cls = Class.forName("com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants");
-
-            if (cls.getClass() != null) {
-                if (PrivateConstants.ACCESS_TOKEN != "") {
-                    access_token =  PrivateConstants.ACCESS_TOKEN;
-                }else{
-                    SharedPreferences sharedPreferences = context.getSharedPreferences("preference_file_key",Context.MODE_PRIVATE);
-                    access_token = sharedPreferences.getString("access_token", "");
-                }
+            if (!PrivateConstants.ACCESS_TOKEN.equals("")) {
+                access_token =  PrivateConstants.ACCESS_TOKEN;
+            }else{
+                SharedPreferences sharedPreferences = context.getSharedPreferences("preference_file_key",Context.MODE_PRIVATE);
+                access_token = sharedPreferences.getString("access_token", "");
             }
-
-        } catch (ClassNotFoundException e) {
-            Log.i(TAG, "access_token: class not found");
-            SharedPreferences sharedPreferences = context.getSharedPreferences("preference_file_key", Context.MODE_PRIVATE);
-            access_token = sharedPreferences.getString("access_token", "");
-        }
 
         return access_token;
     }

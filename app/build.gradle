@@ -16,6 +16,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        releaseUnsigned.initWith(buildTypes.release)
+        releaseUnsigned {
+            signingConfig null
+        }
     }
 }
 
@@ -24,8 +29,8 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1'
@@ -35,7 +40,6 @@ dependencies {
     compile 'com.roomorama:caldroid:3.0.1'
     compile 'com.android.support:preference-v7:23.0.1'
     compile 'xyz.danoz:recyclerviewfastscroller:0.1.3'
-//    compile 'com.melnykov:floatingactionbutton:1.3.0'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
     compile 'com.github.castorflex.smoothprogressbar:library:1.0.1-SNAPSHOT@aar'
 }
