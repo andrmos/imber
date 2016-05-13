@@ -69,17 +69,15 @@ public class Message {
     }
 
     public boolean equals(Message that) {
-        if (!this.getAuthor().equals(that.getAuthor())) {
-            return false;
-        }
 
         if (!this.getAuthorID().equals(that.getAuthorID())) {
             return false;
         }
 
-        if(!this.getDate().equals(that.getDate())) {
-            return false;
-        }
+        //TODO Date from a JSONObject will not be equals to a generated date
+//        if(!this.getDate().equals(that.getDate())) {
+//            return false;
+//        }
 
         if (!this.getMessage().equals(that.getMessage())) {
             return false;

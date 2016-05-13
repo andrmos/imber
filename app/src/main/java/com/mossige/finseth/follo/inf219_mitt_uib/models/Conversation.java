@@ -90,4 +90,20 @@ public class Conversation {
     public void setId(String id) {
         this.id = id;
     }
+
+    public boolean equals(Conversation that) {
+        if (!this.getId().equals(that.getId())) {
+            return false;
+        }
+
+        if (!this.getSubject().equals(that.getSubject())) {
+            return false;
+        }
+
+        if (!this.getLastMessage().equals(that.getLastMessage())) {
+            return false;
+        }
+
+        return true;
+    }
 }

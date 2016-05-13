@@ -39,4 +39,23 @@ public class Announcement {
         return message;
     }
 
+    public boolean equals(Announcement that) {
+        if(!this.getId().equals(that.getId())) {
+            return false;
+        }
+
+        if (!this.getTitle().equals(that.getTitle())) {
+            return false;
+        }
+
+        if (!this.getUserName().equals(that.getUserName())) {
+            return false;
+        }
+
+        if (!this.getMessage().equals(that.getMessage())) {
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -1,7 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib;
 
-import android.util.Log;
-
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
@@ -17,9 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.ArrayComparisonFailure;
 
-import java.lang.reflect.Array;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
@@ -60,10 +57,46 @@ public class JSONParserTest {
 
     @Test
     public void parseMessagesTest() {
-//        ArrayList<Message> parsed = JSONParser.getMessages(messageList, participants);
-//        for (int i = 0; i < lim; i++) {
-//            assertTrue(parsed.get(i).equals(messages.get(i)));
-//        }
+        ArrayList<Message> parsed = JSONParser.getMessages(messageList, participants);
+        for (int i = 0; i < lim; i++) {
+            assertTrue(parsed.get(i).equals(messages.get(i)));
+        }
+    }
+
+    @Test
+    public void parseCourseTest() {
+        ArrayList<Course> parsed = JSONParser.parseAllCourses(JSONCourses, false, null);
+        for (int i = 0; i < lim; i++) {
+            assertTrue(parsed.get(i).equals(courses.get(i)));
+        }
+    }
+
+    @Test
+    public void parseAnnouncementTest() {
+        ArrayList<Announcement> parsed = JSONParser.parseAllAnnouncements(JSONAnnouncements);
+        for (int i = 0; i < lim; i++) {
+            assertTrue(parsed.get(i).equals(announcements.get(i)));
+        }
+    }
+
+    @Test
+    public void parseConversationsTest() {
+        ArrayList<Conversation> parsed = JSONParser.parseAllConversations(JSONConversations);
+        for (int i = 0; i < lim; i++) {
+            assertTrue(parsed.get(i).equals(conversations.get(i)));
+        }
+    }
+
+    @Test
+    public void parseCalendarEventTest() {
+        ArrayList<CalendarEvent> parsed = JSONParser.parseAllCalendarEvents(JSONCalendarEvents);
+        for (int i = 0; i < lim; i++) {
+            System.out.println(calendarEvents.get(i).getStartDate());
+            calendarEvents.get(i).setmStartDate(calendarEvents.get(i).getStartDate().changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo")));
+            calendarEvents.get(i).setmEndDate(calendarEvents.get(i).getEndDate().changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo")));
+            System.out.println(calendarEvents.get(i).getStartDate());
+            assertTrue(parsed.get(i).equals(calendarEvents.get(i)));
+        }
     }
 
 
@@ -141,7 +174,7 @@ public class JSONParserTest {
                 try {
                     obj.put("author", m.getAuthor());
                     obj.put("author_id", m.getAuthorID());
-                    obj.put("created_at", m.getDate());
+                    obj.put("created_at", parseBack(m.getDate()));
                     obj.put("body", m.getMessage());
                     messageList.put(obj);
                 } catch (JSONException e) {
@@ -164,6 +197,16 @@ public class JSONParserTest {
                 }
             }
         }
+    }
+
+    private String parseBack(String date) {
+        String day = date.substring(0, 2);
+        String month = date.substring(3, 5);
+        String year = date.substring(6, 10);
+        String hour = date.substring(12, 14);
+        String min = date.substring(15, 17);
+
+        return year + "-" + month + "-" + day + " " + hour + ":" + min + "z";
     }
 
     private void generateJSONObjects() throws JSONException {
@@ -195,6 +238,21 @@ public class JSONParserTest {
     }
 
     private void convertCalendarEvents() {
+        JSONCalendarEvents = new JSONArray();
+
+        for (int i = 0; i < lim; i++) {
+            JSONObject obj = new JSONObject();
+
+            try {
+                obj.put("title", calendarEvents.get(i).getName());
+                obj.put("location_name", calendarEvents.get(i).getLocation());
+                obj.put("start_at", calendarEvents.get(i).getStartDate().toString());
+                obj.put("end_at", calendarEvents.get(i).getEndDate().toString());
+                JSONCalendarEvents.put(i, obj);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void convertConversations() {
@@ -207,7 +265,7 @@ public class JSONParserTest {
                 obj.put("id", conversations.get(i).getId());
                 obj.put("subject", conversations.get(i).getSubject());
                 obj.put("participants", participantList);
-                obj.put("message", messageList);
+                obj.put("last_message", conversations.get(i).getLastMessage());
                 JSONConversations.put(i, obj);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -248,7 +306,7 @@ public class JSONParserTest {
                 }
                 obj.put("message", announcements.get(i).getMessage());
                 if(!(i % 2 == 0 && i % 10 == 0)) {
-                    obj.put("read_state", announcements.get(i).isUnread());
+                    //obj.put("read_state", announcements.get(i).isUnread());
                 }
                 JSONAnnouncements.put(i, obj);
             } catch (JSONException e) {
