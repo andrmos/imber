@@ -19,6 +19,7 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
     private String location;
     private DateTime mStartDate;
     private DateTime mEndDate;
+
     public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location, TimeZone oldTimeZone) {
         this.name = trimEventName(name);
         TimeZone newTimeZone = TimeZone.getTimeZone("Europe/Oslo");
@@ -34,6 +35,14 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
 
     public DateTime getStartDate() {
         return mStartDate;
+    }
+
+    public void setmStartDate(DateTime t) {
+        this.mStartDate = t;
+    }
+
+    public void setmEndDate(DateTime t) {
+        this.mEndDate = t;
     }
 
     public DateTime getEndDate() {
@@ -95,6 +104,15 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
         } else {
             return -1;
         }
+    }
+
+    public boolean equals(CalendarEvent that) {
+        if(!this.getName().equals(that.getName())) return false;
+        if(!this.getLocation().equals(that.getLocation())) return false;
+        if(!this.getStartDate().equals(that.getStartDate())) return false;
+        if(!this.getEndDate().equals(that.getEndDate())) return false;
+
+        return true;
     }
 
     public static CalendarEvent getFailedCalendarEvent() {

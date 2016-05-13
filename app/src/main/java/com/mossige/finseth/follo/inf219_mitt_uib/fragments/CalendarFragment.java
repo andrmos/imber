@@ -290,13 +290,8 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onResponse(JSONArray response) {
 
-                try {
-                    ArrayList<CalendarEvent> events = JSONParser.parseAllAssignments(response);
-                    calendar.addEvents(events);
-
-                } catch (JSONException e) {
-                    Log.i(TAG, "exception: " + e);
-                }
+                ArrayList<CalendarEvent> events = JSONParser.parseAllAssignments(response);
+                calendar.addEvents(events);
 
             }
         }, new Response.ErrorListener() {

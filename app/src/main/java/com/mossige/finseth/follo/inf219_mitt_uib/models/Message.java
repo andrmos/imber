@@ -67,4 +67,22 @@ public class Message {
     public void setDate(String date) {
         this.date = date;
     }
+
+    public boolean equals(Message that) {
+
+        if (!this.getAuthorID().equals(that.getAuthorID())) {
+            return false;
+        }
+
+        //TODO Date from a JSONObject will not be equals to a generated date
+//        if(!this.getDate().equals(that.getDate())) {
+//            return false;
+//        }
+
+        if (!this.getMessage().equals(that.getMessage())) {
+            return false;
+        }
+
+        return true;
+    }
 }

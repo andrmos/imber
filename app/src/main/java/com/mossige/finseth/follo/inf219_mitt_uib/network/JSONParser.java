@@ -126,7 +126,7 @@ public class JSONParser {
      * @param unparsed JSONArray containing all assignments
      * @return if succesful a list with all assignments
      */
-    public static ArrayList<CalendarEvent> parseAllAssignments(JSONArray unparsed) throws JSONException{
+    public static ArrayList<CalendarEvent> parseAllAssignments(JSONArray unparsed) {
         ArrayList<CalendarEvent> parsed = new ArrayList<>();
 
         CalendarEvent current;
@@ -360,7 +360,7 @@ public class JSONParser {
      * @param participants List of participants for the conversation
      * @return a list containing of successfully parsed {@link Message messages}
      */
-    private static ArrayList<Message> getMessages(JSONArray unParsed, ArrayList<Participant> participants) {
+    public static ArrayList<Message> getMessages(JSONArray unParsed, ArrayList<Participant> participants) {
         ArrayList<Message> parsed = new ArrayList<>();
 
         Message current;
@@ -396,7 +396,6 @@ public class JSONParser {
             String authorID = obj.getString("author_id");
             String date = obj.getString("created_at");
             String message = obj.getString("body");
-
             for (Participant p : participants) {
                 if (p.getId().equals(authorID)) {
                     author = p.getName();
@@ -416,7 +415,7 @@ public class JSONParser {
      * @param unParsed JSONArray Containing a list of participants
      * @return a list of successfully parsed participants
      */
-    private static ArrayList<Participant> getParticipants(JSONArray unParsed) {
+    public static ArrayList<Participant> getParticipants(JSONArray unParsed) {
         ArrayList<Participant> participants = new ArrayList<>();
 
         Participant current;

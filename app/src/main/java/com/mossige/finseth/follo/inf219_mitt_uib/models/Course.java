@@ -49,4 +49,20 @@ public class Course {
         return trimmedName;
     }
 
+    public boolean equals(Course that) {
+        if(this.getId() != that.getId()) {
+            return false;
+        }
+
+        if (!this.getName().equals(that.getName())) {
+            return false;
+        }
+
+        if (!this.getCourseCode().equals(that.getCourseCode())) {
+            return false;
+        }
+
+        return true;
+    }
+
 }
