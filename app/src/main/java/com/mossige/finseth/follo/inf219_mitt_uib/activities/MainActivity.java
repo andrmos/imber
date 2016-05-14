@@ -160,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         for (Course c : courses) {
             ids.add(c.getId());
         }
+        bundle.putString("user_id", profile.getId());
         bundle.putIntegerArrayList("ids", ids);
         calendarFragment.setArguments(bundle);
 
