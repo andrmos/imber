@@ -91,11 +91,17 @@ public class JSONParserTest {
     public void parseCalendarEventTest() {
         ArrayList<CalendarEvent> parsed = JSONParser.parseAllCalendarEvents(JSONCalendarEvents);
         for (int i = 0; i < lim; i++) {
-            System.out.println(calendarEvents.get(i).getStartDate());
             calendarEvents.get(i).setmStartDate(calendarEvents.get(i).getStartDate().changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo")));
             calendarEvents.get(i).setmEndDate(calendarEvents.get(i).getEndDate().changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo")));
-            System.out.println(calendarEvents.get(i).getStartDate());
             assertTrue(parsed.get(i).equals(calendarEvents.get(i)));
+        }
+    }
+
+    @Test
+    public void parseConversationTest() {
+        for (int i = 0; i < lim; i++) {
+            Conversation conversation = JSONParser.parseSingleConversation(JSONConversation.get(i));
+            assertTrue(conversation.equals(conversations.get(i)));
         }
     }
 
