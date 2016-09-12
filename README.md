@@ -6,10 +6,10 @@ At the time of the project, there didn’t exist any native Android application 
 Due to the fact that Mitt UiB uses the open REST API [<i>Canvas LMS</i>](https://canvas.instructure.com/doc/api/index.html), the project could be realized.
 
 ## Previews
-![alt tag](http://i.imgur.com/7YpeY2Y.png =100x)
-![alt tag](http://i.imgur.com/6YKBatF.png =100x)
-![alt tag](http://i.imgur.com/pjc8YbA.png =100x)
-![alt tag](http://i.imgur.com/dasTGvL.png =100x)
+<img src="previews/1.png" alt="Drawing" width="200"/>
+<img src="previews/2.png" alt="Drawing" width="200"/>
+<img src="previews/3.png" alt="Drawing" width="200"/>
+<img src="previews/4.png" alt="Drawing" width="200"/>
 
 ## Authors
 The project is managed by Patrick Halmøy Finseth, Øystein Follo and Andre Mossige.
