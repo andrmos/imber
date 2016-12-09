@@ -1,9 +1,9 @@
 # Mitt UiB Android app
 This application was programmed as part of the course <i>INF219: Project in informatics 1</i> at University of Bergen, spring 2016.
 
-At the time of the project, there didn’t exist any native Android application for the information system, <i>Mitt UiB</i>, used at University of Bergen, so the project was suitable for the <i>INF219</i> course.
+At the time of the project, no native Android application existed for the information system, <i>Mitt UiB</i>, used at University of Bergen, so the project was suitable for the INF219 course.
 
-Due to the fact that Mitt UiB uses the open REST API [<i>Canvas LMS</i>](https://canvas.instructure.com/doc/api/index.html), the project could be realized.
+Mitt UiB uses the open REST API [<i>Canvas LMS</i>](https://canvas.instructure.com/doc/api/index.html).
 
 ## Previews
 <img src="previews/1.png" alt="Drawing" width="250"/>
