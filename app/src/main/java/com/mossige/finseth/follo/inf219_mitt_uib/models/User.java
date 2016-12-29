@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
 /**
  * User model
+ * https://canvas.instructure.com/doc/api/users.html
  *
  * @author Øystein Follo
  * @date 23.02.2016
@@ -12,12 +13,14 @@ public class User {
     private String name;
     private String primary_email;
     private String login_id;
+    private String sortable_name;
 
-    public User(String id, String name, String primary_email, String login_id, String calendar) {
+    public User(String id, String name, String primary_email, String login_id, String sortable_name) {
         this.id = id;
-        this.name = name;
-        this.primary_email = primary_email;
         this.login_id = login_id;
+        this.primary_email = primary_email;
+        this.name = name;
+        this.sortable_name = sortable_name;
     }
 
     public String getPrimary_email() {
@@ -36,25 +39,7 @@ public class User {
         return name;
     }
 
-    public boolean equals(User that) {
-
-        if(!this.getId().equals(that.getId())) {
-            return false;
-        }
-
-        if (!this.getLogin_id().equals(that.getLogin_id())) {
-            return false;
-        }
-
-        if (!this.getPrimary_email().equals(that.getPrimary_email())) {
-            return false;
-        }
-
-        if (!this.getName().equals(that.getName())) {
-            return false;
-        }
-
-        return true;
+    public String getSortable_name() {
+        return sortable_name;
     }
-
 }
