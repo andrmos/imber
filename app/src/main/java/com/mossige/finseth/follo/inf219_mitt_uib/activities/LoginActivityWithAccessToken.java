@@ -37,12 +37,16 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_activity_with_access_token);
+        sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         if(!PrivateConstants.ACCESS_TOKEN.equals("")) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("access_token", PrivateConstants.ACCESS_TOKEN);
+            editor.apply();
+
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }else{
-            sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
             if(sharedPreferences.contains("access_token")) {
                 validateAccessToken(sharedPreferences.getString("access_token",""));
