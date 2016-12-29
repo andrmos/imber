@@ -1,9 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import android.util.Log;
-
-import java.util.ArrayList;
-
 /**
  * Created by PatrickFinseth on 16.02.16.
  */
@@ -12,13 +8,13 @@ public class Course {
     private int id;
     private String name;
     private String calender;
-    private String courseCode;
+    private String course_code;
 
     public Course(int id, String name, String calender, String courseCode){
         this.id = id;
         this.name = trimName(name,courseCode);
         this.calender = calender;
-        this.courseCode = courseCode;
+        this.course_code = courseCode;
     }
 
     public int getId(){
@@ -34,7 +30,7 @@ public class Course {
     }
 
     public String getCourseCode(){
-        return courseCode;
+        return course_code;
     }
 
     private String trimName(String name, String courseCode){

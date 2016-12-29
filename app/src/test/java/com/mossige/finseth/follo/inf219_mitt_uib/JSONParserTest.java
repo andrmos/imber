@@ -289,7 +289,7 @@ public class JSONParserTest {
                 obj.put("name", courses.get(i).getName());
                 ics.put("ics", courses.get(i).getCalenderUrl());
                 obj.put("calendar", ics);
-                obj.put("course_code", courses.get(i).getCourseCode());
+                obj.put("course_code", courses.get(i).getCourse_code());
                 JSONCourses.put(i, obj);
             } catch (JSONException e) {
                 e.printStackTrace();
