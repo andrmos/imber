@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
@@ -34,6 +35,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
@@ -41,8 +43,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, MainActivityListener {
 
@@ -192,26 +199,35 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(coursesReq);
     }
 
+    /**
+     * @return API access token if it exists.
+     */
+    private String getAccessToken() {
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        return sharedPreferences.getString("access_token", "");
+    }
+
     private void requestProfile() {
-
-        JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUserProfileURL(this), (String) null, new Response.Listener<JSONObject>() {
-
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getAccessToken());
+        Call<User> call = client.getProfile();
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(Call<User> call, retrofit2.Response<User> response) {
+                if (response.isSuccessful()) {
 
-                profile = JSONParser.parseUserProfile(response);
+                    profile = response.body();
+                    //Set name on navigation header
+                    TextView nameTV = (TextView) findViewById(R.id.name);
+                    nameTV.setText(profile.getName());
 
-                //Set name on navigation header
-                TextView nameTV = (TextView) findViewById(R.id.name);
-                nameTV.setText(profile.getName());
-
-                //Set email on navigation header
-                TextView emailTV = (TextView) findViewById(R.id.email);
-                emailTV.setText(profile.getEmail());
+                    //Set email on navigation header
+                    TextView emailTV = (TextView) findViewById(R.id.primary_email);
+                    emailTV.setText(profile.getPrimary_email());
+                }
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailure(Call<User> call, Throwable t) {
                 showSnackbar(getString(R.string.error_profile), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -220,12 +236,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 });
             }
         });
-
-        profileReq.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
+        
     }
 
     @Override
