@@ -17,10 +17,10 @@
     <string name="prompt_password">Passord</string>
     <string name="action_sign_in">Logg inn</string>
     <string name="action_sign_in_short">Logg inn</string>
-    <string name="error_invalid_email">Ugyldig email-adresse</string>
+    <string name="error_invalid_email">Ugyldig primary_email-adresse</string>
     <string name="error_incorrect_password">Ugyldig passord</string>
     <string name="error_field_required">Dette feltet må fylles ut</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
+    <string name="permission_rationale">"Contacts permissions are needed for providing primary_email
         completions."
     </string>
 

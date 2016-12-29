@@ -10,28 +10,22 @@ public class User {
 
     private String id;
     private String name;
-    private String email;
-    private String loginID;
-    public String calendar;
+    private String primary_email;
+    private String login_id;
 
-    public User(String id, String name, String email, String loginID, String calendar) {
+    public User(String id, String name, String primary_email, String login_id, String calendar) {
         this.id = id;
         this.name = name;
-        this.email = email;
-        this.loginID = loginID;
-        this.calendar = calendar;
+        this.primary_email = primary_email;
+        this.login_id = login_id;
     }
 
-    public String getCalendar() {
-        return calendar;
+    public String getPrimary_email() {
+        return primary_email;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getLoginID() {
-        return loginID;
+    public String getLogin_id() {
+        return login_id;
     }
 
     public String getId() {
@@ -48,15 +42,11 @@ public class User {
             return false;
         }
 
-        if (!this.getLoginID().equals(that.getLoginID())) {
+        if (!this.getLogin_id().equals(that.getLogin_id())) {
             return false;
         }
 
-        if (!this.getCalendar().equals(that.getCalendar())) {
-            return false;
-        }
-
-        if (!this.getEmail().equals(that.getEmail())) {
+        if (!this.getPrimary_email().equals(that.getPrimary_email())) {
             return false;
         }
 

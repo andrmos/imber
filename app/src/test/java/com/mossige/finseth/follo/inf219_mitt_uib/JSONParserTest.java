@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.TimeZone;
 
@@ -347,8 +346,8 @@ public class JSONParserTest {
                 put("ics", users.get(i).getCalendar());
             obj.put("id", users.get(i).getId());
             obj.put("name", users.get(i).getName());
-            obj.put("primary_email", users.get(i).getEmail());
-            obj.put("login_id", users.get(i).getLoginID());
+            obj.put("primary_email", users.get(i).getPrimary_email());
+            obj.put("login_id", users.get(i).getLogin_id());
             obj.put("calendar", ics);
             JSONUsers.add(obj);
         }
