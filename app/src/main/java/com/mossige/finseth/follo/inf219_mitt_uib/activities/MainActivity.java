@@ -199,16 +199,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         RequestQueueHandler.getInstance(this).addToRequestQueue(coursesReq);
     }
 
-    /**
-     * @return API access token if it exists.
-     */
-    private String getAccessToken() {
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        return sharedPreferences.getString("access_token", "");
-    }
-
     private void requestProfile() {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getAccessToken());
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
         Call<User> call = client.getProfile();
         call.enqueue(new Callback<User>() {
             @Override
