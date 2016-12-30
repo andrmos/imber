@@ -25,12 +25,17 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -48,8 +53,6 @@ public class CourseListFragment extends Fragment {
     /* If data is loaded */
     private boolean loaded;
 
-    private boolean filterInstituteCourses;
-
     MainActivityListener mCallback;
 
     public CourseListFragment() {}
@@ -61,12 +64,7 @@ public class CourseListFragment extends Fragment {
         loaded = false;
         courses = new ArrayList<>();
 
-        //Check settings before intitializing courses
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        // Filter useless courses on institute level
-        filterInstituteCourses = sharedPreferences.getBoolean("checkbox_preference", true);
-
-        requestCourses(filterInstituteCourses);
+        requestCourses();
     }
 
     @Override
@@ -137,35 +135,35 @@ public class CourseListFragment extends Fragment {
         });
     }
 
-    private void requestCourses(final boolean filterInstituteCourses) {
+    private void requestCourses() {
 
-        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(getContext()), (String) null, new Response.Listener<JSONArray>() {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+        Call<List<Course>> call = client.getCourses();
+        call.enqueue(new Callback<List<Course>>() {
             @Override
-            public void onResponse(JSONArray response) {
-                courses.clear();
-                courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getActivity().getApplicationContext()));
+            public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
+                if (response.isSuccessful()) {
+                    courses.clear();
+                    courses.addAll(response.body());
 
+                    loaded = true;
+                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
 
-                loaded = true;
-                if (mAdapter != null) mAdapter.notifyDataSetChanged();
-
-                if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
-
+                    if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
+                }
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailure(Call<List<Course>> call, Throwable t) {
                 if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
                 mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        requestCourses(filterInstituteCourses);
+                        requestCourses();
                     }
                 });
             }
-
         });
 
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
     }
 }
