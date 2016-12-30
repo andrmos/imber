@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.MessageViewHolder;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
 
 import java.util.ArrayList;
@@ -36,9 +35,10 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<GeneralView
     @Override
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         MessageViewHolder singleConversationHolder = (MessageViewHolder) holder;
-        singleConversationHolder.conversation_author.setText(data.get(position).getAuthor());
-        singleConversationHolder.conversation_time.setText(data.get(position).getDate());
-        singleConversationHolder.conversation_message.setText(data.get(position).getMessage().trim());
+        // TODO Change to actual author name
+        singleConversationHolder.conversation_author.setText(data.get(position).getAuthorID());
+        singleConversationHolder.conversation_time.setText(data.get(position).getCreatedAt());
+        singleConversationHolder.conversation_message.setText(data.get(position).getBody().trim());
     }
 
     @Override
