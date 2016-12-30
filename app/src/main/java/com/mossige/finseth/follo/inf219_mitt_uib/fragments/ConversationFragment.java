@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -29,13 +30,18 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by Follo on 15.03.2016.
@@ -91,51 +97,54 @@ public class ConversationFragment extends Fragment {
         return rootView;
     }
 
+    private String getAccessToken() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        return sharedPreferences.getString("access_token", "");
+    }
+
     private void requestConversation() {
-
-        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getConversationsUrl(getContext()), (String) null, new Response.Listener<JSONArray>() {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getAccessToken());
+        Call<List<Conversation>> call = client.getConversations();
+        call.enqueue(new Callback<List<Conversation>>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(Call<List<Conversation>> call, retrofit2.Response<List<Conversation>> response) {
+                // TODO Implement proper pagination. Currently response only include 10 elements.
 
+                if (response.isSuccessful()) {
                     conversations.clear();
-                    conversations.addAll(JSONParser.parseAllConversations(response));
+                    conversations.addAll(response.body());
 
                     loaded = true;
                     mAdapter.notifyDataSetChanged();
-
-
-                progressbar.setVisibility(View.GONE);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressbar.setVisibility(View.GONE);
-
-                Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
-                snackbar.setDuration(4000); // Gives false syntax error
-                snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestConversation();
-                    }
-                });
-                if (!snackbar.isShown()) {
-                    snackbar.show();
+                    progressbar.setVisibility(View.GONE);
                 }
             }
+
+            @Override
+            public void onFailure(Call<List<Conversation>> call, Throwable t) {
+                progressbar.setVisibility(View.GONE);
+                showSnackbar();
+            }
         });
+    }
 
-        coursesReq.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        coursesReq.setTag("conversations");
-
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
+    private void showSnackbar() {
+        Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
+        snackbar.setDuration(4000);
+        snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestConversation();
+            }
+        });
+        if (!snackbar.isShown()) {
+            snackbar.show();
+        }
     }
 
     @Override
     public void onPause() {
+        // TODO Implement support for cancel of Retrofit requests.
         cancelRequest("conversations");
         super.onPause();
     }
