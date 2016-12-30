@@ -35,6 +35,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import retrofit2.Call;
 
 
 /**
@@ -111,10 +113,8 @@ public class SingleConversationFragment extends Fragment {
 
     private void requestSingleConversation() {
 
-
-
         JsonObjectRequest singleConversationRequest = new JsonObjectRequest(Request.Method.GET,
-                UrlEndpoints.getSingleConversationUrl(getArguments().getString("conversationID"),getContext()),
+                UrlEndpoints.getSingleConversationUrl("" + getArguments().getInt("conversationID"),getContext()),
                 (String) null,
                 new Response.Listener<JSONObject>() {
                     @Override

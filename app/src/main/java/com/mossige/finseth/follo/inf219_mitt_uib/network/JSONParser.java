@@ -42,10 +42,8 @@ public class JSONParser {
     public static final Course FAILED_COURSE = new Course(-1, fail, fail, fail);
     public static final Announcement FAILED_ANNOUNCEMENT = new Announcement(fail, fail, fail, fail, fail, false);
     public static final Participant FAILED_PARTICIPANT = new Participant(fail, fail);
-    public static final Conversation FAILED_CONVERSATION = new Conversation(fail, fail, new ArrayList<Participant>(), fail);
+    public static final Conversation FAILED_CONVERSATION = new Conversation(-1, fail, new ArrayList<Participant>(), fail);
     public static final Recipient FAILED_RECIPIENT = new Recipient(fail, fail);
-    public static final User FAILED_USER = new User(fail, fail, fail, fail, fail);
-
 
     public JSONParser() {}
 
@@ -178,7 +176,7 @@ public class JSONParser {
      */
     public static Conversation parseSingleConversation(JSONObject unParsed) {
         try {
-            String id = unParsed.getString("id");
+            int id = unParsed.getInt("id");
             String subject = unParsed.getString("subject");
             ArrayList<Participant> participants = getParticipants(unParsed.getJSONArray("participants"));
             //TODO Don't want to deny the whole conversation if one message is missing
@@ -308,7 +306,7 @@ public class JSONParser {
      */
     private static Conversation getLastMessage(JSONObject obj) {
         try {
-            String id = obj.getString("id");
+            int id = obj.getInt("id");
             String subject = obj.getString("subject");
             ArrayList<Participant> participants = getParticipants(obj.getJSONArray("participants"));
             String lastMessage;

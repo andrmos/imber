@@ -200,7 +200,7 @@ public class ConversationFragment extends Fragment {
 
                 //Bundles all parameters needed for showing one announcement
                 Bundle args = new Bundle();
-                args.putString("conversationID", conversations.get(position).getId());
+                args.putInt("conversationID", conversations.get(position).getId());
                 singleConversationFragment.setArguments(args);
 
                 transaction.commit();

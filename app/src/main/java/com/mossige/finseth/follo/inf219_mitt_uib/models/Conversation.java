@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Conversation {
 
-    private String id;
+    private int id;
     private String subject;
     private ArrayList<Participant> participants;
     @Nullable private ArrayList<Message> messages;
@@ -26,7 +26,7 @@ public class Conversation {
      * @param participants ArrayList containing the conversation {@link Participant participants}
      * @param messages ArrayList containing the conversation {@link Message messages}
      */
-    public Conversation(String id, String subject, ArrayList<Participant> participants, ArrayList<Message> messages) {
+    public Conversation(int id, String subject, ArrayList<Participant> participants, ArrayList<Message> messages) {
         this.id = id;
         this.subject = subject;
         this.participants = participants;
@@ -43,7 +43,7 @@ public class Conversation {
      * @param participants ArrayList containing the conversation {@link Participant participants}
      * @param lastMessage String containg the last message in the conversation
      */
-    public Conversation(String id, String subject, ArrayList<Participant> participants, String lastMessage) {
+    public Conversation(int id, String subject, ArrayList<Participant> participants, String lastMessage) {
         this.id = id;
         this.subject = subject;
         this.participants = participants;
@@ -67,16 +67,16 @@ public class Conversation {
         return participants;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
     public boolean equals(Conversation that) {
-        if (!this.getId().equals(that.getId())) {
+        if (this.getId() != that.getId()) {
             return false;
         }
 
