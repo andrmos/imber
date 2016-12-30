@@ -139,27 +139,6 @@ public class JSONParser {
 
         return parsed;
     }
-    /**
-     * Parses a user profile
-     * @param unParsed JSONObject you get onResponse with the request
-     * @return if successful: a {@link User user}
-     * @return if not successful: a {@link User user} with the format of {@link #FAILED_USER}
-     */
-    public static User parseUserProfile(JSONObject unParsed) {
-        try {
-            String id = unParsed.getString("id");
-            String name = unParsed.getString("name");
-            String email = unParsed.getString("primary_email");
-            String loginID = unParsed.getString("login_id");
-            String calendar = unParsed.getJSONObject("calendar").getString("ics");
-
-            return new User(id, name, email, loginID, calendar);
-        } catch (JSONException e) {
-            Log.e(TAG, "parseUserProfile: ", e);
-            Log.i(TAG, "parseUserProfile: failed to parse user due to a JSONException");
-        }
-        return FAILED_USER;
-    }
 
     /**
      * Parses all conversations
@@ -342,8 +321,8 @@ public class JSONParser {
 
             return new Conversation(id, subject, participants, lastMessage);
         } catch (JSONException e) {
-            Log.e(TAG, "getLastMessage: ", e);
-            Log.i(TAG, "getLastMessage: failed to parse lastMessage due to JSONException");
+            Log.e(TAG, "getLast_message: ", e);
+            Log.i(TAG, "getLast_message: failed to parse lastMessage due to JSONException");
         }
 
         return FAILED_CONVERSATION;
