@@ -97,13 +97,8 @@ public class ConversationFragment extends Fragment {
         return rootView;
     }
 
-    private String getAccessToken() {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        return sharedPreferences.getString("access_token", "");
-    }
-
     private void requestConversation() {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getAccessToken());
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
         Call<List<Conversation>> call = client.getConversations();
         call.enqueue(new Callback<List<Conversation>>() {
             @Override

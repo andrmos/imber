@@ -28,7 +28,7 @@ public class ServiceGenerator {
             .baseUrl(API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create());
 
-    public static <S> S createService(Class<S> serviceClass, final String accessToken) {
+    public static <S> S createService(Class<S> serviceClass, final Context context) {
 
         // Add access_token to every request
         httpClient.addInterceptor(new Interceptor() {
@@ -38,7 +38,7 @@ public class ServiceGenerator {
                 HttpUrl originalHttpUrl = original.url();
 
                 HttpUrl url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("access_token", accessToken)
+                        .addQueryParameter("access_token", getAccessToken(context))
                         .build();
 
                 // Request customization: add request headers
@@ -52,5 +52,11 @@ public class ServiceGenerator {
 
         Retrofit retrofit = builder.client(httpClient.build()).build();
         return retrofit.create(serviceClass);
+    }
+
+    // TODO Possible to use dependency injection to get context?
+    private static String getAccessToken(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        return sharedPreferences.getString("access_token", "");
     }
 }

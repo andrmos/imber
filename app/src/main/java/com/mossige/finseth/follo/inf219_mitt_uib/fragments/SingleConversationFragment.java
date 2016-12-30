@@ -34,6 +34,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -109,6 +110,8 @@ public class SingleConversationFragment extends Fragment {
     }
 
     private void requestSingleConversation() {
+
+
 
         JsonObjectRequest singleConversationRequest = new JsonObjectRequest(Request.Method.GET,
                 UrlEndpoints.getSingleConversationUrl(getArguments().getString("conversationID"),getContext()),
