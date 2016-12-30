@@ -7,18 +7,20 @@ public class Announcement {
 
     private String id;
     private String title;
-    private String userName;
-    private String postedAt;
+    private String user_name;
+    private String posted_at;
     private String message;
-    private boolean unread;
+    private int unread_count;
+    private boolean locked;
 
-    public Announcement(String id, String title, String userName, String postedAt, String message, boolean unread){
+    // TODO Update constructor
+    public Announcement(String id, String title, String userName, String postedAt, String message, boolean locked){
         this.id = id;
         this.title = title;
-        this.userName = userName;
-        this.postedAt = postedAt;
+        this.user_name = userName;
+        this.posted_at = postedAt;
         this.message = message;
-        this.unread = unread;
+        this.locked = locked;
     }
 
     public String getId() { return id; }
@@ -28,34 +30,22 @@ public class Announcement {
     }
 
     public String getUserName() {
-        return userName;
+        return user_name;
     }
 
     public String getPostedAt() {
-        return postedAt;
+        return posted_at;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public boolean equals(Announcement that) {
-        if(!this.getId().equals(that.getId())) {
-            return false;
-        }
-
-        if (!this.getTitle().equals(that.getTitle())) {
-            return false;
-        }
-
-        if (!this.getUserName().equals(that.getUserName())) {
-            return false;
-        }
-
-        if (!this.getMessage().equals(that.getMessage())) {
-            return false;
-        }
-        return true;
+    public boolean isLocked() {
+        return locked;
     }
 
+    public int getUnread_count() {
+        return unread_count;
+    }
 }
