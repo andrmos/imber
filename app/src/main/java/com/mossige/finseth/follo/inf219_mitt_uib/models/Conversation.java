@@ -1,9 +1,11 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
+import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 
 /**
- * Conversationmodel
+ * Conversation model
  *
  * @author Øystein Follo
  * @date 16.02.2016
@@ -13,8 +15,8 @@ public class Conversation {
     private String id;
     private String subject;
     private ArrayList<Participant> participants;
-    private ArrayList<Message> messages;
-    private String lastMessage;
+    @Nullable private ArrayList<Message> messages;
+    private String last_message;
 
     /**
      * Used when you want all the messages in a conversation
@@ -28,7 +30,7 @@ public class Conversation {
         this.id = id;
         this.subject = subject;
         this.participants = participants;
-        this.lastMessage = messages.get(messages.size()-1).getMessage();
+        this.last_message = messages.get(messages.size()-1).getMessage();
         this.messages = messages;
     }
 
@@ -45,42 +47,24 @@ public class Conversation {
         this.id = id;
         this.subject = subject;
         this.participants = participants;
-        this.lastMessage = lastMessage;
+        this.last_message = lastMessage;
         this.messages = new ArrayList<>();
     }
 
     public String getLastMessage() {
-        return lastMessage;
-    }
-
-    public void setLastMessage(String lastMessage) {
-        this.lastMessage = lastMessage;
+        return last_message;
     }
 
     public ArrayList<Message> getMessages() {
-
         return messages;
     }
 
-    public void setMessages(ArrayList<Message> messages) {
-        this.messages = messages;
-    }
-
     public String getSubject() {
-
         return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 
     public ArrayList<Participant> getParticipants() {
         return participants;
-    }
-
-    public void setParticipants(ArrayList<Participant> participants) {
-        this.participants = participants;
     }
 
     public String getId() {
