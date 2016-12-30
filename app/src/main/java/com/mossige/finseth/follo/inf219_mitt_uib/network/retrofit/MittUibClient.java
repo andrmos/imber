@@ -37,10 +37,16 @@ public interface MittUibClient {
     Call<List<Announcement>> getAnnouncements(@Path("id") int courseId);
 
     /**
-     * @return The conversations for the logged in user.
+     * @return The list of conversations for the logged in user.
      */
     @GET("conversations")
     Call<List<Conversation>> getConversations();
 
+    /**
+     * @param conversationId
+     * @return Information for the specified conversation.
+     */
+    @GET("conversations/{id}")
+    Call<Conversation> getConversation(@Path("id") int conversationId);
 
 }
