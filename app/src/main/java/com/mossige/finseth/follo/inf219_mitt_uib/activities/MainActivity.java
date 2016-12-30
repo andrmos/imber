@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         for (Course c : courses) {
             ids.add(c.getId());
         }
-        bundle.putString("user_id", profile.getId());
+        bundle.putInt("user_id", profile.getId());
         bundle.putIntegerArrayList("ids", ids);
         calendarFragment.setArguments(bundle);
 
@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 if (response.isSuccessful()) {
 
                     profile = response.body();
+
                     //Set name on navigation header
                     TextView nameTV = (TextView) findViewById(R.id.name);
                     nameTV.setText(profile.getName());

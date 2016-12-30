@@ -9,13 +9,13 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
  */
 public class User {
 
-    private String id;
+    private int id;
     private String name;
     private String primary_email;
     private String login_id;
     private String sortable_name;
 
-    public User(String id, String name, String primary_email, String login_id, String sortable_name) {
+    public User(int id, String name, String primary_email, String login_id, String sortable_name) {
         this.id = id;
         this.login_id = login_id;
         this.primary_email = primary_email;
@@ -27,11 +27,11 @@ public class User {
         return primary_email;
     }
 
-    public String getLogin_id() {
+    public String getLoginId() {
         return login_id;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

@@ -202,7 +202,7 @@ public class CalendarFragment extends Fragment {
 
         if(getArguments() != null){
             if(getArguments().containsKey("user_id")){
-                ids.add("user_" + getArguments().getString("user_id"));
+                ids.add("user_" + getArguments().getInt("user_id"));
             }
         }
 
