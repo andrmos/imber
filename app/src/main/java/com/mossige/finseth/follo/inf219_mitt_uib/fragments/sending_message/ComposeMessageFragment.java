@@ -80,7 +80,7 @@ public class ComposeMessageFragment extends Fragment {
 
         //TODO add group checkbox
         subject = (EditText) rootView.findViewById(R.id.subject);
-        body = (EditText) rootView.findViewById(R.id.body);
+        body = (EditText) rootView.findViewById(R.id.message_body);
 
         subjectInputLayout = (TextInputLayout)rootView.findViewById(R.id.subject_input_layout);
         subjectInputLayout.setErrorEnabled(true);

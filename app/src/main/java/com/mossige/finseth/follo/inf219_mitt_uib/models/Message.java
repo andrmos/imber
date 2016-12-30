@@ -1,6 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import java.util.ArrayList;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
@@ -10,38 +9,31 @@ import hirondelle.date4j.DateTime;
  */
 public class Message {
 
-    private String author;
-    private String authorID;
-    private String date;
-    private String message;
-
-    private ArrayList<String> recipiants;
-    private String subject;
+    private int id;
+    private String author_id;
+    private String created_at;
     private String body;
 
-    public Message(String authorID, String date, String message, String author) {
+    public Message(String authorID, String date, String body, String author) {
 
-        //Make datetime object with string - subststring removes 'z' in date format
+        // TODO Remove?
+        //Make datetime object with string - subststring removes 'z' in created_at format
         DateTime dt = new DateTime(date.substring(0,date.length()-1));
         if(!author.equals("FAILED")) {
             dt = dt.changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo"));
-            this.date = trimDate(dt.toString());
+            this.created_at = trimDate(dt.toString());
         }
-        this.author = author;
-        this.authorID = authorID;
-        this.message = message;
+        this.author_id = authorID;
+        this.body = body;
     }
 
-    public String getMessage() {
-        return message;
+    public String getBody() {
+        return body;
     }
 
-    public String getAuthor(){
-        return author;
-    }
+    public String getAuthorId() { return author_id; }
 
-    public String getAuthorID() { return authorID; }
-
+    // TODO Remove
     private static String trimDate(String date){
         String dateToString = "";
 
@@ -56,30 +48,22 @@ public class Message {
         return dateToString;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
+    public String getCreatedAt() {
+        return created_at;
     }
 
     public boolean equals(Message that) {
 
-        if (!this.getAuthorID().equals(that.getAuthorID())) {
+        if (!this.getAuthorId().equals(that.getAuthorId())) {
             return false;
         }
 
-        //TODO Date from a JSONObject will not be equals to a generated date
-//        if(!this.getDate().equals(that.getDate())) {
+        //TODO Date from a JSONObject will not be equals to a generated created_at
+//        if(!this.getCreatedAt().equals(that.getCreatedAt())) {
 //            return false;
 //        }
 
-        if (!this.getMessage().equals(that.getMessage())) {
+        if (!this.getBody().equals(that.getBody())) {
             return false;
         }
 

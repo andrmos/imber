@@ -30,7 +30,7 @@ public class Conversation {
         this.id = id;
         this.subject = subject;
         this.participants = participants;
-        this.last_message = messages.get(messages.size()-1).getMessage();
+        this.last_message = messages.get(messages.size()-1).getBody();
         this.messages = messages;
     }
 

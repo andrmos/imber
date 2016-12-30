@@ -36,7 +36,7 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<GeneralView
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         MessageViewHolder singleConversationHolder = (MessageViewHolder) holder;
         // TODO Change to actual author name
-        singleConversationHolder.conversation_author.setText(data.get(position).getAuthorID());
+        singleConversationHolder.conversation_author.setText(data.get(position).getAuthorId());
         singleConversationHolder.conversation_time.setText(data.get(position).getCreatedAt());
         singleConversationHolder.conversation_message.setText(data.get(position).getBody().trim());
     }

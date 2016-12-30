@@ -18,7 +18,7 @@ public class MessageViewHolder extends GeneralViewHolder {
         super(v);
         conversation_author = (TextView) v.findViewById(R.id.message_author);
         conversation_time = (TextView) v.findViewById(R.id.message_time);
-        conversation_message = (TextView) v.findViewById(R.id.message);
+        conversation_message = (TextView) v.findViewById(R.id.message_body);
 
     }
 }
