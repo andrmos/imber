@@ -95,6 +95,8 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         }
     }
 
+    // TODO Add reset method according to https://gist.github.com/ssinss/e06f12ef66c51252563e
+
     public abstract void onLoadMore(int page, int totalItemsCount);
 }
 
