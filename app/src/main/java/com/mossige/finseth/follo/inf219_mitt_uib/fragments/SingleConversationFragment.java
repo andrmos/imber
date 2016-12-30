@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,36 +13,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.activities.MainActivity;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.MessageRecyclerViewAdapter;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ComposeMessageFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
+import retrofit2.Callback;
 
 
 /**
@@ -105,24 +90,25 @@ public class SingleConversationFragment extends Fragment {
             progressbar.setVisibility(View.VISIBLE);
         }
 
-
-
-
         return rootView;
     }
 
     private void requestSingleConversation() {
 
-        JsonObjectRequest singleConversationRequest = new JsonObjectRequest(Request.Method.GET,
-                UrlEndpoints.getSingleConversationUrl("" + getArguments().getInt("conversationID"),getContext()),
-                (String) null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
-                        conversation = JSONParser.parseSingleConversation(response);
+        if (getArguments().containsKey("conversationID")) {
+            int conversationId = getArguments().getInt("conversationID");
+
+            Call<Conversation> call = client.getConversation(conversationId);
+            call.enqueue(new Callback<Conversation>() {
+                @Override
+                public void onResponse(Call<Conversation> call, retrofit2.Response<Conversation> response) {
+                    if (response.isSuccessful()) {
+
+                        conversation = response.body();
+
                         fab.setEnabled(true);
-
                         messages.clear();
                         messages.addAll(conversation.getMessages());
 
@@ -130,39 +116,41 @@ public class SingleConversationFragment extends Fragment {
                             getActivity().setTitle(conversation.getSubject());
                         }
 
-
                         loaded = true;
                         mAdapter.notifyDataSetChanged();
 
                         //Update unread count in navigation drawer
                         mCallback.requestUnreadCount();
 
-
                         progressbar.setVisibility(View.GONE);
+
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressbar.setVisibility(View.GONE);
-                Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
-                snackbar.setDuration(4000); // Gives false syntax error
-                snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestSingleConversation();
-                    }
-                });
-                if (!snackbar.isShown()) {
-                    snackbar.show();
                 }
+
+                @Override
+                public void onFailure(Call<Conversation> call, Throwable t) {
+                    showSnackbar();
+                }
+            });
+
+        } else {
+            showSnackbar();
+        }
+    }
+
+    private void showSnackbar() {
+        progressbar.setVisibility(View.GONE);
+        Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
+        snackbar.setDuration(4000); // Gives false syntax error
+        snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestSingleConversation();
             }
         });
-
-        singleConversationRequest.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(singleConversationRequest);
+        if (!snackbar.isShown()) {
+            snackbar.show();
+        }
     }
 
     private void initFabButton() {
@@ -183,7 +171,6 @@ public class SingleConversationFragment extends Fragment {
 
                 ArrayList<String> ids = new ArrayList<>();
                 for (Participant p : conversation.getParticipants()) {
-                    Log.i(TAG, "onClick: added " + p.getName());
                     ids.add(p.getId());
                 }
 
