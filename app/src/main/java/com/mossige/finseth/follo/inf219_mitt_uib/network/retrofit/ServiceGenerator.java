@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 
@@ -35,15 +36,11 @@ public class ServiceGenerator {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
-                HttpUrl originalHttpUrl = original.url();
 
-                HttpUrl url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("access_token", getAccessToken(context))
-                        .build();
-
-                // Request customization: add request headers
+                String accessToken = "Bearer " + getAccessToken(context);
                 Request.Builder requestBuilder = original.newBuilder()
-                        .url(url);
+                        .header("Authorization", accessToken)
+                        .method(original.method(), original.body());
 
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
