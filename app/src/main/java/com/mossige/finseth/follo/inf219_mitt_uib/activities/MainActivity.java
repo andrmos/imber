@@ -45,6 +45,7 @@ import org.json.JSONObject;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -243,32 +244,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         
     }
 
-    @Override
-    public void requestUnreadCount() {
-
-        final JsonObjectRequest profileReq = new JsonObjectRequest(Request.Method.GET, UrlEndpoints.getUnreadCountURL(this), (String) null, new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-
-                int unreadCount = JSONParser.parseUnreadCount(response);
-                setMenuCounter(R.id.nav_inbox, unreadCount);
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                //Do nothing
-            }
-        });
-
-        profileReq.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueueHandler.getInstance(this).addToRequestQueue(profileReq);
-    }
-
     public void setMenuCounter(@IdRes int itemId, int count) {
         TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
         view.setText(count > 0 ? String.valueOf(count) : null);
@@ -294,6 +269,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public void initCalendar() {
         initCalendarFragment();
+    }
+
+    @Override
+    public void requestUnreadCount() {
+        // TODO Implement
     }
 
     private void initFragment(Fragment fragment, FragmentTransaction transaction){
