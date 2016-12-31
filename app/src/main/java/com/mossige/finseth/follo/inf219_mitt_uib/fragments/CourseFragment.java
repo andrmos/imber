@@ -29,6 +29,8 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import org.json.JSONArray;
 
@@ -36,8 +38,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,7 +110,7 @@ public class CourseFragment extends Fragment {
             course = new Course(course_id,name,calendar_url,course_code);
         }
 
-        requestAnnouncements("" + course.getId());
+        requestAnnouncements(course.getId());
         requestAgendas();
 
     }
@@ -200,20 +205,17 @@ public class CourseFragment extends Fragment {
         });
     }
 
-
-
-    private void requestAnnouncements(final String course_id) {
-
-        final JsonArrayRequest announcementsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCourseAnnouncementsUrl(course_id, getContext()), (String) null, new Response.Listener<JSONArray>() {
-
+    private void requestAnnouncements(final int course_id) {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+        Call<List<Announcement>> call = client.getAnnouncements(course_id);
+        call.enqueue(new Callback<List<Announcement>>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(Call<List<Announcement>> call, retrofit2.Response<List<Announcement>> response) {
 
                 announcements.clear();
-                announcements.addAll(JSONParser.parseAllAnnouncements(response));
+                announcements.addAll(response.body());
 
                 loaded[0] = true;
-
 
                 if (isLoaded()) {
                     mainList.setVisibility(View.VISIBLE);
@@ -221,9 +223,9 @@ public class CourseFragment extends Fragment {
                 }
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailure(Call<List<Announcement>> call, Throwable t) {
                 progressbar.setVisibility(View.GONE);
                 mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                     @Override
@@ -233,12 +235,6 @@ public class CourseFragment extends Fragment {
                 });
             }
         });
-
-        announcementsRequest.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(announcementsRequest);
     }
 
     /**
