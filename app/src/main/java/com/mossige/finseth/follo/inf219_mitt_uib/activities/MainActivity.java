@@ -46,6 +46,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         requestProfile();
         requestUnreadCount();
-        requestCourses(false); // Need events in calendar
+        requestCourses(); // Need events in calendar
 
         initFragment(new CourseListFragment(), getSupportFragmentManager().beginTransaction());
 
@@ -176,28 +177,37 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     // TODO Move method to Calendar Fragment
-    private void requestCourses(final boolean filterInstituteCourses) {
+    private void requestCourses() {
 
-        JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(this), (String) null, new Response.Listener<JSONArray>() {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
+        Call<List<Course>> call = client.getCourses();
+        call.enqueue(new Callback<List<Course>>() {
             @Override
-            public void onResponse(JSONArray response) {
-                courses.clear();
-                courses.addAll(JSONParser.parseAllCourses(response, filterInstituteCourses, getApplicationContext()));
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                showSnackbar(getString(R.string.request_courses_error), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestCourses(filterInstituteCourses);
-                    }
-                });
+            public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
+                if (response.isSuccessful()) {
+
+                    courses.clear();
+                    courses.addAll(response.body());
+
+                } else {
+                    showSnackbar();
+                }
             }
 
+            @Override
+            public void onFailure(Call<List<Course>> call, Throwable t) {
+                showSnackbar();
+            }
         });
+    }
 
-        RequestQueueHandler.getInstance(this).addToRequestQueue(coursesReq);
+    private void showSnackbar() {
+        showSnackbar(getString(R.string.request_courses_error), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestCourses();
+            }
+        });
     }
 
     private void requestProfile() {
