@@ -18,4 +18,16 @@ public class SendMessage {
         this.body = body;
         this.recipients = recipients;
     }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public ArrayList<String> getRecipients() {
+        return recipients;
+    }
 }
