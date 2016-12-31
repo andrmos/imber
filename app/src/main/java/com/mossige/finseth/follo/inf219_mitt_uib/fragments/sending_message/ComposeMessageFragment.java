@@ -20,17 +20,26 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by folb 31.03.16
@@ -129,51 +138,39 @@ public class ComposeMessageFragment extends Fragment {
     private void postMessageRequest(final ArrayList<String> recipients, final String subject, final String body) {
 
         if (validateMessage(subject, body)) {
+            SendMessage message = new SendMessage(subject, body, recipients);
 
-            try {
-
-                //Create json object
-                JSONObject postJSONObject = new JSONObject();
-                postJSONObject.put("body", body);
-                postJSONObject.put("subject", subject);
-                //Accumulate all recipients
-                for (int i = 0; i < recipients.size(); i++) {
-                    postJSONObject.accumulate("recipients", recipients.get(i));
-                }
-                //Request post method
-                JsonArrayRequest postMessage = new JsonArrayRequest(Request.Method.POST, UrlEndpoints.postNewMessageUrl(getContext()), postJSONObject, new Response.Listener<JSONArray>() {
-
-                    @Override
-                    public void onResponse(JSONArray response) {
+            MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+            Call<List<SendMessage>> call = client.createConversation(message);
+            call.enqueue(new Callback<List<SendMessage>>() {
+                @Override
+                public void onResponse(Call<List<SendMessage>> call, retrofit2.Response<List<SendMessage>> response) {
+                    if (response.isSuccessful()) {
                         mCallback.showSnackbar(getString(R.string.message_sent), null);
                         cleanTextFields();
-
                         replaceFragment();
-
+                    } else {
+                        showSnackbar(recipients, subject, body);
                     }
+                }
 
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        mCallback.showSnackbar(getString(R.string.error_sending_message), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                postMessageRequest(recipients,subject,body);
-                            }
-                        });
-                    }
-                });
-
-                RequestQueueHandler.getInstance(this.getContext()).addToRequestQueue(postMessage);
-
-            } catch (JSONException e) {
-                Log.e(TAG, "postMessageRequest: creating json object " + e);
-            }
-
+                @Override
+                public void onFailure(Call<List<SendMessage>> call, Throwable t) {
+                    showSnackbar(recipients, subject, body);
+                }
+            });
 
         }
 
+    }
 
+    private void showSnackbar(final ArrayList<String> recipients, final String subject, final String body) {
+        mCallback.showSnackbar(getString(R.string.error_sending_message), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postMessageRequest(recipients,subject,body);
+            }
+        });
     }
 
     private void replaceFragment (){

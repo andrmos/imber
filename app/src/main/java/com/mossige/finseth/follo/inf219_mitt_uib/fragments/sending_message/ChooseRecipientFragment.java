@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,15 +38,20 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Created by Follo on 20.03.2016.
@@ -280,23 +286,25 @@ public class ChooseRecipientFragment extends Fragment {
 
 
     private void requestCourses() {
-
-        final JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(getContext()), (String) null, new Response.Listener<JSONArray>() {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+        Call<List<Course>> call = client.getCourses();
+        call.enqueue(new Callback<List<Course>>() {
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
+                if (response.isSuccessful()) {
+                    courses.clear();
+                    courses.addAll(response.body());
+                    courseCodes.clear();
+                    for (Course c : courses) {
+                        courseCodes.add(c.getCourseCode());
+                    }
 
-                courses = JSONParser.parseAllCourses(response, false, getContext());
-                courseCodes.clear();
-                for (Course c : courses) {
-                    courseCodes.add(c.getCourseCode());
+                    courseAdapter.notifyDataSetChanged();
                 }
-
-                courseAdapter.notifyDataSetChanged();
-
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailure(Call<List<Course>> call, Throwable t) {
                 if(progressBar != null){
                     progressBar.setVisibility(View.GONE);
                 }
@@ -308,14 +316,7 @@ public class ChooseRecipientFragment extends Fragment {
                     }
                 });
             }
-
         });
-
-        coursesReq.setRetryPolicy(new DefaultRetryPolicy(5000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(coursesReq);
     }
 
     private void requestRecipients(final String url, final String tag) {
