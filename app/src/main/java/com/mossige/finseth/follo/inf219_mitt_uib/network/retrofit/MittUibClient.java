@@ -3,12 +3,19 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -49,4 +56,6 @@ public interface MittUibClient {
     @GET("conversations/{id}")
     Call<Conversation> getConversation(@Path("id") int conversationId);
 
+    @POST("conversations")
+    Call<List<SendMessage>> createConversation(@Body SendMessage message);
 }
