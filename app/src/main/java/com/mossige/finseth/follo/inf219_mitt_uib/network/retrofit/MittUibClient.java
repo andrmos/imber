@@ -7,6 +7,8 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +58,18 @@ public interface MittUibClient {
     @GET("conversations/{id}")
     Call<Conversation> getConversation(@Path("id") int conversationId);
 
+    /**
+     * Create a new conversation with one or more recipients.
+     * @param message
+     * @return
+     */
     @POST("conversations")
     Call<List<SendMessage>> createConversation(@Body SendMessage message);
+
+    /**
+     * // TODO Not yet used
+     * @return The number of unread conversations for the current user
+     */
+    @GET("conversations/unread_count")
+    Call<JSONObject> getUnreadCount();
 }
