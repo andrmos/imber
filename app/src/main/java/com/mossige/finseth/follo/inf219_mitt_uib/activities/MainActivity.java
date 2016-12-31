@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         transaction.commit();
     }
 
+    // TODO Move method to Calendar Fragment
     private void requestCourses(final boolean filterInstituteCourses) {
 
         JsonArrayRequest coursesReq = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCoursesListUrl(this), (String) null, new Response.Listener<JSONArray>() {
