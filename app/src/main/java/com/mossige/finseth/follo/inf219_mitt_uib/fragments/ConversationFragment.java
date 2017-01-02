@@ -1,7 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,26 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.ConversationRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message.ChooseRecipientFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +50,8 @@ public class ConversationFragment extends Fragment {
 
     private View rootView;
     MainActivityListener mCallback;
+    // The URL to the next page in a request
+    private String nextPage;
 
     public ConversationFragment() {}
 
@@ -78,7 +71,8 @@ public class ConversationFragment extends Fragment {
         super.onCreate(savedInstanceState);
         conversations = new ArrayList<>();
         loaded = false;
-        requestConversation();
+        nextPage = "";
+        requestConversations();
     }
 
     @Override
@@ -87,7 +81,7 @@ public class ConversationFragment extends Fragment {
         getActivity().setTitle(R.string.conversation_title);
 
         progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
-        initRecycleView(rootView);
+        initRecyclerView(rootView);
         if (loaded) {
             progressbar.setVisibility(View.GONE);
         } else {
@@ -97,21 +91,35 @@ public class ConversationFragment extends Fragment {
         return rootView;
     }
 
-    private void requestConversation() {
+    private void requestConversations() {
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<Conversation>> call = client.getConversations();
+        Call<List<Conversation>> call;
+
+        boolean firstPage = nextPage.isEmpty();
+        if (firstPage) {
+            call = client.getConversations();
+        } else {
+            call = client.getConversationsPagination(nextPage);
+        }
+
+        nextPage = "";
         call.enqueue(new Callback<List<Conversation>>() {
             @Override
             public void onResponse(Call<List<Conversation>> call, retrofit2.Response<List<Conversation>> response) {
-                // TODO Implement proper pagination. Currently response only include 10 elements.
+                progressbar.setVisibility(View.GONE);
 
                 if (response.isSuccessful()) {
-                    conversations.clear();
+                    int currentSize = mAdapter.getItemCount();
+
                     conversations.addAll(response.body());
+                    mAdapter.notifyItemRangeChanged(currentSize, conversations.size() - 1);
 
                     loaded = true;
-                    mAdapter.notifyDataSetChanged();
-                    progressbar.setVisibility(View.GONE);
+
+                    String paginationLinks = response.headers().get("Link");
+                    updatePageLink(paginationLinks);
+                } else {
+                    showSnackbar();
                 }
             }
 
@@ -123,13 +131,37 @@ public class ConversationFragment extends Fragment {
         });
     }
 
+    // TODO Solve in a more elegant and efficient way if possible.
+    // TODO Move to a helper class as this will be used everywhere.
+    private void updatePageLink(String paginationLinks) {
+        String[] links = paginationLinks.split(",");
+
+        for (int i = 0; i < links.length; i++) {
+            String line = links[i];
+            // If link contains rel=next
+            if (line.contains("rel=\"next\"")) {
+
+                // Get next link url
+                String link = line.substring(line.indexOf("<") + 1);
+                link = link.substring(0, link.indexOf(">"));
+
+                nextPage = link;
+                // There is only one 'rel=next' link in each response
+                return;
+            }
+        }
+
+        // Reset if there is no next link
+        nextPage = "";
+    }
+
     private void showSnackbar() {
         Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
         snackbar.setDuration(4000);
         snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestConversation();
+                requestConversations();
             }
         });
         if (!snackbar.isShown()) {
@@ -157,14 +189,24 @@ public class ConversationFragment extends Fragment {
     }
 
 
-    private void initRecycleView(View rootView) {
+    private void initRecyclerView(View rootView) {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
+
+        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                // If there is a next link
+                if (!nextPage.isEmpty()) {
+                    requestConversations();
+                }
+            }
+        });
 
         // Create adapter that binds the views with some content
         mAdapter = new ConversationRecyclerViewAdapter(conversations);
