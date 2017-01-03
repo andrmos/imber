@@ -5,16 +5,25 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AnnouncementRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 /**
  * Fragment for announcement listing
@@ -28,6 +37,9 @@ public class AnnouncementFragment extends Fragment {
     private RecyclerView mainList;
 
     private ArrayList<Announcement> announcements;
+    private String nextPage;
+    private RecyclerView.Adapter mAdapter;
+    private int courseId;
 
     public AnnouncementFragment() { }
 
@@ -51,16 +63,51 @@ public class AnnouncementFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         announcements = new ArrayList<>();
+        nextPage = "";
+        courseId = getArguments().getInt("courseId");
+        requestAnnouncements(courseId);
+    }
 
-        ArrayList<String> announcementIds = getArguments().getStringArrayList("announcementIds");
-        ArrayList<String> announcementTitles = getArguments().getStringArrayList("announcementTitles");
-        ArrayList<String> announcementSender = getArguments().getStringArrayList("announcementSender");
-        ArrayList<String> announcementDates= getArguments().getStringArrayList("announcementDates");
-        ArrayList<String> announcementMessages = getArguments().getStringArrayList("announcementMessages");
+    private void requestAnnouncements(final int course_id) {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
-        for(int i = 0; i < announcementTitles.size(); i++){
-            announcements.add(new Announcement(announcementIds.get(i),announcementTitles.get(i), announcementSender.get(i), announcementDates.get(i),announcementMessages.get(i),true));
+        Call<List<Announcement>> call;
+        boolean firstPage = nextPage.isEmpty();
+        if (firstPage) {
+            call = client.getAnnouncements(course_id);
+        } else {
+            call = client.getAnnouncementsPagination(nextPage);
         }
+
+        call.enqueue(new Callback<List<Announcement>>() {
+            @Override
+            public void onResponse(Call<List<Announcement>> call, retrofit2.Response<List<Announcement>> response) {
+
+                if (response.isSuccessful()) {
+                    int currentSize = mAdapter.getItemCount();
+                    announcements.addAll(response.body());
+                    mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
+
+                    nextPage = HeaderLinksHelper.getNextPageUrl(response.headers().get("Link"));
+
+                    mainList.setVisibility(View.VISIBLE);
+                } else {
+                    // TODO
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Announcement>> call, Throwable t) {
+                // TODO Implement
+//                mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        requestAnnouncements(course_id);
+//                    }
+//                });
+            }
+        });
     }
 
     private void initRecycleView(View rootView) {
@@ -69,13 +116,22 @@ public class AnnouncementFragment extends Fragment {
         mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
         // Create the LayoutManager that holds all the views
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
-        // Create adapter that binds the views with some content
-        RecyclerView.Adapter mAdapter = new AnnouncementRecyclerViewAdapter(announcements);
-        mainList.setAdapter(mAdapter);
+        mainList.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                // If there is a next link
+                if (!nextPage.isEmpty()) {
+                    requestAnnouncements(courseId);
+                }
+            }
+        });
 
+        // Create adapter that binds the views with some content
+        mAdapter = new AnnouncementRecyclerViewAdapter(announcements);
+        mainList.setAdapter(mAdapter);
     }
 
     private void initOnClickListener() {
@@ -91,6 +147,7 @@ public class AnnouncementFragment extends Fragment {
                 //Bundles all parameters needed for showing one announcement
                 Bundle args = new Bundle();
 
+                // TODO Change to announcements from "announcements" array
                 if(getArguments() != null) {
                     if (getArguments().containsKey("announcementTitles")) {
                         args.putString("title", getArguments().getStringArrayList("announcementTitles").get(position));
