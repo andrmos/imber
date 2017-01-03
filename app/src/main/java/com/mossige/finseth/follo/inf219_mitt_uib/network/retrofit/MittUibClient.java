@@ -40,6 +40,9 @@ public interface MittUibClient {
     @GET("courses")
     Call<List<Course>> getCourses();
 
+    @GET
+    Call<List<Course>> getCoursesPagination(@Url String url);
+
     /**
      * @param courseId
      * @return The announcements for the specified course.
@@ -47,13 +50,16 @@ public interface MittUibClient {
     @GET("courses/{id}/discussion_topics?only_announcements=true")
     Call<List<Announcement>> getAnnouncements(@Path("id") int courseId);
 
+    @GET
+    Call<List<Announcement>> getAnnouncementsPagination(@Url String url);
+
     /**
      * @return The list of conversations for the logged in user.
      */
     @GET("conversations")
     Call<List<Conversation>> getConversations();
 
-    @GET()
+    @GET
     Call<List<Conversation>> getConversationsPagination(@Url String url);
 
     /**
