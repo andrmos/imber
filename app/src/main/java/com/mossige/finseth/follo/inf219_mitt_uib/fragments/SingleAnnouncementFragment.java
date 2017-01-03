@@ -37,13 +37,14 @@ public class SingleAnnouncementFragment extends Fragment{
         // Set text to every TextView in fragment_announcement.xml
         title_tv.setText(""+ getArguments().get("title"));
         message_tv.setText(getArguments().get("message").toString());
-        sender_tv.setText("" + getArguments().get("sender"));
-        date_tv.setText(parseDate(getArguments().get("date").toString()));
+        sender_tv.setText("" + getArguments().get("userName"));
+        date_tv.setText(parseDate(getArguments().get("postedAt").toString()));
 
         return view;
     }
 
     /**
+     * TODO improve
      * Parser and formater for a date string on form XXXX-XX-XXTXX:XX
      */
     private String parseDate(String date){

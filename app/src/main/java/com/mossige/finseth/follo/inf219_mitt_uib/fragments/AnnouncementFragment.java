@@ -48,7 +48,7 @@ public class AnnouncementFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         // Set label for toolbar
-        getActivity().setTitle(getString(R.string.announcements_title) + " - " + getArguments().getString("course_code"));
+        getActivity().setTitle(getString(R.string.announcements_title) + " - " + getArguments().getString("courseCode"));
 
         initRecycleView(rootView);
 
@@ -146,27 +146,12 @@ public class AnnouncementFragment extends Fragment {
 
                 //Bundles all parameters needed for showing one announcement
                 Bundle args = new Bundle();
-
-                // TODO Change to announcements from "announcements" array
-                if(getArguments() != null) {
-                    if (getArguments().containsKey("announcementTitles")) {
-                        args.putString("title", getArguments().getStringArrayList("announcementTitles").get(position));
-                    }
-
-                    if(getArguments().containsKey("announcementMessages")) {
-                        args.putString("message", getArguments().getStringArrayList("announcementMessages").get(position));
-                    }
-
-                    if(getArguments().containsKey("announcementSender")) {
-                        args.putString("sender", getArguments().getStringArrayList("announcementSender").get(position));
-                    }
-
-                    if(getArguments().containsKey("announcementDates")) {
-                        args.putString("date", getArguments().getStringArrayList("announcementDates").get(position));
-                    }
-
-                    singleAnnouncementFragment.setArguments(args);
-                }
+                Announcement announcement = announcements.get(position);
+                args.putString("title", announcement.getTitle());
+                args.putString("message", announcement.getMessage());
+                args.putString("userName", announcement.getUserName());
+                args.putString("postedAt", announcement.getPostedAt());
+                singleAnnouncementFragment.setArguments(args);
 
                 transaction.commit();
             }
