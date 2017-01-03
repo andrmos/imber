@@ -23,6 +23,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewSc
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
@@ -116,8 +117,9 @@ public class ConversationFragment extends Fragment {
 
                     loaded = true;
 
-                    String paginationLinks = response.headers().get("Link");
-                    updatePageLink(paginationLinks);
+                    // Set URL to next page in request
+                    nextPage = HeaderLinksHelper.getNextPageUrl(response.headers().get("Link"));
+
                 } else {
                     showSnackbar();
                 }
@@ -129,30 +131,6 @@ public class ConversationFragment extends Fragment {
                 showSnackbar();
             }
         });
-    }
-
-    // TODO Solve in a more elegant and efficient way if possible.
-    // TODO Move to a helper class as this will be used everywhere.
-    private void updatePageLink(String paginationLinks) {
-        String[] links = paginationLinks.split(",");
-
-        for (int i = 0; i < links.length; i++) {
-            String line = links[i];
-            // If link contains rel=next
-            if (line.contains("rel=\"next\"")) {
-
-                // Get next link url
-                String link = line.substring(line.indexOf("<") + 1);
-                link = link.substring(0, link.indexOf(">"));
-
-                nextPage = link;
-                // There is only one 'rel=next' link in each response
-                return;
-            }
-        }
-
-        // Reset if there is no next link
-        nextPage = "";
     }
 
     private void showSnackbar() {
