@@ -2,13 +2,14 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 
 import java.io.IOException;
 
-import okhttp3.HttpUrl;
+import hirondelle.date4j.DateTime;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,7 +28,7 @@ public class ServiceGenerator {
 
     private static Retrofit.Builder builder = new Retrofit.Builder()
             .baseUrl(API_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create());
+            .addConverterFactory(gsonConverterFactory());
 
     public static <S> S createService(Class<S> serviceClass, final Context context) {
 
@@ -55,5 +56,15 @@ public class ServiceGenerator {
     private static String getAccessToken(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         return sharedPreferences.getString("access_token", "");
+    }
+
+    private static GsonConverterFactory gsonConverterFactory() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        // Add custom deserializer
+        gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeDeserializer());
+        Gson myGson = gsonBuilder.create();
+
+        return GsonConverterFactory.create(myGson);
     }
 }
