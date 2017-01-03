@@ -26,6 +26,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
@@ -164,29 +165,9 @@ public class CourseFragment extends Fragment {
                     transaction.replace(R.id.content_frame, announcementFragment);
                     transaction.addToBackStack(null);
 
-                    //Temporary lists for bundling announcement object
-                    ArrayList<String> announcementTitles = new ArrayList<>();
-                    ArrayList<String> announcementMessages = new ArrayList<>();
-                    ArrayList<String> announcementSender = new ArrayList<>();
-                    ArrayList<String> announcementDates = new ArrayList<>();
-                    ArrayList<String> announcementIds = new ArrayList<>();
-
-                    //Make list with all announcement titles
-                    for (Announcement a : announcements) {
-                        announcementIds.add(a.getId());
-                        announcementTitles.add(a.getTitle());
-                        announcementMessages.add(android.text.Html.fromHtml(a.getMessage()).toString());
-                        announcementSender.add(a.getUserName());
-                        announcementDates.add(a.getPostedAt());
-                    }
-
                     Bundle args = new Bundle();
-                    args.putStringArrayList("announcementTitles", announcementTitles);
-                    args.putStringArrayList("announcementMessages", announcementMessages);
-                    args.putStringArrayList("announcementSender", announcementSender);
-                    args.putStringArrayList("announcementDates", announcementDates);
-                    args.putStringArrayList("announcementIds", announcementIds);
-                    args.putString("course_code", course.getCourseCode());
+                    args.putString("courseCode", course.getCourseCode());
+                    args.putInt("courseId", course.getId());
                     announcementFragment.setArguments(args);
 
                     transaction.addToBackStack(null);
@@ -207,19 +188,23 @@ public class CourseFragment extends Fragment {
 
     private void requestAnnouncements(final int course_id) {
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+
         Call<List<Announcement>> call = client.getAnnouncements(course_id);
         call.enqueue(new Callback<List<Announcement>>() {
             @Override
             public void onResponse(Call<List<Announcement>> call, retrofit2.Response<List<Announcement>> response) {
 
-                announcements.clear();
-                announcements.addAll(response.body());
+                if (response.isSuccessful()) {
+                    announcements.addAll(response.body());
+                    loaded[0] = true;
 
-                loaded[0] = true;
+                    if (isLoaded()) {
+                        mainList.setVisibility(View.VISIBLE);
+                        progressbar.setVisibility(View.GONE);
+                    }
 
-                if (isLoaded()) {
-                    mainList.setVisibility(View.VISIBLE);
-                    progressbar.setVisibility(View.GONE);
+                } else {
+                    // TODO
                 }
 
             }
