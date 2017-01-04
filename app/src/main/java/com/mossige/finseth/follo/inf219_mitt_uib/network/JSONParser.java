@@ -37,7 +37,7 @@ public class JSONParser {
 
     //Standard variables for if the parser fails
     public static final String fail = "FAILED";
-    public static final CalendarEvent FAILED_CALENDAR_EVENT = new CalendarEvent(fail, new DateTime(1970, 1, 1, 0, 0, 0, 0), new DateTime(1970, 1, 1, 0, 0, 0, 0), fail, TimeZone.getTimeZone("UTC"));
+//    public static final CalendarEvent FAILED_CALENDAR_EVENT = new CalendarEvent(fail, new DateTime(1970, 1, 1, 0, 0, 0, 0), new DateTime(1970, 1, 1, 0, 0, 0, 0), fail, TimeZone.getTimeZone("UTC"));
     public static final Message FAILED_MESSAGE = new Message(fail, fail, fail, fail);
     public static final Course FAILED_COURSE = new Course(-1, fail, fail, fail);
     public static final Announcement FAILED_ANNOUNCEMENT = new Announcement(fail, fail, fail, fail, fail, false);
@@ -99,12 +99,12 @@ public class JSONParser {
                     current = parseOneCalendarEvent(obj);
                 }
             } catch (JSONException e) {
-                current = FAILED_CALENDAR_EVENT;
+                current = null;
                 Log.e(TAG, "parseAllCalendarEvents: ", e);
                 Log.i(TAG, "parseAllCalendarEvents: failed to parse a calendar event due to a JSONException");
             }
 
-            if (current.equals(FAILED_CALENDAR_EVENT)) {
+            if (current.equals(null)) {
                 Log.i(TAG, "parseAllCalendarEvents: failed to parse calendar event " + i);
             } else {
                 parsed.add(current);
@@ -129,7 +129,7 @@ public class JSONParser {
                 current = parseOneAssignment(obj);
                 parsed.add(current);
             }catch(JSONException e){
-                current = FAILED_CALENDAR_EVENT;
+                current = null;
                 Log.e(TAG, "parseAllCalendarEvents: ", e);
                 Log.i(TAG, "parseAllCalendarEvents: failed to parse a calendar event due to a JSONException");
             }
@@ -268,13 +268,13 @@ public class JSONParser {
 
             TimeZone timeZone = TimeZone.getTimeZone("UTC");
 
-            return new CalendarEvent(title, parseDateString(start), parseDateString(stop), "Innleveringsfrist", timeZone);
+//            return new CalendarEvent(title, parseDateString(start), parseDateString(stop), "Innleveringsfrist", timeZone);
         } catch(JSONException e){
             Log.e(TAG, "parseOneAssignment: ", e);
             Log.i(TAG, "parseOneAssignment: failed to load one assignment");
         }
 
-        return FAILED_CALENDAR_EVENT;
+        return null;
     }
 
     /**
@@ -506,14 +506,14 @@ public class JSONParser {
 
             TimeZone timeZone = TimeZone.getTimeZone("UTC");
 
-            return new CalendarEvent(title, parseDateString(start), parseDateString(stop), location, timeZone);
+//            return new CalendarEvent(title, parseDateString(start), parseDateString(stop), location, timeZone);
 
         } catch (JSONException e) {
             Log.e(TAG, "parseOneCalendarEvent: ", e);
             Log.i(TAG, "parseOneCalendarEvent: failed to load calendarEvent");
         }
 
-        return CalendarEvent.getFailedCalendarEvent();
+        return null;
     }
 
     /**
