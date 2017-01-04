@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
@@ -78,9 +79,28 @@ public interface MittUibClient {
     Call<List<SendMessage>> createConversation(@Body SendMessage message);
 
     /**
+     * Retrieve the list of calendar events or assignments for the current user.
+     *
+     * @param startDate Include events since this date, inclusive. Format: YYYY-MM-DD
+     * @param end_date Include events before this date, inclusive. Format: YYYY-MM-DD
+     * @param contextCodes Array of context codes of courses/groups/users you want. Format ex. "course_<code>"
+     * @param excludes Array of attributes to exclude. “description”, “child_events” or “assignment”
+     * @param type Type of event, "event", or "assignment"
+     * @return
+     */
+    @GET("calendar_events?per_page=50")
+    Call<List<CalendarEvent>> getEvents(@Query("start_date") String startDate,
+                                        @Query("end_date") String end_date,
+                                        @Query("context_codes[]") List<String> contextCodes,
+                                        @Query("excludes[]") List<String> excludes,
+                                        @Query("type") String type,
+                                        @Query("page_num") int pageNum);
+
+    /**
      * // TODO Not yet used
      * @return The number of unread conversations for the current user
      */
     @GET("conversations/unread_count")
     Call<JSONObject> getUnreadCount();
+
 }
