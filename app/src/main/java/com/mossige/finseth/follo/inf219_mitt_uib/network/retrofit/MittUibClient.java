@@ -94,7 +94,7 @@ public interface MittUibClient {
                                         @Query("context_codes[]") List<String> contextCodes,
                                         @Query("excludes[]") List<String> excludes,
                                         @Query("type") String type,
-                                        @Query("page_num") int pageNum);
+                                        @Query("page_num") Integer pageNum);
 
     /**
      * // TODO Not yet used
