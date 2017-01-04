@@ -100,13 +100,22 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
         }
     }
 
-    public boolean equals(CalendarEvent that) {
-        if(!this.getTitle().equals(that.getTitle())) return false;
-        if(!this.getLocation().equals(that.getLocation())) return false;
-        if(!this.getStartDate().equals(that.getStartDate())) return false;
-        if(!this.getEndDate().equals(that.getEndDate())) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        return true;
+        CalendarEvent that = (CalendarEvent) o;
+
+        if (id != that.id) return false;
+        if (hidden != that.hidden) return false;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (location != null ? !location.equals(that.location) : that.location != null)
+            return false;
+        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null)
+            return false;
+        return endDate != null ? endDate.equals(that.endDate) : that.endDate == null;
+
     }
 
     @Override
