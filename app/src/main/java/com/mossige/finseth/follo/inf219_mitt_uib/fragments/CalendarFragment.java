@@ -217,8 +217,6 @@ public class CalendarFragment extends Fragment {
 
         Call<List<CalendarEvent>> call = client.getEvents(startDateString, endDateString, contextCodes, excludes, type, pageNum);
 
-        Log.i(TAG, "getCalendarEvents: link: " + call.request().url().toString());
-
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
