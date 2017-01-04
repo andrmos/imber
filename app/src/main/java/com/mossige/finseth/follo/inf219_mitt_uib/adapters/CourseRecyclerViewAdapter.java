@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendasViewHolder;
@@ -112,7 +111,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
         DateTime start = agendas.get(i).getStartDate();
         DateTime end = agendas.get(i).getEndDate();
 
-        String summary = agendas.get(i).getName() + " ";
+        String summary = agendas.get(i).getTitle() + " ";
 
         //Gives time two digit representation
         summary += start.getDay() + ".";

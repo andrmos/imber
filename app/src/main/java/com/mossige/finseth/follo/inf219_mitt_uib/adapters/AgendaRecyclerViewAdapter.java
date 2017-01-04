@@ -1,7 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class AgendaRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
         SingleAgendaViewHolder agendaHolder = (SingleAgendaViewHolder) holder;
-        agendaHolder.title.setText(data.get(position).getName());
+        agendaHolder.title.setText(data.get(position).getTitle());
         agendaHolder.time.setText(getFormatDate(position));
         agendaHolder.location.setText(data.get(position).getLocation());
     }

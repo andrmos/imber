@@ -1,8 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import android.util.Log;
 
-import java.util.TimeZone;
+import com.google.gson.annotations.SerializedName;
 
 import hirondelle.date4j.DateTime;
 
@@ -12,41 +11,35 @@ import hirondelle.date4j.DateTime;
 public class CalendarEvent implements Comparable<CalendarEvent>{
 
     private static final String TAG = "CalendarEvent";
-    public static final String fail = "FAILED";
 
-    private String name;
-
+    private int id;
+    private String title;
     private String location;
-    private DateTime mStartDate;
-    private DateTime mEndDate;
+    @SerializedName("start_at")
+    private DateTime startDate;
+    @SerializedName("end_at")
+    private DateTime endDate;
+    private boolean hidden;
 
-    public CalendarEvent(String name, DateTime startDate, DateTime endDate, String location, TimeZone oldTimeZone) {
-        this.name = trimEventName(name);
-        TimeZone newTimeZone = TimeZone.getTimeZone("Europe/Oslo");
-        this.mStartDate = startDate.changeTimeZone(oldTimeZone, newTimeZone);
-        this.mEndDate = endDate.changeTimeZone(oldTimeZone, newTimeZone);
-
-        this.location = trimLocation(location);
+    public CalendarEvent(int id, String title, String location, DateTime startDate, DateTime endDate, boolean hidden) {
+        this.id = id;
+        this.title = title;
+        this.location = location;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.hidden = hidden;
     }
 
-    public String getName(){
-        return name;
+    public String getTitle(){
+        return title;
     }
 
     public DateTime getStartDate() {
-        return mStartDate;
-    }
-
-    public void setmStartDate(DateTime t) {
-        this.mStartDate = t;
-    }
-
-    public void setmEndDate(DateTime t) {
-        this.mEndDate = t;
+        return startDate;
     }
 
     public DateTime getEndDate() {
-        return mEndDate;
+        return endDate;
     }
 
     public String getLocation() {
@@ -54,11 +47,12 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
     }
 
     /**
-     * Remove brackets and unnecessary name info
+     * Remove brackets and unnecessary title info
      * @param name
      * @return
      */
     private String trimEventName(String name){
+        // TODO trim event name and location
         String[] splitArray = name.split(" ");
         String trimedName = "";
 
@@ -107,7 +101,7 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
     }
 
     public boolean equals(CalendarEvent that) {
-        if(!this.getName().equals(that.getName())) return false;
+        if(!this.getTitle().equals(that.getTitle())) return false;
         if(!this.getLocation().equals(that.getLocation())) return false;
         if(!this.getStartDate().equals(that.getStartDate())) return false;
         if(!this.getEndDate().equals(that.getEndDate())) return false;
@@ -115,7 +109,15 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
         return true;
     }
 
-    public static CalendarEvent getFailedCalendarEvent() {
-        return new CalendarEvent(fail, new DateTime(1970, 1, 1, 0, 0, 0, 0), new DateTime(1970, 1, 1, 0, 0, 0, 0), fail, TimeZone.getTimeZone("UTC"));
+    @Override
+    public String toString() {
+        return "CalendarEvent{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", location='" + location + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", hidden=" + hidden +
+                '}';
     }
 }
