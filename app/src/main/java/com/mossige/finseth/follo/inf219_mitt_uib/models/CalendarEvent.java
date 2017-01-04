@@ -8,11 +8,11 @@ import hirondelle.date4j.DateTime;
 /**
  * Created by PatrickFinseth on 23.02.16.
  */
-public class CalendarEvent implements Comparable<CalendarEvent>{
+public class CalendarEvent implements Comparable<CalendarEvent> {
 
     private static final String TAG = "CalendarEvent";
 
-    private int id;
+//    private int id;
     private String title;
     private String location;
     @SerializedName("start_at")
@@ -22,7 +22,7 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
     private boolean hidden;
 
     public CalendarEvent(int id, String title, String location, DateTime startDate, DateTime endDate, boolean hidden) {
-        this.id = id;
+//        this.id = id;
         this.title = title;
         this.location = location;
         this.startDate = startDate;
@@ -107,7 +107,7 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
 
         CalendarEvent that = (CalendarEvent) o;
 
-        if (id != that.id) return false;
+//        if (id != that.id) return false;
         if (hidden != that.hidden) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
         if (location != null ? !location.equals(that.location) : that.location != null)
@@ -121,7 +121,7 @@ public class CalendarEvent implements Comparable<CalendarEvent>{
     @Override
     public String toString() {
         return "CalendarEvent{" +
-                "id=" + id +
+//                "id=" + id +
                 ", title='" + title + '\'' +
                 ", location='" + location + '\'' +
                 ", startDate=" + startDate +
