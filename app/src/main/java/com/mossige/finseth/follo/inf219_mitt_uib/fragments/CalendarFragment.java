@@ -11,26 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -203,11 +192,11 @@ public class CalendarFragment extends Fragment {
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
         ArrayList<String> contextCodes = contextCodes();
+        String type = "event";
 
         //What to exlude
         ArrayList<String> excludes = new ArrayList<>();
         excludes.add("child_events");
-        String type = "event";
 
         // TODO fix zero indexed months
         final DateTime startDate = DateTime.forDateOnly(year, month + 1, 1);
@@ -215,7 +204,7 @@ public class CalendarFragment extends Fragment {
         String startDateString = startDate.toString();
         String endDateString = endDate.format("YYYY-MM-DD");
 
-        Call<List<CalendarEvent>> call = client.getEvents(startDateString, endDateString, contextCodes, excludes, type, pageNum);
+        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDateString, endDateString, contextCodes, excludes, type, pageNum);
 
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
@@ -247,7 +236,7 @@ public class CalendarFragment extends Fragment {
                         }
                     }
 
-                    //TODO requestAssignments()
+                    requestAssignments(year, month);
 
                 } else {
                     mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
@@ -291,38 +280,41 @@ public class CalendarFragment extends Fragment {
 
     private void requestAssignments(final int year, final int month) {
         //Course ids for context_codes in url
-        ArrayList<String> ids = new ArrayList<>();
+        ArrayList<String> contextCodes = new ArrayList<>();
         for (Integer i : courseIds) {
-            ids.add("course_" + i);
+            contextCodes.add("course_" + i);
         }
 
-        //What to exclude
-        ArrayList<String> exclude = new ArrayList<>();
-
-        //Type - event/assignment
         String type = "assignment";
 
+        // TODO fix zero indexed month
         DateTime startDate = DateTime.forDateOnly(year, month + 1, 1);
         DateTime endDate = startDate.getEndOfMonth();
-
         String startDateString = startDate.toString();
         String endDateString = endDate.format("YYYY-MM-DD");
 
-        //Per page set to max
-        String per_page = "50";
-
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, startDateString, endDateString, per_page, 1,getContext()), (String) null, new Response.Listener<JSONArray>() {
-
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDateString, endDateString, contextCodes, null, type, null);
+        call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
-            public void onResponse(JSONArray response) {
-
-                ArrayList<CalendarEvent> events = JSONParser.parseAllAssignments(response);
-                calendar.addEvents(events);
+            public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful()) {
+                    ArrayList<CalendarEvent> events = new ArrayList<>();
+                    events.addAll(response.body());
+                    calendar.addEvents(events);
+                } else {
+                    mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestAssignments(year,month);
+                        }
+                    });
+                }
 
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
                 mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -331,8 +323,6 @@ public class CalendarFragment extends Fragment {
                 });
             }
         });
-
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
     }
 
     /**
