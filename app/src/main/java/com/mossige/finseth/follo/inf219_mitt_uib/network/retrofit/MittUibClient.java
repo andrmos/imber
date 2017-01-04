@@ -89,12 +89,13 @@ public interface MittUibClient {
      * @return
      */
     @GET("calendar_events?per_page=50")
-    Call<List<CalendarEvent>> getEvents(@Query("start_date") String startDate,
-                                        @Query("end_date") String end_date,
-                                        @Query("context_codes[]") List<String> contextCodes,
-                                        @Query("excludes[]") List<String> excludes,
-                                        @Query("type") String type,
-                                        @Query("page_num") Integer pageNum);
+    Call<List<CalendarEvent>> getCalendarEvents(@Query("start_date") String startDate,
+                                                @Query("end_date") String end_date,
+                                                @Query("context_codes[]") List<String> contextCodes,
+                                                @Query("excludes[]") List<String> excludes,
+                                                @Query("type") String type,
+                                                @Query("page_num") Integer pageNum);
+
 
     /**
      * // TODO Not yet used
