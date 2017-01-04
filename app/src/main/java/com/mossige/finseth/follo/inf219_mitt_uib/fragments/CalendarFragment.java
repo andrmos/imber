@@ -20,9 +20,12 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -31,10 +34,13 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 public class CalendarFragment extends Fragment {
@@ -191,10 +197,102 @@ public class CalendarFragment extends Fragment {
      *
      * @param year     The year to get the calendar events.
      * @param month    The month to get the calendar events. Zero indexed.
-     * @param page_num Page number of calendar event request. Declared final since it's accessed from inner class.
+     * @param pageNum Page number of calendar event request. Declared final since it's accessed from inner class.
      */
-    private void getCalendarEvents(final int year, final int month, final int page_num) {
-        // Add all course ids for use in context_codes in url
+    private void getCalendarEvents(final int year, final int month, final int pageNum) {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+
+        ArrayList<String> contextCodes = contextCodes();
+
+        //What to exlude
+        ArrayList<String> excludes = new ArrayList<>();
+        excludes.add("child_events");
+        String type = "event";
+
+        // TODO fix zero indexed months
+        final DateTime startDate = DateTime.forDateOnly(year, month + 1, 1);
+        final DateTime endDate = startDate.getEndOfMonth();
+        String startDateString = startDate.toString();
+        String endDateString = endDate.format("YYYY-MM-DD");
+
+        Call<List<CalendarEvent>> call = client.getEvents(startDateString, endDateString, contextCodes, excludes, type, pageNum);
+
+        Log.i(TAG, "getCalendarEvents: link: " + call.request().url().toString());
+
+        call.enqueue(new Callback<List<CalendarEvent>>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful()) {
+
+                    ArrayList<CalendarEvent> events = new ArrayList<>();
+                    events.addAll(response.body());
+
+                    calendar.addEvents(events);
+
+                    // If returned maximum amount of events, get events for next page
+
+                    String nextPage = HeaderLinksHelper.getNextPageUrl(response.headers().get("Link"));
+                    if (!nextPage.isEmpty()) {
+                        // TODO change to getEventsPagination(nextPage)
+                        getCalendarEvents(year, month, pageNum + 1);
+                    }
+
+                    requestAssignments(year, month);
+                    calendar.setLoaded(year, month, true);
+                    setBackgrounds(events);
+
+                    // If in current month, set todays agendas
+                    DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
+                    if (today.gteq(startDate) && today.lteq(endDate)) {
+                        if (callBack != null) {
+                            callBack.setAgendas(calendar.getEventsForDate(today));
+                        }
+                    }
+
+                    //TODO requestAssignments()
+
+                } else {
+                    mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getCalendarEvents(year,month,pageNum);
+                        }
+                    });
+                    calendar.setLoaded(year, month, false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getCalendarEvents(year,month,pageNum);
+                    }
+                });
+                calendar.setLoaded(year, month, false);
+            }
+        });
+    }
+
+    private ArrayList<String> contextCodes() {
+        //        Add all course ids for use in context_codes in url
+        ArrayList<String> contextCodes = new ArrayList<>();
+        for (Integer i : courseIds) {
+            // TODO Max size of context codes is 10, rest is ignored...
+            contextCodes.add("course_" + i);
+        }
+
+        if(getArguments() != null){
+            if(getArguments().containsKey("user_id")){
+                contextCodes.add("user_" + getArguments().getInt("user_id"));
+            }
+        }
+        return contextCodes;
+    }
+
+    private void oldReq(final int year, final int month, final int page_num) {
+//        Add all course ids for use in context_codes in url
         ArrayList<String> ids = new ArrayList<>();
         for (Integer i : courseIds) {
             ids.add("course_" + i);
