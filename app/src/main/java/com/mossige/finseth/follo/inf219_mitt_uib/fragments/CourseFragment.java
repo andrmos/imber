@@ -235,8 +235,8 @@ public class CourseFragment extends Fragment {
     private void requestAgendas() {
 
         //Course ids for context_codes in url
-        ArrayList<String> ids = new ArrayList<>();
-        ids.add("course_" + course.getId());
+        ArrayList<String> contextCodes = new ArrayList<>();
+        contextCodes.add("course_" + course.getId());
 
         //What to exclude
         ArrayList<String> exclude = new ArrayList<>();
@@ -245,15 +245,55 @@ public class CourseFragment extends Fragment {
         String type = "event";
 
         //Only 3 agendas for one course
-        String per_page = "3";
+        int perPage = 3;
 
         //Get todays date in right format
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
-        String start_date = df.format(cal.getTime());
-        String end_date = df.format(cal.getTime());
-        
-        oldReq(ids, exclude, type, per_page, start_date, end_date);
+        String startDate = df.format(cal.getTime());
+        String endDate = df.format(cal.getTime());
+
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDate, endDate, contextCodes, null, type, perPage, null);
+        call.enqueue(new Callback<List<CalendarEvent>>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful()) {
+
+
+                    agendas.clear();
+                    agendas.addAll(response.body());
+
+                    loaded[1] = true;
+
+                    requestAssignments();
+
+                    if (isLoaded()) {
+                        mainList.setVisibility(View.VISIBLE);
+                        progressbar.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    showSnackbar();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                showSnackbar();
+            }
+        });
+
+    }
+
+    private void showSnackbar() {
+        if (progressbar != null) progressbar.setVisibility(View.GONE);
+        mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestAgendas();
+            }
+        });
     }
 
     private void oldReq(ArrayList<String> ids, ArrayList<String> exclude, String type, String per_page, String start_date, String end_date) {
@@ -278,13 +318,7 @@ public class CourseFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error);
-                if (progressbar != null) progressbar.setVisibility(View.GONE);
-                mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestAgendas();
-                    }
-                });
+                showSnackbar();
             }
         });
 
@@ -332,13 +366,7 @@ public class CourseFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i(TAG, "onErrorResponse: " + error);
-                if (progressbar != null) progressbar.setVisibility(View.GONE);
-                mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestAgendas();
-                    }
-                });
+                showSnackbar();
             }
         });
 
