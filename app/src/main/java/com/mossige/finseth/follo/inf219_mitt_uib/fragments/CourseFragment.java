@@ -252,7 +252,11 @@ public class CourseFragment extends Fragment {
         Calendar cal = Calendar.getInstance();
         String start_date = df.format(cal.getTime());
         String end_date = df.format(cal.getTime());
+        
+        oldReq(ids, exclude, type, per_page, start_date, end_date);
+    }
 
+    private void oldReq(ArrayList<String> ids, ArrayList<String> exclude, String type, String per_page, String start_date, String end_date) {
         JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1,getContext()), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
