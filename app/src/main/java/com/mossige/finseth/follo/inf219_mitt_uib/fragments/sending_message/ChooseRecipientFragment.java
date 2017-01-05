@@ -322,6 +322,10 @@ public class ChooseRecipientFragment extends Fragment {
     private void requestRecipients(final String url, final String tag) {
         nextLink = "";
 
+        oldReq(url, tag);
+    }
+
+    private void oldReq(final String url, final String tag) {
         final JsonArrayRequest recipientsReq = new JsonArrayRequest(Request.Method.GET, url, (String) null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
