@@ -204,7 +204,13 @@ public class CourseFragment extends Fragment {
                     }
 
                 } else {
-                    // TODO
+                    progressbar.setVisibility(View.GONE);
+                    mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestAnnouncements(course_id);
+                        }
+                    });
                 }
 
             }
@@ -212,7 +218,7 @@ public class CourseFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
                 progressbar.setVisibility(View.GONE);
-                mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+                mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestAnnouncements(course_id);
@@ -237,9 +243,6 @@ public class CourseFragment extends Fragment {
         //Course ids for context_codes in url
         ArrayList<String> contextCodes = new ArrayList<>();
         contextCodes.add("course_" + course.getId());
-
-        //What to exclude
-        ArrayList<String> exclude = new ArrayList<>();
 
         //Type - event/assignment
         String type = "event";
@@ -274,73 +277,80 @@ public class CourseFragment extends Fragment {
                     }
 
                 } else {
-                    showSnackbar();
+                    mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestAgendas();
+                        }
+                    });
                 }
             }
 
             @Override
             public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
-                showSnackbar();
+                mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestAgendas();
+                    }
+                });
             }
         });
 
-    }
-
-    private void showSnackbar() {
-        if (progressbar != null) progressbar.setVisibility(View.GONE);
-        mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestAgendas();
-            }
-        });
     }
 
     private void requestAssignments() {
-        Log.i(TAG, "requestAssignements");
-
         //Course ids for context_codes in url
-        ArrayList<String> ids = new ArrayList<>();
-        ids.add("course_" + course.getId());
-
-        //What to exclude
-        ArrayList<String> exclude = new ArrayList<>();
+        ArrayList<String> contextCodes = new ArrayList<>();
+        contextCodes.add("course_" + course.getId());
 
         //Type - event/assignment
         String type = "assignment";
 
         //Only 3 agendas for one course
-        String per_page = "3";
+        int perPage = 3;
 
         //Get todays date in right format
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Calendar cal = Calendar.getInstance();
-        String start_date = df.format(cal.getTime());
-        String end_date = df.format(cal.getTime());
+        String startDate = df.format(cal.getTime());
+        String endDate = df.format(cal.getTime());
 
-        Log.i(TAG, "onResponse: url:" + UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date,per_page,1,getContext()));
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1,getContext()), (String) null, new Response.Listener<JSONArray>() {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDate, endDate, contextCodes, null, type, perPage, null);
 
+        call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
-            public void onResponse(JSONArray response) {
-                agendas.addAll(JSONParser.parseAllCalendarEvents(response));
+            public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful()) {
 
-                loaded[2] = true;
+                    agendas.addAll(response.body());
 
-                if (isLoaded()) {
-                    mainList.setVisibility(View.VISIBLE);
-                    progressbar.setVisibility(View.GONE);
+                    loaded[2] = true;
+
+                    if (isLoaded()) {
+                        mainList.setVisibility(View.VISIBLE);
+                        progressbar.setVisibility(View.GONE);
+                    }
+                } else {
+                    mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestAssignments();
+                        }
+                    });
                 }
-
             }
-        }, new Response.ErrorListener() {
+
             @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error);
-                showSnackbar();
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestAssignments();
+                    }
+                });
             }
         });
-
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
     }
 }
