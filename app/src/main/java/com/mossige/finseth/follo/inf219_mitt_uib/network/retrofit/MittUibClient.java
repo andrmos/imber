@@ -125,6 +125,9 @@ public interface MittUibClient {
     Call<List<Recipient>> getRecipients(@Query("search") String search,
                                         @Query("context") String context);
 
+    @GET
+    Call<List<Recipient>> getRecipientsPagination(@Url String url);
+
 
     /**
      * // TODO Not yet used
