@@ -296,35 +296,6 @@ public class CourseFragment extends Fragment {
         });
     }
 
-    private void oldReq(ArrayList<String> ids, ArrayList<String> exclude, String type, String per_page, String start_date, String end_date) {
-        JsonArrayRequest calendarEventsRequest = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.getCalendarEventsUrl(ids, exclude, type, start_date, end_date, per_page,1,getContext()), (String) null, new Response.Listener<JSONArray>() {
-
-            @Override
-            public void onResponse(JSONArray response) {
-                agendas.clear();
-                agendas.addAll(JSONParser.parseAllCalendarEvents(response));
-
-                loaded[1] = true;
-
-                requestAssignments();
-
-                if (isLoaded()) {
-                    mainList.setVisibility(View.VISIBLE);
-                    progressbar.setVisibility(View.GONE);
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.i(TAG, "onErrorResponse: " + error);
-                showSnackbar();
-            }
-        });
-
-        RequestQueueHandler.getInstance(getContext()).addToRequestQueue(calendarEventsRequest);
-    }
-
     private void requestAssignments() {
         Log.i(TAG, "requestAssignements");
 
