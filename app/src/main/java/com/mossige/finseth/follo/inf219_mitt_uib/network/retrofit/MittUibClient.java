@@ -121,7 +121,7 @@ public interface MittUibClient {
      * @param context The context of the search. Ex: "course_<code>"
      * @return
      */
-    @GET("search/recipients?per_page=10&permissions[]=send_messages_all&type=\"user\"")
+    @GET("search/recipients?per_page=10&permissions[]=send_messages_all&type=user")
     Call<List<Recipient>> getRecipients(@Query("search") String search,
                                         @Query("context") String context);
 
