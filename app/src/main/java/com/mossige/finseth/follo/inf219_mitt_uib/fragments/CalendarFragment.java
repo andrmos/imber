@@ -204,7 +204,9 @@ public class CalendarFragment extends Fragment {
         String startDateString = startDate.toString();
         String endDateString = endDate.format("YYYY-MM-DD");
 
-        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDateString, endDateString, contextCodes, excludes, type, pageNum);
+        int perPage = 50;
+
+        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDateString, endDateString, contextCodes, excludes, type, perPage, pageNum);
 
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
@@ -293,8 +295,10 @@ public class CalendarFragment extends Fragment {
         String startDateString = startDate.toString();
         String endDateString = endDate.format("YYYY-MM-DD");
 
+        int perPage = 50;
+
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDateString, endDateString, contextCodes, null, type, null);
+        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDateString, endDateString, contextCodes, null, type, perPage, null);
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {

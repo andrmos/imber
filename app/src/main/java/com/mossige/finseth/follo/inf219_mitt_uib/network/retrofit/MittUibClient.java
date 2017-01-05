@@ -89,12 +89,13 @@ public interface MittUibClient {
      * @param type         Type of event, "event" or "assignment"
      * @return
      */
-    @GET("calendar_events?per_page=50")
+    @GET("calendar_events")
     Call<List<CalendarEvent>> getCalendarEvents(@Query("start_date") String startDate,
                                                 @Query("end_date") String end_date,
                                                 @Query("context_codes[]") List<String> contextCodes,
                                                 @Query("excludes[]") List<String> excludes,
                                                 @Query("type") String type,
+                                                @Query("per_page") Integer perPage,
                                                 @Query("page_num") Integer pageNum);
 
     /**
