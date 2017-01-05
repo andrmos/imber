@@ -62,5 +62,6 @@
     <string name="error_requesting_calendar">Kunne ikke laste kalender</string>
     <string name="error_requesting_assignments">Kunne ikke laste innleveringer</string>
     <string name="error_requesting_agendas">Kunne ikke laste agendaene</string>
+    <string name="error_requesting_announcements">Kunne ikke laste kunngjøringer</string>
 
 </resources>
