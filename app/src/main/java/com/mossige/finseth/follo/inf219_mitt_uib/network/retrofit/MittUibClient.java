@@ -114,6 +114,17 @@ public interface MittUibClient {
                                                     @Query("excludes[]") List<String> excludes,
                                                     @Query("page_num") Integer pageNum);
 
+    /**
+     * Retrieve valid recipients (users, courses and groups) that the current user can send messages to.
+     *
+     * @param search The search terms, seperated via whitespace. Should be encoded.
+     * @param context The context of the search. Ex: "course_<code>"
+     * @return
+     */
+    @GET("search/recipients?per_page=10&permissions[]=send_messages_all&type=\"user\"")
+    Call<List<Recipient>> getRecipients(@Query("search") String search,
+                                        @Query("context") String context);
+
 
     /**
      * // TODO Not yet used
