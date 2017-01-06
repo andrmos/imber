@@ -35,14 +35,17 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.CancelableCallback;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import org.json.JSONArray;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -52,6 +55,7 @@ import java.util.Map;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 /**
  * Created by Follo on 20.03.2016.
@@ -73,7 +77,7 @@ public class ChooseRecipientFragment extends Fragment {
 
     private boolean loaded;
 
-    private String nextLink;
+    private String nextPage;
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -168,6 +172,7 @@ public class ChooseRecipientFragment extends Fragment {
 
         loaded = false;
 
+        nextPage = "";
         requestCourses();
     }
 
@@ -204,19 +209,17 @@ public class ChooseRecipientFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                String url = UrlEndpoints.getRecipients(newText, courseId, getContext());
-
-                // Clear results to fill with new data
-                recipients.clear();
-                mAdapter.notifyDataSetChanged();
-                requestRecipients(url, newText);
-
-                // Do not cancel requests with empty tag
+                // Cancel old request
                 if (newText.length() > 1) {
                     String oldTag = newText.substring(0, newText.length() - 1);
-                    // Cancel old request
-                    RequestQueueHandler.getInstance(getContext()).cancelRequest(oldTag);
+                    CancelableCallback.cancel(oldTag);
                 }
+
+                // Clear list to fill with new data
+                recipients.clear();
+                mAdapter.notifyDataSetChanged();
+                requestRecipients(newText, true);
+
                 return true;
             }
         });
@@ -225,8 +228,7 @@ public class ChooseRecipientFragment extends Fragment {
 
     @Override
     public void onPause() {
-        // Cancel all recipient requests when navigating away from fragment
-        RequestQueueHandler.getInstance(getContext()).cancelRequest("recipient");
+        // TODO Cancel all requests?
         super.onPause();
     }
 
@@ -240,13 +242,12 @@ public class ChooseRecipientFragment extends Fragment {
         courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
+                CancelableCallback.cancelAll();
                 recipients.clear();
                 mAdapter.notifyDataSetChanged();
 
                 courseId = courses.get(parent.getSelectedItemPosition()).getId();
-                String url = UrlEndpoints.getRecipients(null, courseId,getContext());
-
-                requestRecipients(url, "recipient");
+                requestRecipients("", true);
             }
 
             @Override
@@ -268,17 +269,17 @@ public class ChooseRecipientFragment extends Fragment {
         recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                // If not end of list
-                if (!nextLink.isEmpty()) {
-                    requestRecipients(nextLink, "recipient");
+
+                if (!nextPage.isEmpty()) {
+                    requestRecipients("", false);
                 }
+
             }
         });
 
         // Create adapter that binds the views with some content
         mAdapter = new RecipientRecyclerViewAdapter(recipients);
         recyclerView.setAdapter(mAdapter);
-
 
         initOnClickListener();
     }
@@ -319,10 +320,57 @@ public class ChooseRecipientFragment extends Fragment {
         });
     }
 
-    private void requestRecipients(final String url, final String tag) {
-        nextLink = "";
+    private void requestRecipients(final String searchTerms, final boolean firstPage) {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
-        oldReq(url, tag);
+        String context = "course_" + courseId;
+
+        Call<List<Recipient>> call;
+        if (firstPage) {
+            call = client.getRecipients(searchTerms, context);
+        } else {
+            call = client.getRecipientsPagination(nextPage);
+        }
+
+        call.enqueue(new CancelableCallback<List<Recipient>>() {
+            @Override
+            public void onSuccess(Call<List<Recipient>> call, retrofit2.Response<List<Recipient>> response) {
+                if (response.isSuccessful()) {
+                    int currentSize = mAdapter.getItemCount();
+
+                    recipients.addAll(response.body());
+                    // TODO Fix already checked recipients
+
+                    progressBar.setVisibility(View.GONE);
+                    mAdapter.notifyItemRangeInserted(currentSize, recipients.size());
+
+                    loaded = true;
+
+                    nextPage = HeaderLinksHelper.getNextPageUrl(response.headers().get("Link"));
+
+                } else {
+                    showSnackbar(searchTerms, firstPage);
+                }
+            }
+
+            @Override
+            public void onError(Call<List<Recipient>> call, Throwable t) {
+                showSnackbar(searchTerms, firstPage);
+            }
+        });
+    }
+
+    private void showSnackbar(final String searchTerms, final boolean firstPage) {
+        if(progressBar != null){
+            progressBar.setVisibility(View.GONE);
+        }
+
+        mCallback.showSnackbar(getString(R.string.error_loading_recipients), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestRecipients(searchTerms, firstPage);
+            }
+        });
     }
 
     private void oldReq(final String url, final String tag) {
@@ -354,7 +402,7 @@ public class ChooseRecipientFragment extends Fragment {
                 mCallback.showSnackbar(getString(R.string.error_loading_recipients), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        requestRecipients(url,tag);
+//                        requestRecipients(url,tag);
                     }
                 });
             }
@@ -364,7 +412,7 @@ public class ChooseRecipientFragment extends Fragment {
             protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
                 // Canvas API limits each response to a certain amount of recipients per response.
                 // This extracts the url to the next page from the response.
-                nextLink = "";
+                nextPage = "";
 
                 String linkKey = "Link";
                 if (response.headers.containsKey(linkKey)) {
@@ -382,7 +430,7 @@ public class ChooseRecipientFragment extends Fragment {
                             link = link.substring(0, link.indexOf(">"));
                             link += "&access_token=" + UrlEndpoints.access_token(getContext());
 
-                            nextLink = link;
+                            nextPage = link;
                             // There is only one 'rel=next' link in each response
                             break;
                         }
