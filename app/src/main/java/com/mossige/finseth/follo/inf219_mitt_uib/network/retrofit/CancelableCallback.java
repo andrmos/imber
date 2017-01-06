@@ -17,13 +17,13 @@ import retrofit2.Response;
  */
 public abstract class CancelableCallback<T> implements Callback<T> {
 
-    private static List<CancelableCallback> mList = new ArrayList<>();
+    private static List<CancelableCallback> callbacks = new ArrayList<>();
 
     private boolean isCanceled = false;
-    private Object mTag = null;
+    private Object tag = null;
 
     public static void cancelAll() {
-        Iterator<CancelableCallback> iterator = mList.iterator();
+        Iterator<CancelableCallback> iterator = callbacks.iterator();
         while (iterator.hasNext()){
             iterator.next().isCanceled = true;
             iterator.remove();
@@ -32,11 +32,11 @@ public abstract class CancelableCallback<T> implements Callback<T> {
 
     public static void cancel(Object tag) {
         if (tag != null) {
-            Iterator<CancelableCallback> iterator = mList.iterator();
+            Iterator<CancelableCallback> iterator = callbacks.iterator();
             CancelableCallback item;
             while (iterator.hasNext()) {
                 item = iterator.next();
-                if (tag.equals(item.mTag)) {
+                if (tag.equals(item.tag)) {
                     item.isCanceled = true;
                     iterator.remove();
                 }
@@ -45,17 +45,17 @@ public abstract class CancelableCallback<T> implements Callback<T> {
     }
 
     public CancelableCallback() {
-        mList.add(this);
+        callbacks.add(this);
     }
 
     public CancelableCallback(Object tag) {
-        mTag = tag;
-        mList.add(this);
+        this.tag = tag;
+        callbacks.add(this);
     }
 
     public void cancel() {
         isCanceled = true;
-        mList.remove(this);
+        callbacks.remove(this);
     }
 
     @Override
@@ -63,7 +63,7 @@ public abstract class CancelableCallback<T> implements Callback<T> {
         if (!isCanceled) {
             onSuccess(call, response);
         }
-        mList.remove(this);
+        callbacks.remove(this);
     }
 
     @Override
@@ -71,6 +71,7 @@ public abstract class CancelableCallback<T> implements Callback<T> {
         if (!isCanceled) {
             onError(call, t);
         }
+        callbacks.remove(this);
     }
 
     public abstract void onSuccess(Call<T> call, Response<T> response);
