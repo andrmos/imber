@@ -332,7 +332,7 @@ public class ChooseRecipientFragment extends Fragment {
             call = client.getRecipientsPagination(nextPage);
         }
 
-        call.enqueue(new CancelableCallback<List<Recipient>>() {
+        call.enqueue(new CancelableCallback<List<Recipient>>(searchTerms) {
             @Override
             public void onSuccess(Call<List<Recipient>> call, retrofit2.Response<List<Recipient>> response) {
                 if (response.isSuccessful()) {
