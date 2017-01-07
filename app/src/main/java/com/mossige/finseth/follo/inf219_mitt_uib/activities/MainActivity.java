@@ -20,12 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
@@ -36,13 +30,9 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
