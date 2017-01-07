@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 import com.roomorama.caldroid.CaldroidFragment;
@@ -220,7 +219,7 @@ public class CalendarFragment extends Fragment {
 
                     // If returned maximum amount of events, get events for next page
 
-                    String nextPage = HeaderLinksHelper.getNextPageUrl(response.headers().get("Link"));
+                    String nextPage = PaginationUtils.getNextPageUrl(response.headers().get("Link"));
                     if (!nextPage.isEmpty()) {
                         // TODO change to getEventsPagination(nextPage)
                         getCalendarEvents(year, month, pageNum + 1);

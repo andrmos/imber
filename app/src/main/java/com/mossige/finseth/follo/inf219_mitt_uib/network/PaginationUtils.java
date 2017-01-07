@@ -4,7 +4,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.network;
  * Created by andre on 03.01.17.
  */
 
-public class HeaderLinksHelper {
+public class PaginationUtils {
 
     /**
      * Parses a set of pagination links from the "Link" HTTP header, and returns the link to the next page.

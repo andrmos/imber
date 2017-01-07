@@ -14,11 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
@@ -26,14 +21,8 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
-
-import org.json.JSONArray;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

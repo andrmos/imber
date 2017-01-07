@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AnnouncementRecyclerVi
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
@@ -88,7 +87,7 @@ public class AnnouncementFragment extends Fragment {
                     announcements.addAll(response.body());
                     mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
-                    nextPage = HeaderLinksHelper.getNextPageUrl(response.headers().get("Link"));
+                    nextPage = PaginationUtils.getNextPageUrl(response.headers().get("Link"));
 
                     mainList.setVisibility(View.VISIBLE);
                 } else {

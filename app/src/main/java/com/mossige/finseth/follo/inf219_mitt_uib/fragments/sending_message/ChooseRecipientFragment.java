@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,12 +21,6 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.RecipientRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
@@ -35,17 +28,11 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.HeaderLinksHelper;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.JSONParser;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.CancelableCallback;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
-import org.json.JSONArray;
-
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -55,7 +42,6 @@ import java.util.Map;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Retrofit;
 
 /**
  * Created by Follo on 20.03.2016.
@@ -346,7 +332,7 @@ public class ChooseRecipientFragment extends Fragment {
 
                     loaded = true;
 
-                    nextPage = HeaderLinksHelper.getNextPageUrl(response.headers().get("Link"));
+                    nextPage = PaginationUtils.getNextPageUrl(response.headers().get("Link"));
 
                 } else {
                     showSnackbar(searchTerms, firstPage);
