@@ -36,7 +36,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.UrlEndpoints;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
