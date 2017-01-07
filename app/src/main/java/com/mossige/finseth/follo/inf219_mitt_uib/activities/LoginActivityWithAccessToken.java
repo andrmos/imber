@@ -69,6 +69,10 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
 
     private void validateAccessToken(final String token){
 
+        oldReq(token);
+    }
+
+    private void oldReq(final String token) {
         final JsonArrayRequest validate = new JsonArrayRequest(Request.Method.GET, UrlEndpoints.validateTokenURL(token), (String) null, new Response.Listener<JSONArray>() {
 
             @Override
