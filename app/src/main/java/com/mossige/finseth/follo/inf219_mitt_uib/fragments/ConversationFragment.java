@@ -24,7 +24,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
@@ -149,23 +148,9 @@ public class ConversationFragment extends Fragment {
 
     @Override
     public void onPause() {
-        // TODO Implement support for cancel of Retrofit requests.
-        cancelRequest("conversations");
+        // TODO Implement support for cancel of Retrofit requests?
         super.onPause();
     }
-
-    private void cancelRequest(final String tag) {
-        RequestQueueHandler.getInstance(getContext()).getRequestQueue().cancelAll(new RequestQueue.RequestFilter() {
-            @Override
-            public boolean apply(Request<?> request) {
-                if (request.getTag() != null) {
-                    return request.getTag().equals(tag);
-                }
-                return false;
-            }
-        });
-    }
-
 
     private void initRecyclerView(View rootView) {
         // Create RecycleView

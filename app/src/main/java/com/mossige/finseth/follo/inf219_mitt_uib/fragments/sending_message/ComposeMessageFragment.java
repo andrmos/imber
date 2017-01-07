@@ -26,7 +26,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 

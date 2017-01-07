@@ -11,7 +11,6 @@ import android.widget.Button;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.RequestQueueHandler;
 
 import java.util.ArrayList;
 
