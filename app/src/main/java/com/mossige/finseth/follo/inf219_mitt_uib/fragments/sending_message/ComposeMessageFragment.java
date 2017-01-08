@@ -68,7 +68,7 @@ public class ComposeMessageFragment extends Fragment {
         if (id == R.id.send) {
             item.setEnabled(false);
             hideSoftKeyboard(rootView);
-            postMessageRequest(getArguments().getStringArrayList("recipientIDs"), subject.getText().toString(), body.getText().toString());
+            postMessageRequest(getArguments().getIntegerArrayList("recipientIDs"), subject.getText().toString(), body.getText().toString());
             return true;
         }
 
@@ -129,7 +129,7 @@ public class ComposeMessageFragment extends Fragment {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private void postMessageRequest(final ArrayList<String> recipients, final String subject, final String body) {
+    private void postMessageRequest(final ArrayList<Integer> recipients, final String subject, final String body) {
 
         if (validateMessage(subject, body)) {
             SendMessage message = new SendMessage(subject, body, recipients);
@@ -158,7 +158,7 @@ public class ComposeMessageFragment extends Fragment {
 
     }
 
-    private void showSnackbar(final ArrayList<String> recipients, final String subject, final String body) {
+    private void showSnackbar(final ArrayList<Integer> recipients, final String subject, final String body) {
         mCallback.showSnackbar(getString(R.string.error_sending_message), new View.OnClickListener() {
             @Override
             public void onClick(View v) {

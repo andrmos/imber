@@ -11,9 +11,9 @@ public class SendMessage {
 
     private String subject;
     private String body;
-    private ArrayList<String> recipients;
+    private ArrayList<Integer> recipients;
 
-    public SendMessage(String subject, String body, ArrayList<String> recipients) {
+    public SendMessage(String subject, String body, ArrayList<Integer> recipients) {
         this.subject = subject;
         this.body = body;
         this.recipients = recipients;
@@ -27,7 +27,7 @@ public class SendMessage {
         return body;
     }
 
-    public ArrayList<String> getRecipients() {
+    public ArrayList<Integer> getRecipients() {
         return recipients;
     }
 }
