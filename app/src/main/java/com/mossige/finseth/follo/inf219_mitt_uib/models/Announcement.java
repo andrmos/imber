@@ -1,51 +1,60 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
+import com.google.gson.annotations.SerializedName;
+
+import hirondelle.date4j.DateTime;
+
 /**
  * Created by PatrickFinseth on 16.02.16.
  */
 public class Announcement {
 
-    private String id;
+    private int id;
     private String title;
-    private String user_name;
-    private String posted_at;
     private String message;
-    private int unread_count;
+    @SerializedName("posted_at")
+    private DateTime postedAt;
+    @SerializedName("user_name")
+    private String userName;
+    @SerializedName("unread_count")
+    private int unreadCount;
     private boolean locked;
 
-    // TODO Update constructor
-    public Announcement(String id, String title, String userName, String postedAt, String message, boolean locked){
+    public Announcement(int id, String title, String message, DateTime postedAt, String userName, int unreadCount, boolean locked) {
         this.id = id;
         this.title = title;
-        this.user_name = userName;
-        this.posted_at = postedAt;
         this.message = message;
+        this.postedAt = postedAt;
+        this.userName = userName;
+        this.unreadCount = unreadCount;
         this.locked = locked;
     }
 
-    public String getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     public String getTitle() {
         return title;
-    }
-
-    public String getUserName() {
-        return user_name;
-    }
-
-    public String getPostedAt() {
-        return posted_at;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public boolean isLocked() {
-        return locked;
+    public DateTime getPostedAt() {
+        return postedAt;
     }
 
-    public int getUnread_count() {
-        return unread_count;
+    public String getUserName() {
+        return userName;
+    }
+
+    public int getUnreadCount() {
+        return unreadCount;
+    }
+
+    public boolean isLocked() {
+        return locked;
     }
 }

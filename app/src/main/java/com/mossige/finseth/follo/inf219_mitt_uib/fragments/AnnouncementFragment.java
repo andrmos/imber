@@ -149,7 +149,7 @@ public class AnnouncementFragment extends Fragment {
                 args.putString("title", announcement.getTitle());
                 args.putString("message", announcement.getMessage());
                 args.putString("userName", announcement.getUserName());
-                args.putString("postedAt", announcement.getPostedAt());
+                args.putString("postedAt", announcement.getPostedAt().toString());
                 singleAnnouncementFragment.setArguments(args);
 
                 transaction.commit();

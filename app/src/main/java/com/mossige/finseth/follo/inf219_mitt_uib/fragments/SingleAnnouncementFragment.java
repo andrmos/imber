@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 
 /**
  * Created by PatrickFinseth on 13.03.16.
@@ -17,8 +16,6 @@ public class SingleAnnouncementFragment extends Fragment{
 
 
     private static final String TAG = "SingleAnnFragment";
-
-    private Announcement announcement;
 
     public SingleAnnouncementFragment() {
         // Required empty public constructor
@@ -38,24 +35,9 @@ public class SingleAnnouncementFragment extends Fragment{
         title_tv.setText(""+ getArguments().get("title"));
         message_tv.setText(getArguments().get("message").toString());
         sender_tv.setText("" + getArguments().get("userName"));
-        date_tv.setText(parseDate(getArguments().get("postedAt").toString()));
+        date_tv.setText("" + getArguments().get("postedAt"));
 
         return view;
     }
-
-    /**
-     * TODO improve
-     * Parser and formater for a date string on form XXXX-XX-XXTXX:XX
-     */
-    private String parseDate(String date){
-        String year = date.substring(0,4);
-        String month = date.substring(5,7);
-        String day = date.substring(8,10);
-        String hour = date.substring(11,13);
-        String minute = date.substring(14,16);
-
-        return day + "." + month + "." + year + " - " + hour + ":" + minute;
-    }
-
 
 }
