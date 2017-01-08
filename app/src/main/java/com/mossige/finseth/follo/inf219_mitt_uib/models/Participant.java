@@ -5,15 +5,15 @@ package com.mossige.finseth.follo.inf219_mitt_uib.models;
  */
 public class Participant {
 
-    private String id;
+    private int id;
     private String name;
 
-    public Participant(String id, String name) {
+    public Participant(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -21,15 +21,15 @@ public class Participant {
         return name;
     }
 
-    public boolean equals(Participant that) {
-        if (!this.getId().equals(that.getId())) {
-            return false;
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (!this.getName().equals(that.getName())) {
-            return false;
-        }
+        Participant that = (Participant) o;
 
-        return true;
+        if (id != that.id) return false;
+        return name != null ? name.equals(that.name) : that.name == null;
+
     }
 }
