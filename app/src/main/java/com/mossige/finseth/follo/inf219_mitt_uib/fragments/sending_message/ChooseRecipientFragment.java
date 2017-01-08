@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -324,8 +325,13 @@ public class ChooseRecipientFragment extends Fragment {
                 if (response.isSuccessful()) {
                     int currentSize = mAdapter.getItemCount();
 
-                    recipients.addAll(response.body());
-                    // TODO Fix already checked recipients
+                    // Check already checked recipients
+                    for (Recipient r : response.body()) {
+                        if (recipientsChecked.containsKey(r.getId())) {
+                            r.setChecked(recipientsChecked.get(r.getId()));
+                        }
+                        recipients.add(r);
+                    }
 
                     progressBar.setVisibility(View.GONE);
                     mAdapter.notifyItemRangeInserted(currentSize, recipients.size());
