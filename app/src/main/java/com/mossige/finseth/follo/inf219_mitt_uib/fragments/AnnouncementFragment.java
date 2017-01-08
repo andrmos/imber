@@ -1,10 +1,12 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AnnouncementRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
@@ -39,6 +42,7 @@ public class AnnouncementFragment extends Fragment {
     private String nextPage;
     private RecyclerView.Adapter mAdapter;
     private int courseId;
+    private MainActivityListener mCallback;
 
     public AnnouncementFragment() { }
 
@@ -67,6 +71,17 @@ public class AnnouncementFragment extends Fragment {
         requestAnnouncements(courseId);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mCallback = (MainActivityListener) context;
+        }catch(ClassCastException e){
+            Log.i(TAG, "onAttach: " + e.toString());
+        }
+    }
+
     private void requestAnnouncements(final int course_id) {
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
@@ -91,20 +106,23 @@ public class AnnouncementFragment extends Fragment {
 
                     mainList.setVisibility(View.VISIBLE);
                 } else {
-                    // TODO
+                    showSnackbar(course_id);
                 }
 
             }
 
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
-                // TODO Implement
-//                mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        requestAnnouncements(course_id);
-//                    }
-//                });
+                showSnackbar(course_id);
+            }
+        });
+    }
+
+    private void showSnackbar(final int course_id) {
+        mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestAnnouncements(course_id);
             }
         });
     }
