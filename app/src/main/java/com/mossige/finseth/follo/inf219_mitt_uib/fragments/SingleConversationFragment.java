@@ -38,7 +38,7 @@ public class SingleConversationFragment extends Fragment {
 
     private static final String TAG = "ConversationFragment";
 
-    private RecyclerView.Adapter mAdapter;
+    private MessageRecyclerViewAdapter mAdapter;
 
     private SmoothProgressBar progressbar;
 
@@ -107,6 +107,7 @@ public class SingleConversationFragment extends Fragment {
                     if (response.isSuccessful()) {
 
                         conversation = response.body();
+                        mAdapter.setParticipants(conversation.getParticipants());
 
                         fab.setEnabled(true);
                         messages.clear();
@@ -169,12 +170,12 @@ public class SingleConversationFragment extends Fragment {
 
                 Bundle bundle = new Bundle();
 
-                ArrayList<String> ids = new ArrayList<>();
+                ArrayList<Integer> ids = new ArrayList<>();
                 for (Participant p : conversation.getParticipants()) {
                     ids.add(p.getId());
                 }
 
-                bundle.putStringArrayList("recipientIDs", ids);
+                bundle.putIntegerArrayList("recipientIDs", ids);
                 composeMessageFragment.setArguments(bundle);
 
                 transaction.addToBackStack(null);

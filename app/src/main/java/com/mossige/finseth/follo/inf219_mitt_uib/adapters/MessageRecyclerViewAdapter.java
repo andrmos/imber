@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.MessageViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
 
 import java.util.ArrayList;
 
@@ -18,14 +20,18 @@ import java.util.ArrayList;
 public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
     private ArrayList<Message> data;
+    private ArrayList<Participant> participants;
 
     public MessageRecyclerViewAdapter(ArrayList<Message> data) {
         this.data = data;
     }
 
+    public void setParticipants(ArrayList<Participant> participants) {
+        this.participants = participants;
+    }
+
     @Override
     public GeneralViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // course card
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_card, parent, false);
         GeneralViewHolder holder = new MessageViewHolder(v);
 
@@ -35,14 +41,24 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<GeneralView
     @Override
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         MessageViewHolder singleConversationHolder = (MessageViewHolder) holder;
-        // TODO Change to actual author name
-        singleConversationHolder.conversation_author.setText(data.get(position).getAuthorId());
-        singleConversationHolder.conversation_time.setText(data.get(position).getCreatedAt());
+        singleConversationHolder.conversation_author.setText(getAuthorName(data.get(position).getAuthorId()));
+        singleConversationHolder.conversation_time.setText(data.get(position).getCreatedAt().toString());
         singleConversationHolder.conversation_message.setText(data.get(position).getBody().trim());
     }
 
     @Override
     public int getItemCount() {
         return data.size();
+    }
+
+    private String getAuthorName(int authorId) {
+        if (participants != null) {
+            for (Participant p : participants) {
+                if (p.getId() == authorId) {
+                    return p.getName();
+                }
+            }
+        }
+        return Integer.toString(authorId);
     }
 }
