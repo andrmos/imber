@@ -1,16 +1,10 @@
 TODO:
-- Do REST with okHttp and, or Retrofit
-- Realm for data persistence. Possible to store JSONObject directly in local Realm db.
-  Using Realm you can access RealmObjects instead of JSON or SQL. https://realm.io/docs/java/latest/#json
+- Realm for data persistence.
 - File Browser. example: http://www.christophbrill.de/de_DE/how-to-create-a-android-file-browser-in-15-minutes/
-- Fix auth: only add validated authentication key to shared preferences
-
-
-
-
 
 Setup example with offline datastore: https://adityaladwa.wordpress.com/2016/10/25/offline-first-reactive-android-apps-repository-pattern-mvp-dagger-2-rxjava-contentprovider/ 
 
 
-Low priority:
 - RxJava
+- Dagger
+- Butterknife
