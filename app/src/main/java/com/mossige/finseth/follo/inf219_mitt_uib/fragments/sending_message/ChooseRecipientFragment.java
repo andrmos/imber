@@ -215,7 +215,7 @@ public class ChooseRecipientFragment extends Fragment {
 
     @Override
     public void onPause() {
-        // TODO Cancel all requests?
+        CancelableCallback.cancelAll();
         super.onPause();
     }
 
