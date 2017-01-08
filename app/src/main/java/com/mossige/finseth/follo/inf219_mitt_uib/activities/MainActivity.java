@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         transaction.commit();
     }
 
-    // TODO Move method to Calendar Fragment
     private void requestCourses() {
 
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
@@ -259,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     @Override
     public void requestUnreadCount() {
-        // TODO Implement
+
     }
 
     private void initFragment(Fragment fragment, FragmentTransaction transaction){
