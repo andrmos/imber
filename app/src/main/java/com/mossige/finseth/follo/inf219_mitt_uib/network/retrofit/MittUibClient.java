@@ -130,7 +130,6 @@ public interface MittUibClient {
 
 
     /**
-     * // TODO Not yet used
      * @return The number of unread conversations for the current user
      */
     @GET("conversations/unread_count")

@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     @Override
     protected void onStop() {
-        // TODO Cancel requests?
         super.onStop();
     }
 
