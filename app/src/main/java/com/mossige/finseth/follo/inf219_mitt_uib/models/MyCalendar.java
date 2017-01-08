@@ -4,11 +4,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import hirondelle.date4j.DateTime;
 
@@ -24,7 +22,7 @@ public class MyCalendar {
 
     private HashSet<CalendarEvent> calendar;
 
-    /** If year-month at key: 'year-month' is loaded. Zero indexed month.*/
+    /** If year-month at key: 'year-month' is loaded.*/
     private HashMap<String, Boolean> loaded;
 
     public MyCalendar() {
@@ -50,7 +48,7 @@ public class MyCalendar {
     /**
      *
      * @param year
-     * @param month zero indexed
+     * @param month
      * @param value
      */
     public void setLoaded(int year, int month, boolean value) {
@@ -60,7 +58,7 @@ public class MyCalendar {
     /**
      *
      * @param year
-     * @param month zero indexed
+     * @param month
      * @return
      */
     public boolean loaded(int year, int month) {

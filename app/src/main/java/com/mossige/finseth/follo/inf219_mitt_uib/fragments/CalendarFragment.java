@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,23 +121,20 @@ public class CalendarFragment extends Fragment {
 
         final CaldroidListener listener = new CaldroidListener() {
 
+            /**
+             * Retrieve calendar events for selected month, and the two months before and after.
+             */
             @Override
             public void onChangeMonth(int month, int year) {
                 DateTime curMonth = new DateTime(year, month, 1, 0, 0, 0, 0); // Only need year and month
                 DateTime prevMonth = curMonth.minus(0, 1, 0, 0, 0, 0, 0, DateTime.DayOverflow.FirstDay);
                 DateTime nextMonth = curMonth.plus(0, 1, 0, 0, 0, 0, 0, DateTime.DayOverflow.FirstDay);
 
-                if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth() - 1)) { // Zero indexed month
-                    getCalendarEvents(curMonth.getYear(), curMonth.getMonth() - 1, 1);
-
-                }
-
-                if (!calendar.loaded(nextMonth.getYear(), nextMonth.getMonth() - 1)) { // Zero indexed month
-                    getCalendarEvents(nextMonth.getYear(), nextMonth.getMonth() - 1, 1);
-                }
-
-                if (!calendar.loaded(prevMonth.getYear(), prevMonth.getMonth() - 1)) { // Zero indexed month
-                    getCalendarEvents(prevMonth.getYear(), prevMonth.getMonth() - 1, 1);
+                DateTime[] months = {curMonth, nextMonth, prevMonth};
+                for (DateTime m : months) {
+                    if (!calendar.loaded(m.getYear(), m.getMonth())) {
+                        getCalendarEvents(m.getYear(), m.getMonth(), 1);
+                    }
                 }
             }
 
@@ -184,7 +182,7 @@ public class CalendarFragment extends Fragment {
      * Get all calendar events for a month, and add them to the 'events' field.
      *
      * @param year     The year to get the calendar events.
-     * @param month    The month to get the calendar events. Zero indexed.
+     * @param month    The month to get the calendar events.
      * @param pageNum Page number of calendar event request. Declared final since it's accessed from inner class.
      */
     private void getCalendarEvents(final int year, final int month, final int pageNum) {
@@ -197,8 +195,7 @@ public class CalendarFragment extends Fragment {
         ArrayList<String> excludes = new ArrayList<>();
         excludes.add("child_events");
 
-        // TODO fix zero indexed months
-        final DateTime startDate = DateTime.forDateOnly(year, month + 1, 1);
+        final DateTime startDate = DateTime.forDateOnly(year, month, 1);
         final DateTime endDate = startDate.getEndOfMonth();
         String startDateString = startDate.toString();
         String endDateString = endDate.format("YYYY-MM-DD");
@@ -221,7 +218,6 @@ public class CalendarFragment extends Fragment {
 
                     String nextPage = PaginationUtils.getNextPageUrl(response.headers().get("Link"));
                     if (!nextPage.isEmpty()) {
-                        // TODO change to getEventsPagination(nextPage)
                         getCalendarEvents(year, month, pageNum + 1);
                     }
 
@@ -288,8 +284,7 @@ public class CalendarFragment extends Fragment {
 
         String type = "assignment";
 
-        // TODO fix zero indexed month
-        DateTime startDate = DateTime.forDateOnly(year, month + 1, 1);
+        DateTime startDate = DateTime.forDateOnly(year, month, 1);
         DateTime endDate = startDate.getEndOfMonth();
         String startDateString = startDate.toString();
         String endDateString = endDate.format("YYYY-MM-DD");
@@ -304,6 +299,7 @@ public class CalendarFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ArrayList<CalendarEvent> events = new ArrayList<>();
                     events.addAll(response.body());
+                    setBackgrounds(events);
                     calendar.addEvents(events);
                 } else {
                     mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {

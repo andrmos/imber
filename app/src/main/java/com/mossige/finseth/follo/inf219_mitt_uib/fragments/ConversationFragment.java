@@ -146,7 +146,6 @@ public class ConversationFragment extends Fragment {
 
     @Override
     public void onPause() {
-        // TODO Implement support for cancel of Retrofit requests?
         super.onPause();
     }
 
