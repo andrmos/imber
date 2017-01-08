@@ -1,6 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import java.util.TimeZone;
+import com.google.gson.annotations.SerializedName;
 
 import hirondelle.date4j.DateTime;
 
@@ -10,63 +10,47 @@ import hirondelle.date4j.DateTime;
 public class Message {
 
     private int id;
-    private String author_id;
-    private String created_at;
+    @SerializedName("author_id")
+    private int authorId;
+    @SerializedName("created_at")
+    private DateTime createdAt;
     private String body;
 
-    public Message(String authorID, String date, String body, String author) {
-
-        // TODO Remove?
-        //Make datetime object with string - subststring removes 'z' in created_at format
-        DateTime dt = new DateTime(date.substring(0,date.length()-1));
-        if(!author.equals("FAILED")) {
-            dt = dt.changeTimeZone(TimeZone.getTimeZone("UTC"), TimeZone.getTimeZone("Europe/Oslo"));
-            this.created_at = trimDate(dt.toString());
-        }
-        this.author_id = authorID;
+    public Message(int id, int authorId, DateTime createdAt, String body) {
+        this.id = id;
+        this.authorId = authorId;
+        this.createdAt = createdAt;
         this.body = body;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getAuthorId() {
+        return authorId;
+    }
+
+    public DateTime getCreatedAt() {
+        return createdAt;
     }
 
     public String getBody() {
         return body;
     }
 
-    public String getAuthorId() { return author_id; }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-    // TODO Remove
-    private static String trimDate(String date){
-        String dateToString = "";
+        Message message = (Message) o;
 
-        String year = date.substring(0, 4);
-        String month = date.substring(5,7);
-        String day = date.substring(8,10);
-        String hour = date.substring(11,13);
-        String min = date.substring(14,16);
-
-        dateToString = day + "/" + month + "-" + year + "  " + hour + ":" + min;
-
-        return dateToString;
-    }
-
-    public String getCreatedAt() {
-        return created_at;
-    }
-
-    public boolean equals(Message that) {
-
-        if (!this.getAuthorId().equals(that.getAuthorId())) {
+        if (id != message.id) return false;
+        if (authorId != message.authorId) return false;
+        if (createdAt != null ? !createdAt.equals(message.createdAt) : message.createdAt != null)
             return false;
-        }
+        return body != null ? body.equals(message.body) : message.body == null;
 
-        //TODO Date from a JSONObject will not be equals to a generated created_at
-//        if(!this.getCreatedAt().equals(that.getCreatedAt())) {
-//            return false;
-//        }
-
-        if (!this.getBody().equals(that.getBody())) {
-            return false;
-        }
-
-        return true;
     }
 }
