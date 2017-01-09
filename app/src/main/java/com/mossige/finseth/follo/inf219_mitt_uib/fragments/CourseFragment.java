@@ -91,7 +91,7 @@ public class CourseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_course, container, false);
         // Set toolbar title to course name
         String course_name = course.getName();
         getActivity().setTitle(course_name);
