@@ -131,7 +131,7 @@ public class CourseListFragment extends Fragment {
     private void requestCourses() {
 
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<Course>> call = client.getCourses();
+        Call<List<Course>> call = client.getFavoriteCourses();
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {

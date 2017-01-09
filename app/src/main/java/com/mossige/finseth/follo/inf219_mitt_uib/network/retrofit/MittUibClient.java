@@ -42,6 +42,12 @@ public interface MittUibClient {
     @GET("courses")
     Call<List<Course>> getCourses();
 
+    /**
+     * @return The favorite active courses of the logged in user.
+     */
+    @GET("users/self/favorites/courses")
+    Call<List<Course>> getFavoriteCourses();
+
     @GET
     Call<List<Course>> getCoursesPagination(@Url String url);
 
