@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,11 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.FileBrowserRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Folder;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+
+import java.util.ArrayList;
 
 /**
  * Created by andre on 09.01.2017.
@@ -20,10 +26,19 @@ public class FileBrowserFragment extends Fragment {
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
 
+    private ArrayList<File> files;
+    private ArrayList<Folder> folders;
+
     public FileBrowserFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        files = new ArrayList<>();
+        folders = new ArrayList<>();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +62,7 @@ public class FileBrowserFragment extends Fragment {
         mainList.setLayoutManager(mLayoutManager);
 
         // Create adapter that binds the views with some content
-        mAdapter = new FileBrowserRecyclerViewAdapter();
+        mAdapter = new FileBrowserRecyclerViewAdapter(files, folders);
         mainList.setAdapter(mAdapter);
 
         initOnClickListener();
