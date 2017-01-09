@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
+import com.mossige.finseth.follo.inf219_mitt_uib.fragments.FileBrowserFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
@@ -94,36 +95,33 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         // Reset back stack when navigating to a new fragment from the nav bar
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        boolean fragmentTransaction = false;
-
+        boolean fragmentTransaction = true;
         switch(id){
 
             case R.id.nav_course:
                 initFragment(new CourseListFragment(), transaction);
-                fragmentTransaction = true;
                 break;
 
             case R.id.nav_calendar:
                 initCalendarFragment();
-                fragmentTransaction = true;
                 break;
 
             case R.id.nav_about:
                 initFragment(new AboutFragment(),transaction);
-                fragmentTransaction = true;
                 break;
 
             case R.id.nav_settings:
                 initFragment(new SettingFragment(),transaction);
-                fragmentTransaction = true;
                 break;
 
             case R.id.nav_inbox:
                 transaction.addToBackStack("inbox");
                 initFragment(new ConversationFragment(), transaction);
-                fragmentTransaction = true;
                 break;
 
+            default:
+                fragmentTransaction = false;
+                break;
         }
 
         if(fragmentTransaction) {
