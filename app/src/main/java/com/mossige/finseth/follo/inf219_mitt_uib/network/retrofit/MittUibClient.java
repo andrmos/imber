@@ -6,6 +6,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Folder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
@@ -128,13 +129,13 @@ public interface MittUibClient {
 
 
     /**
-     * @return The number of unread conversations for the current user
+     * @return The number of unread conversations for the current user.
      */
     @GET("conversations/unread_count")
     Call<JSONObject> getUnreadCount();
 
     /**
-     * Returns a list of files for the specified course.
+     * Returns a list of files for the given course.
      *
      * @param courseId  The specified course.
      * @param only      Array of information to restrict to. Ex: 'names'.
@@ -142,10 +143,10 @@ public interface MittUibClient {
      */
     @GET("courses/{id}/files")
     Call<List<File>> getFiles(@Path("id") int courseId,
-                              @Query("only") List<String> only);
+                              @Query("only[]") List<String> only);
 
     /**
-     * Returns a list of files in the specified folder.
+     * Returns a list of files in the given folder.
      *
      * @param folderId  The specified folder.
      * @param only      Array of information to restrict to. Ex: 'names'.
@@ -153,9 +154,29 @@ public interface MittUibClient {
      */
     @GET("folders/{id}/files")
     Call<List<File>> getFilesByFolder(@Path("id") int folderId,
-                                      @Query("only") List<String> only);
+                                      @Query("only[]") List<String> only);
 
     @GET
     Call<List<File>> getFilesPaginate(@Url String url);
 
+    /**
+     * Returns a list of all folders for the given course.
+     *
+     * @param courseId  The given course id.
+     * @param only      Array of information to restrict to. Ex: 'names'.
+     * @return
+     */
+    @GET("courses/{id}/folders")
+    Call<List<Folder>> getFolders(@Path("id") int courseId,
+                                  @Query("only[]") List<String> only);
+
+    @GET("courses/{courseId}/folders/{folderId}")
+    Call<Folder> getFolder(@Path("courseId") int courseId,
+                           @Path("folderId") int folderId);
+
+    @GET("courses/{id}/folders/root")
+    Call<Folder> getRootFolder(@Path("id") int courseId);
+
+    @GET
+    Call<List<Folder>> getFoldersPaginate(@Url String url);
 }
