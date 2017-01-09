@@ -5,19 +5,17 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.AssignmentEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -135,4 +133,17 @@ public interface MittUibClient {
     @GET("conversations/unread_count")
     Call<JSONObject> getUnreadCount();
 
+    /**
+     * Returns a list of files for the specified course.
+     *
+     * @param courseId  The specified course.
+     * @param only      Array of information to restrict to. Ex: 'names'.
+     * @return
+     */
+    @GET("courses/{id}/files")
+    Call<List<File>> getFiles(@Path("id") String courseId,
+                              @Query("only") List<String> only);
+
+    @GET
+    Call<List<File>> getFilesPaginate(@Url String url);
 }
