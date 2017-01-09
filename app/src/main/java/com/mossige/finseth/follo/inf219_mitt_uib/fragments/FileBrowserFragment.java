@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.FileBrowserRecyclerViewAdapter;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
@@ -42,6 +43,7 @@ public class FileBrowserFragment extends Fragment {
     private ArrayList<Folder> folders;
 
     private Course course;
+    private String nextPage;
 
     public FileBrowserFragment() {
         // Required empty public constructor
@@ -52,6 +54,7 @@ public class FileBrowserFragment extends Fragment {
         super.onCreate(savedInstanceState);
         files = new ArrayList<>();
         folders = new ArrayList<>();
+        nextPage = "";
 
         if (getArguments() != null) {
             if (getArguments().containsKey("course")) {
@@ -65,7 +68,15 @@ public class FileBrowserFragment extends Fragment {
 
     private void getFiles() {
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<File>> call = client.getFiles(course.getId(), null);
+
+        Call<List<File>> call;
+        boolean firstPage = nextPage.isEmpty();
+        if (firstPage) {
+            call = client.getFiles(course.getId(), null);
+        } else {
+            call = client.getFilesPaginate(nextPage);
+        }
+
         call.enqueue(new Callback<List<File>>() {
             @Override
             public void onResponse(Call<List<File>> call, Response<List<File>> response) {
@@ -73,6 +84,8 @@ public class FileBrowserFragment extends Fragment {
                     int currentSize = mAdapter.getItemCount();
                     files.addAll(response.body());
                     mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
+
+                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
 
                 }
@@ -104,8 +117,17 @@ public class FileBrowserFragment extends Fragment {
         mainList.setVisibility(View.GONE);
 
         // Create the LayoutManager that holds all the views
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mainList.setLayoutManager(mLayoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mainList.setLayoutManager(layoutManager);
+
+        mainList.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                if (!nextPage.isEmpty()) {
+                    getFiles();
+                }
+            }
+        });
 
         // Create adapter that binds the views with some content
         mAdapter = new FileBrowserRecyclerViewAdapter(files, folders);
