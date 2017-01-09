@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Folder;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
@@ -23,11 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by andre on 09.01.2017.
  */
 public class FileBrowserFragment extends Fragment {
+
+    private static final String TAG = "FileBrowserFragment";
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
@@ -53,6 +59,30 @@ public class FileBrowserFragment extends Fragment {
                 course = new Gson().fromJson(json, Course.class);
             }
         }
+
+        getFiles();
+    }
+
+    private void getFiles() {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+        Call<List<File>> call = client.getFiles(course.getId(), null);
+        call.enqueue(new Callback<List<File>>() {
+            @Override
+            public void onResponse(Call<List<File>> call, Response<List<File>> response) {
+                if (response.isSuccessful()) {
+                    int currentSize = mAdapter.getItemCount();
+                    files.addAll(response.body());
+                    mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<File>> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -62,6 +92,7 @@ public class FileBrowserFragment extends Fragment {
         getActivity().setTitle(R.string.btn_file_browser);
 
         initRecycleView(rootView);
+        mainList.setVisibility(View.VISIBLE);
 
         return rootView;
     }
