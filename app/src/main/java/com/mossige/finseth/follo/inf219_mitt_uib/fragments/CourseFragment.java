@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
@@ -107,7 +108,34 @@ public class CourseFragment extends Fragment {
             progressbar.setVisibility(View.VISIBLE);
         }
 
+        initFileBrowserButton(rootView);
+
         return rootView;
+    }
+
+    private void initFileBrowserButton(View rootView) {
+        Button b = (Button) rootView.findViewById(R.id.btn_file_browser);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFileBrowserFragment();
+            }
+        });
+    }
+
+    private void loadFileBrowserFragment() {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FileBrowserFragment fileBrowserFragment = new FileBrowserFragment();
+        transaction.replace(R.id.content_frame, fileBrowserFragment);
+        transaction.addToBackStack(null);
+
+        Bundle args = new Bundle();
+        String json = new Gson().toJson(course);
+        args.putString("course", json);
+        fileBrowserFragment.setArguments(args);
+
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void initRecycleView(View rootView) {
@@ -145,15 +173,15 @@ public class CourseFragment extends Fragment {
 
                     transaction.addToBackStack(null);
                     transaction.commit();
-                } else {
-                    Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");
-                }
 
-                if(position == 1){
+                } else if (position == 1) {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
                     mCallback.initCalendar();
+
+                } else {
+                    Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");
                 }
             }
         });
