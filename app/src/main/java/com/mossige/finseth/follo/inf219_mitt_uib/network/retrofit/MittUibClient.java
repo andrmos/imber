@@ -144,6 +144,18 @@ public interface MittUibClient {
     Call<List<File>> getFiles(@Path("id") String courseId,
                               @Query("only") List<String> only);
 
+    /**
+     * Returns a list of files in the specified folder.
+     *
+     * @param folderId  The specified folder.
+     * @param only      Array of information to restrict to. Ex: 'names'.
+     * @return
+     */
+    @GET("folders/{id}/files")
+    Call<List<File>> getFilesByFolder(@Path("id") String folderId,
+                                      @Query("only") List<String> only);
+
     @GET
     Call<List<File>> getFilesPaginate(@Url String url);
+
 }
