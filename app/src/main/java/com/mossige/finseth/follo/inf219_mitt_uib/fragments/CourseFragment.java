@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
@@ -77,39 +78,22 @@ public class CourseFragment extends Fragment {
         agendas = new ArrayList<>();
         loaded = new boolean[3];
 
-        // Get arguments from course list
-        int course_id = getArguments().getInt("id");
-
         if(getArguments() != null) {
-            String calendar_url = "";
-            String name = "";
-            String course_code = "";
-
-            if (getArguments().containsKey("calendar_url")) {
-                calendar_url = getArguments().getString("calendar_url");
+            if (getArguments().containsKey("course")) {
+                String json = getArguments().getString("course");
+                course = new Gson().fromJson(json, Course.class);
             }
-
-            if(getArguments().containsKey("name")) {
-                name = getArguments().getString("name");
-            }
-
-            if(getArguments().containsKey("course_code")) {
-                course_code = getArguments().getString("course_code");
-            }
-
-            course = new Course(course_id,name,calendar_url,course_code);
         }
 
         requestAnnouncements(course.getId());
         requestAgendas();
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         // Set toolbar title to course name
-        String course_name = getArguments().getString("name");
+        String course_name = course.getName();
         getActivity().setTitle(course_name);
 
         progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);

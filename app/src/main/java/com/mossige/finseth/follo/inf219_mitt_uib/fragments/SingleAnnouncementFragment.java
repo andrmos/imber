@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 
 /**
  * Created by PatrickFinseth on 13.03.16.
@@ -31,11 +33,16 @@ public class SingleAnnouncementFragment extends Fragment{
         TextView sender_tv = (TextView) view.findViewById(R.id.single_announcement_sender);
         TextView date_tv = (TextView) view.findViewById(R.id.single_announcement_date);
 
-        // Set text to every TextView in fragment_announcement.xml
-        title_tv.setText(""+ getArguments().get("title"));
-        message_tv.setText(getArguments().get("message").toString());
-        sender_tv.setText("" + getArguments().get("userName"));
-        date_tv.setText("" + getArguments().get("postedAt"));
+        if (getArguments() != null && getArguments().containsKey("announcement")) {
+            String json = getArguments().getString("announcement");
+            Announcement announcement = new Gson().fromJson(json, Announcement.class);
+
+            // Set text to every TextView in fragment_announcement.xml
+            title_tv.setText(announcement.getTitle());
+            message_tv.setText(announcement.getMessage());
+            sender_tv.setText(announcement.getUserName());
+            date_tv.setText(announcement.getPostedAt().toString());
+        }
 
         return view;
     }

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
@@ -117,12 +118,9 @@ public class CourseListFragment extends Fragment {
                 transaction.addToBackStack(null);
 
                 Bundle bundle = new Bundle();
-                bundle.putInt("id", courses.get(position).getId());
-                bundle.putString("calendar_url", courses.get(position).getCalenderUrl());
-                bundle.putString("name", courses.get(position).getName());
-                bundle.putString("course_code", courses.get(position).getCourseCode());
+                String json = new Gson().toJson(courses.get(position));
+                bundle.putString("course", json);
                 courseFragment.setArguments(bundle);
-
                 transaction.commit();
             }
         });
