@@ -9,14 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.FileBrowserRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Folder;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
 
 /**
  * Created by andre on 09.01.2017.
@@ -29,6 +35,8 @@ public class FileBrowserFragment extends Fragment {
     private ArrayList<File> files;
     private ArrayList<Folder> folders;
 
+    private Course course;
+
     public FileBrowserFragment() {
         // Required empty public constructor
     }
@@ -38,6 +46,13 @@ public class FileBrowserFragment extends Fragment {
         super.onCreate(savedInstanceState);
         files = new ArrayList<>();
         folders = new ArrayList<>();
+
+        if (getArguments() != null) {
+            if (getArguments().containsKey("course")) {
+                String json = getArguments().getString("course");
+                course = new Gson().fromJson(json, Course.class);
+            }
+        }
     }
 
     @Override
