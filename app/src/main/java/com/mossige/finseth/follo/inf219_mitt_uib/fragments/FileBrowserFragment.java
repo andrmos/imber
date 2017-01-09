@@ -1,11 +1,11 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.FileBrowserRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Folder;
@@ -44,9 +45,20 @@ public class FileBrowserFragment extends Fragment {
 
     private Course course;
     private String nextPage;
+    private MainActivityListener callback;
 
     public FileBrowserFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            callback = (MainActivityListener) context;
+        } catch (ClassCastException e) {
+            //Do nothing
+        }
     }
 
     @Override
@@ -87,13 +99,22 @@ public class FileBrowserFragment extends Fragment {
 
                     nextPage = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
-
+                    showSnackbar();
                 }
             }
 
             @Override
             public void onFailure(Call<List<File>> call, Throwable t) {
+                showSnackbar();
+            }
+        });
+    }
 
+    private void showSnackbar() {
+        callback.showSnackbar(getString(R.string.error_getting_files), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFiles();
             }
         });
     }
