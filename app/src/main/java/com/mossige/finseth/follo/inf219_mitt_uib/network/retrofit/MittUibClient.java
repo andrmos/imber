@@ -141,7 +141,7 @@ public interface MittUibClient {
      * @return
      */
     @GET("courses/{id}/files")
-    Call<List<File>> getFiles(@Path("id") String courseId,
+    Call<List<File>> getFiles(@Path("id") int courseId,
                               @Query("only") List<String> only);
 
     /**
@@ -152,7 +152,7 @@ public interface MittUibClient {
      * @return
      */
     @GET("folders/{id}/files")
-    Call<List<File>> getFilesByFolder(@Path("id") String folderId,
+    Call<List<File>> getFilesByFolder(@Path("id") int folderId,
                                       @Query("only") List<String> only);
 
     @GET
