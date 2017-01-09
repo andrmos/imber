@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AnnouncementRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
@@ -161,15 +162,10 @@ public class AnnouncementFragment extends Fragment {
 
                 transaction.addToBackStack(null);
 
-                //Bundles all parameters needed for showing one announcement
-                Bundle args = new Bundle();
-                Announcement announcement = announcements.get(position);
-                args.putString("title", announcement.getTitle());
-                args.putString("message", announcement.getMessage());
-                args.putString("userName", announcement.getUserName());
-                args.putString("postedAt", announcement.getPostedAt().toString());
-                singleAnnouncementFragment.setArguments(args);
-
+                Bundle bundle = new Bundle();
+                String json = new Gson().toJson(announcements.get(position));
+                bundle.putString("announcement", json);
+                singleAnnouncementFragment.setArguments(bundle);
                 transaction.commit();
             }
         });
