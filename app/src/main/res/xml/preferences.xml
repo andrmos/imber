@@ -4,14 +4,8 @@
     android:layout_height="match_parent">
 
     <android.support.v7.preference.PreferenceCategory
+        android:id="@+id/course_category"
         android:title="Fag">
-
-        <android.support.v7.preference.CheckBoxPreference
-            android:id="@+id/filter_checkBox"
-            android:key="checkbox_preference"
-            android:title="Filter"
-            android:onClick="onPreferenceClick"
-            android:summary="filtrere vekk fag på insituttnivå" />
 
     </android.support.v7.preference.PreferenceCategory>
 
