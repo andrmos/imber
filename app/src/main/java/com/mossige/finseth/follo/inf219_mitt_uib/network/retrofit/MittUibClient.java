@@ -179,10 +179,21 @@ public interface MittUibClient {
     Call<List<Folder>> getFolders(@Path("id") int courseId,
                                   @Query("only[]") List<String> only);
 
-    @GET("courses/{courseId}/folders/{folderId}")
-    Call<Folder> getFolder(@Path("courseId") int courseId,
-                           @Path("folderId") int folderId);
+    /**
+     * Returns the details for a folder.
+     *
+     * @param folderId The given folder.
+     * @return
+     */
+    @GET("folders/{id}")
+    Call<Folder> getFolder(@Path("id") int folderId);
 
+    /**
+     * Returns the details for the root folder in a given course.
+     *
+     * @param courseId The given course.
+     * @return
+     */
     @GET("courses/{id}/folders/root")
     Call<Folder> getRootFolder(@Path("id") int courseId);
 
