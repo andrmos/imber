@@ -16,7 +16,6 @@ public class Folder {
     @SerializedName("context_type")
     private String contextType;
     @SerializedName("folders_url")
-    private int position;
     private String foldersUrl;
     @SerializedName("files_url")
     private String filesUrl;
@@ -24,6 +23,7 @@ public class Folder {
     private int filesCount;
     @SerializedName("folders_count")
     private int foldersCount;
+    private int position;
     private String name;
     @SerializedName("full_name")
     private String fullName;
