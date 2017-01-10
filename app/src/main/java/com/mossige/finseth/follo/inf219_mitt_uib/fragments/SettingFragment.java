@@ -51,13 +51,13 @@ public class SettingFragment extends PreferenceFragmentCompat{
 
         getActivity().setTitle("Innstillinger");
 
-        Preference preference = (Preference) findPreference("favorite");
+        Preference preference = findPreference("favorite");
         preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 SettingFavoriteCourseFragment settingFavoriteCourseFragment = new SettingFavoriteCourseFragment();
-                transaction.replace(R.id.preference_screen, settingFavoriteCourseFragment);
-
+                transaction.replace(R.id.content_frame, settingFavoriteCourseFragment);
+                transaction.commit();
                 return true;
             }
         });
