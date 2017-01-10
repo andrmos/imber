@@ -156,6 +156,15 @@ public interface MittUibClient {
     Call<List<File>> getFilesByFolder(@Path("id") int folderId,
                                       @Query("only[]") List<String> only);
 
+    /**
+     * Returns the details for a file.
+     *
+     * @param fileId The given file.
+     * @return
+     */
+    @GET("files/{id}")
+    Call<File> getFile(@Path("id") int fileId);
+
     @GET
     Call<List<File>> getFilesPaginate(@Url String url);
 
