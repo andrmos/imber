@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +45,10 @@ public class FileBrowserFragment extends Fragment {
     private ArrayList<Folder> folders;
 
     private Course course;
-    private String nextPage;
     private MainActivityListener callback;
+
+    private String nextPageFiles;
+    private String nextPageFolders;
 
     public FileBrowserFragment() {
         // Required empty public constructor
@@ -66,7 +69,8 @@ public class FileBrowserFragment extends Fragment {
         super.onCreate(savedInstanceState);
         files = new ArrayList<>();
         folders = new ArrayList<>();
-        nextPage = "";
+        nextPageFiles = "";
+        nextPageFolders = "";
 
         if (getArguments() != null) {
             if (getArguments().containsKey("course")) {
@@ -75,18 +79,54 @@ public class FileBrowserFragment extends Fragment {
             }
         }
 
+        getFolders();
         getFiles();
+    }
+
+    private void getFolders() {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+
+        Call<List<Folder>> call;
+        boolean firstPage = nextPageFolders.isEmpty();
+        if (firstPage) {
+            call = client.getFolders(course.getId(), null);
+        } else {
+            call = client.getFoldersPaginate(nextPageFolders);
+        }
+
+        Log.i(TAG, "url: " + call.request().url());
+
+        call.enqueue(new Callback<List<Folder>>() {
+            @Override
+            public void onResponse(Call<List<Folder>> call, Response<List<Folder>> response) {
+                if (response.isSuccessful()) {
+                    int currentSize = folders.size();
+                    folders.addAll(response.body());
+                    mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
+
+                    nextPageFolders = PaginationUtils.getNextPageUrl(response.headers());
+                } else {
+                    showSnackbar(R.string.error_getting_files);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Folder>> call, Throwable t) {
+                showSnackbar(R.string.error_getting_files);
+            }
+        });
+
     }
 
     private void getFiles() {
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
         Call<List<File>> call;
-        boolean firstPage = nextPage.isEmpty();
+        boolean firstPage = nextPageFiles.isEmpty();
         if (firstPage) {
             call = client.getFiles(course.getId(), null);
         } else {
-            call = client.getFilesPaginate(nextPage);
+            call = client.getFilesPaginate(nextPageFiles);
         }
 
         call.enqueue(new Callback<List<File>>() {
@@ -97,21 +137,21 @@ public class FileBrowserFragment extends Fragment {
                     files.addAll(response.body());
                     mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
-                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
+                    nextPageFiles = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
-                    showSnackbar();
+                    showSnackbar(R.string.error_getting_files);
                 }
             }
 
             @Override
             public void onFailure(Call<List<File>> call, Throwable t) {
-                showSnackbar();
+                showSnackbar(R.string.error_getting_files);
             }
         });
     }
 
-    private void showSnackbar() {
-        callback.showSnackbar(getString(R.string.error_getting_files), new View.OnClickListener() {
+    private void showSnackbar(int error_getting_files) {
+        callback.showSnackbar(getString(error_getting_files), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getFiles();
@@ -144,7 +184,10 @@ public class FileBrowserFragment extends Fragment {
         mainList.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                if (!nextPage.isEmpty()) {
+                if (!nextPageFolders.isEmpty()) {
+                    getFolders();
+                }
+                if (!nextPageFiles.isEmpty()) {
                     getFiles();
                 }
             }
