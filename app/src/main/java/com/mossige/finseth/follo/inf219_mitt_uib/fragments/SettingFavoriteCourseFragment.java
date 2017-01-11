@@ -1,13 +1,16 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.util.Log;
+import android.view.View;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
@@ -15,6 +18,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerat
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -29,6 +33,18 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
     private ArrayList<Course> courses;
     private ArrayList<Course> favoriteCourses;
     private boolean loaded;
+    private MainActivityListener mCallback;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (MainActivityListener) context;
+        }catch(ClassCastException e){
+            //Do nothing
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +52,9 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
         courses = new ArrayList<>();
         favoriteCourses = new ArrayList<>();
-        loaded = false;
+
+        //TODO add smoothprogressbar and set to false
+        loaded = true;
         checkBoxes = new ArrayList<>();
 
         getActivity().setTitle("Velg favorittfag");
@@ -65,14 +83,11 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
                 for(int j = 0; j < favoriteCourses.size(); j++){
                     if(courses.get(i).getId() == favoriteCourses.get(j).getId()){
                         cbp.setChecked(true);
-                        Log.i(TAG, "checked");
                     }
                 }
                 checkBoxes.add(cbp);
                 screen.addPreference(cbp);
             }
-        }else{
-            Log.i(TAG, "Not loaded");
         }
     }
 
@@ -84,13 +99,18 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
             @Override
             public void onResponse(Call<Course> call, retrofit2.Response<Course> response) {
                 if (response.isSuccessful()) {
-                    Log.i(TAG, "Saved");
+                    mCallback.showSnackbar(getString(R.string.course_saved), null);
                 }
             }
 
             @Override
             public void onFailure(Call<Course> call, Throwable t) {
-                Log.i(TAG, "Fail");
+                mCallback.showSnackbar(getString(R.string.error_saving_course), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        saveFavoriteCourse(id);
+                    }
+                });
             }
         });
     }
@@ -112,6 +132,12 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
+                mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestCourses();
+                    }
+                });
 
             }
         });
@@ -127,16 +153,18 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
                     favoriteCourses.clear();
                     favoriteCourses.addAll(response.body());
 
-                    loaded = true;
-
-                    Log.i(TAG, "size is " + favoriteCourses.size());
-
                     initSettings();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
+                mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestCourses();
+                    }
+                });
             }
         });
     }
@@ -148,13 +176,18 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
             @Override
             public void onResponse(Call<Course> call, retrofit2.Response<Course> response) {
                 if (response.isSuccessful()) {
-                    Log.i(TAG, "Removed");
+                    mCallback.showSnackbar(getString(R.string.course_removed), null);
                 }
             }
 
             @Override
             public void onFailure(Call<Course> call, Throwable t) {
-                Log.i(TAG, "Fail");
+                mCallback.showSnackbar(getString(R.string.error_removing_course), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeFavoriteCourse(id);
+                    }
+                });
             }
         });
     }
