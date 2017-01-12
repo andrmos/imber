@@ -6,7 +6,6 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
-import android.util.Log;
 import android.view.View;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
@@ -17,8 +16,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerat
 
 import java.util.ArrayList;
 import java.util.List;
-
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -32,7 +29,6 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
     private ArrayList<CheckBoxPreference> checkBoxes;
     private ArrayList<Course> courses;
     private ArrayList<Course> favoriteCourses;
-    private boolean loaded;
     private MainActivityListener mCallback;
 
     @Override
@@ -52,17 +48,15 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
         courses = new ArrayList<>();
         favoriteCourses = new ArrayList<>();
-
-        //TODO add smoothprogressbar and set to false
-        loaded = true;
         checkBoxes = new ArrayList<>();
-
-        getActivity().setTitle("Velg favorittfag");
 
         //Inflates view
         addPreferencesFromResource(R.xml.preference_favorite);
 
+        getActivity().setTitle("Velg favorittfag");
+
         requestCourses();
+
     }
 
     @Override
@@ -71,24 +65,22 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
     }
 
     private void initSettings(){
-        if(loaded){
-            PreferenceScreen screen = getPreferenceScreen();
+        PreferenceScreen screen = getPreferenceScreen();
 
-            for(int i = 0; i < courses.size(); i++){
-                CheckBoxPreference cbp = new CheckBoxPreference(this.getActivity());
-                cbp.setTitle(courses.get(i).getCourseCode());
-                cbp.setKey("" + courses.get(i).getId());
-                cbp.setViewId(i);
-                cbp.setOnPreferenceClickListener(this);
-                for(int j = 0; j < favoriteCourses.size(); j++){
-                    if(courses.get(i).getId() == favoriteCourses.get(j).getId()){
-                        cbp.setChecked(true);
-                    }
+        for(int i = 0; i < courses.size(); i++){
+            CheckBoxPreference cbp = new CheckBoxPreference(this.getActivity());
+            cbp.setTitle(courses.get(i).getCourseCode());
+            cbp.setKey("" + courses.get(i).getId());
+            cbp.setViewId(i);
+            cbp.setOnPreferenceClickListener(this);
+            for(int j = 0; j < favoriteCourses.size(); j++){
+                if(courses.get(i).getId() == favoriteCourses.get(j).getId()){
+                    cbp.setChecked(true);
                 }
-                checkBoxes.add(cbp);
-                screen.addPreference(cbp);
             }
-        }
+            checkBoxes.add(cbp);
+            screen.addPreference(cbp);
+            }
     }
 
     private void saveFavoriteCourse(final String id) {
