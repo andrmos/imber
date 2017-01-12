@@ -29,6 +29,7 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
     private ArrayList<CheckBoxPreference> checkBoxes;
     private ArrayList<Course> courses;
     private ArrayList<Course> favoriteCourses;
+
     private MainActivityListener mCallback;
 
     @Override
@@ -68,6 +69,8 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         PreferenceScreen screen = getPreferenceScreen();
 
         for(int i = 0; i < courses.size(); i++){
+
+            //Add all courses as a checkbox
             CheckBoxPreference cbp = new CheckBoxPreference(this.getActivity());
             cbp.setTitle(courses.get(i).getCourseCode());
             cbp.setKey("" + courses.get(i).getId());
