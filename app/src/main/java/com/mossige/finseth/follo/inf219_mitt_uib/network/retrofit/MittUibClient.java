@@ -16,6 +16,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -41,6 +42,26 @@ public interface MittUibClient {
      */
     @GET("courses")
     Call<List<Course>> getCourses();
+
+    /**
+     * @return The favorite active courses of the logged in user.
+     */
+    @GET("users/self/favorites/courses")
+    Call<List<Course>> getFavoriteCourses();
+
+    /**
+     * Add course to favorite list.
+     * @return
+     */
+    @POST("users/self/favorites/courses/{id}")
+    Call<Course> addFavortiteCourse(@Path("id") String courseId);
+
+    /**
+     * Delete course from favorite list.
+     * @return
+     */
+    @DELETE("users/self/favorites/courses/{id}")
+    Call<Course> removeFavortiteCourse(@Path("id") String courseId);
 
     @GET
     Call<List<Course>> getCoursesPagination(@Url String url);

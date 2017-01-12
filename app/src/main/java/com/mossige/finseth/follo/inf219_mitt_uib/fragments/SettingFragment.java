@@ -3,23 +3,44 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceScreen;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 
 /**
  * Created by PatrickFinseth on 14.03.16.
  */
-public class SettingFragment extends PreferenceFragmentCompat {
+public class SettingFragment extends PreferenceFragmentCompat{
 
 
     private static final String TAG = "SettingFragment";
-
-    private SharedPreferences sharedPreferences;
-    private CheckBoxPreference checkBoxPreference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,34 +49,16 @@ public class SettingFragment extends PreferenceFragmentCompat {
         //Inflates view
         addPreferencesFromResource(R.xml.preferences);
 
-        //Get shared preferences from file
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        getActivity().setTitle("Innstillinger");
 
-        //Get checkbox preference for course filter
-        checkBoxPreference = (CheckBoxPreference) getPreferenceManager().findPreference("checkbox_preference");
-
-        //Make click listener for box
-        checkBoxPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener(){
-
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                String key = preference.getKey();
-                
-                Boolean courseFilter = false;
-                
-                if(newValue instanceof Boolean){
-                    courseFilter = (Boolean) newValue;
-
-                    //Add changes to shared preferences
-                    editor.putBoolean(key,courseFilter);
-                    checkBoxPreference.setChecked(courseFilter);
-                }
-
-                editor.apply();
-
-                return courseFilter;
+        Preference preference = findPreference("favorite");
+        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                SettingFavoriteCourseFragment settingFavoriteCourseFragment = new SettingFavoriteCourseFragment();
+                transaction.replace(R.id.content_frame, settingFavoriteCourseFragment);
+                transaction.commit();
+                return true;
             }
         });
     }
@@ -64,5 +67,5 @@ public class SettingFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle bundle, String s) {
         //empty
     }
-}
 
+}
