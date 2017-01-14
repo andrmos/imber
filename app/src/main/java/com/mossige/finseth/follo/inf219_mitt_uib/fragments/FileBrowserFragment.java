@@ -21,6 +21,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Folder;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.CancelableCallback;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
@@ -79,22 +80,40 @@ public class FileBrowserFragment extends Fragment {
             }
         }
 
-        getFolders();
-        getFiles();
+        getRootFolder();
     }
 
-    private void getFolders() {
+    private void getRootFolder() {
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
+        Call<Folder> call = client.getRootFolder(course.getId());
+        call.enqueue(new CancelableCallback<Folder>() {
+            @Override
+            public void onSuccess(Call<Folder> call, Response<Folder> response) {
+
+                Folder folder = response.body();
+                getFolders(folder.getId());
+                getFiles(folder.getId());
+
+
+            }
+
+            @Override
+            public void onError(Call<Folder> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void getFolders(final int folderId) {
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
         Call<List<Folder>> call;
         boolean firstPage = nextPageFolders.isEmpty();
         if (firstPage) {
-            call = client.getFolders(course.getId(), null);
+            call = client.getFolders(folderId);
         } else {
             call = client.getFoldersPaginate(nextPageFolders);
         }
-
-        Log.i(TAG, "url: " + call.request().url());
 
         call.enqueue(new Callback<List<Folder>>() {
             @Override
@@ -102,29 +121,30 @@ public class FileBrowserFragment extends Fragment {
                 if (response.isSuccessful()) {
                     int currentSize = folders.size();
                     folders.addAll(response.body());
+
                     mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
                     nextPageFolders = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
-                    showSnackbar(R.string.error_getting_files);
+                    showSnackbar(folderId, R.string.error_getting_files);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Folder>> call, Throwable t) {
-                showSnackbar(R.string.error_getting_files);
+                showSnackbar(folderId, R.string.error_getting_files);
             }
         });
 
     }
 
-    private void getFiles() {
+    private void getFiles(final int folderId) {
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
         Call<List<File>> call;
         boolean firstPage = nextPageFiles.isEmpty();
         if (firstPage) {
-            call = client.getFiles(course.getId(), null);
+            call = client.getFilesByFolder(folderId, null);
         } else {
             call = client.getFilesPaginate(nextPageFiles);
         }
@@ -139,22 +159,22 @@ public class FileBrowserFragment extends Fragment {
 
                     nextPageFiles = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
-                    showSnackbar(R.string.error_getting_files);
+                    showSnackbar(folderId, R.string.error_getting_files);
                 }
             }
 
             @Override
             public void onFailure(Call<List<File>> call, Throwable t) {
-                showSnackbar(R.string.error_getting_files);
+                showSnackbar(folderId, R.string.error_getting_files);
             }
         });
     }
 
-    private void showSnackbar(int error_getting_files) {
+    private void showSnackbar(final int folderId, int error_getting_files) {
         callback.showSnackbar(getString(error_getting_files), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFiles();
+                getFiles(folderId);
             }
         });
     }
@@ -185,10 +205,10 @@ public class FileBrowserFragment extends Fragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 if (!nextPageFolders.isEmpty()) {
-                    getFolders();
+                    // TODO
                 }
                 if (!nextPageFiles.isEmpty()) {
-                    getFiles();
+                    // TODO
                 }
             }
         });
