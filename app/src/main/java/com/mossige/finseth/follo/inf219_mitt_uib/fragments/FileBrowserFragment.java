@@ -210,6 +210,7 @@ public class FileBrowserFragment extends Fragment {
         mainList.addOnScrollListener(new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
+                // TODO Solve properly
                 if (!nextPageFolders.isEmpty()) {
                     getFolders(currentFolderId);
                 }
@@ -230,6 +231,21 @@ public class FileBrowserFragment extends Fragment {
         ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+                // Item clicked is folder at folders.get(position)
+                if (position < folders.size()) {
+                    Folder clicked = folders.get(position);
+                    // TODO Cancel all previous calls
+                    int currentSize = folders.size() + files.size();
+                    folders.clear();
+                    files.clear();
+                    mAdapter.notifyItemRangeRemoved(0, currentSize);
+
+                    getFolders(clicked.getId());
+                    getFiles(clicked.getId());
+                } else {
+                    // Clicked on a file
+                }
 
             }
         });
