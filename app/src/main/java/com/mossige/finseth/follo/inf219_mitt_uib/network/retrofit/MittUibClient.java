@@ -168,6 +168,9 @@ public interface MittUibClient {
     @GET
     Call<List<File>> getFilesPaginate(@Url String url);
 
+    @GET("folders/{id}/folders")
+    Call<List<Folder>> getFolders(@Path("id") int folderId);
+
     /**
      * Returns a list of all folders for the given course.
      *
@@ -176,8 +179,8 @@ public interface MittUibClient {
      * @return
      */
     @GET("courses/{id}/folders")
-    Call<List<Folder>> getFolders(@Path("id") int courseId,
-                                  @Query("only[]") List<String> only);
+    Call<List<Folder>> getFoldersByCourse(@Path("id") int courseId,
+                                          @Query("only[]") List<String> only);
 
     /**
      * Returns the details for a folder.
