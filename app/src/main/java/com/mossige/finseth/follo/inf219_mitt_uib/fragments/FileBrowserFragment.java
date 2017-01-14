@@ -51,6 +51,9 @@ public class FileBrowserFragment extends Fragment {
     private String nextPageFiles;
     private String nextPageFolders;
 
+    // The id of the folder currently being browsed.
+    private int currentFolderId;
+
     public FileBrowserFragment() {
         // Required empty public constructor
     }
@@ -90,16 +93,19 @@ public class FileBrowserFragment extends Fragment {
             @Override
             public void onSuccess(Call<Folder> call, Response<Folder> response) {
 
-                Folder folder = response.body();
-                getFolders(folder.getId());
-                getFiles(folder.getId());
-
+                if (response.isSuccessful()) {
+                    currentFolderId = response.body().getId();
+                    getFolders(currentFolderId);
+                    getFiles(currentFolderId);
+                } else {
+                    // TODO
+                }
 
             }
 
             @Override
             public void onError(Call<Folder> call, Throwable t) {
-
+                // TODO
             }
         });
     }
@@ -126,13 +132,13 @@ public class FileBrowserFragment extends Fragment {
 
                     nextPageFolders = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
-                    showSnackbar(folderId, R.string.error_getting_files);
+                    // TODO
                 }
             }
 
             @Override
             public void onFailure(Call<List<Folder>> call, Throwable t) {
-                showSnackbar(folderId, R.string.error_getting_files);
+                // TODO
             }
         });
 
@@ -159,13 +165,13 @@ public class FileBrowserFragment extends Fragment {
 
                     nextPageFiles = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
-                    showSnackbar(folderId, R.string.error_getting_files);
+                    // TODO
                 }
             }
 
             @Override
             public void onFailure(Call<List<File>> call, Throwable t) {
-                showSnackbar(folderId, R.string.error_getting_files);
+                // TODO
             }
         });
     }
@@ -205,10 +211,10 @@ public class FileBrowserFragment extends Fragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 if (!nextPageFolders.isEmpty()) {
-                    // TODO
+                    getFolders(currentFolderId);
                 }
                 if (!nextPageFiles.isEmpty()) {
-                    // TODO
+                    getFiles(currentFolderId);
                 }
             }
         });
