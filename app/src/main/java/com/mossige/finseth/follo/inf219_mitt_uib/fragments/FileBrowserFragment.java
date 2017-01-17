@@ -1,12 +1,22 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.Manifest;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +34,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.CancelableCallback;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
+import com.mossige.finseth.follo.inf219_mitt_uib.utils.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +43,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.DOWNLOAD_SERVICE;
+
 /**
  * Created by andre on 09.01.2017.
  */
-public class FileBrowserFragment extends Fragment {
+public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = "FileBrowserFragment";
 
@@ -53,6 +66,12 @@ public class FileBrowserFragment extends Fragment {
 
     // The id of the folder currently being browsed.
     private int currentFolderId;
+    private DownloadComplete downloadComplete;
+    private String tmpUrl;
+    private String tmlFileName;
+    private long enqueuedDownload;
+    private String tmpMime;
+    private String tmpContent;
 
     public FileBrowserFragment() {
         // Required empty public constructor
@@ -83,7 +102,16 @@ public class FileBrowserFragment extends Fragment {
             }
         }
 
+        // TODO Handle back stack properly to navigate between folders
         getRootFolder();
+
+        initBroadcastReceiver();
+    }
+
+    private void initBroadcastReceiver() {
+        // Register broadcastreceiver for finished download
+        downloadComplete = new DownloadComplete();
+        getContext().registerReceiver(downloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     private void getRootFolder() {
@@ -236,18 +264,95 @@ public class FileBrowserFragment extends Fragment {
                 if (position < folders.size()) {
                     Folder clicked = folders.get(position);
                     // TODO Cancel all previous calls
-                    int currentSize = folders.size() + files.size();
                     folders.clear();
                     files.clear();
-                    mAdapter.notifyItemRangeRemoved(0, currentSize);
+                    mAdapter.notifyDataSetChanged();
 
                     getFolders(clicked.getId());
                     getFiles(clicked.getId());
+
+                    // Clicked on file at files.get(position - folders.size())
                 } else {
-                    // Clicked on a file
+                    File clicked = files.get(position - folders.size());
+                    tmpUrl = clicked.getUrl();
+                    tmlFileName = clicked.getFileName();
+                    downloadFile(tmpUrl, tmlFileName);
                 }
 
             }
         });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (getContext() != null && downloadComplete != null) {
+            getContext().unregisterReceiver(downloadComplete);
+        }
+    }
+
+    // TODO Give warning if file is big
+    // TODO Download file to cache folder instead of external?
+    public void downloadFile(String uri, String fileName) {
+        DownloadManager manager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+        String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        if (PermissionUtils.isPermissionGranted(permission, getActivity())) {
+            enqueuedDownload = manager.enqueue(request);
+
+        } else {
+            requestPermissions(new String[]{permission}, 1);
+        }
+    }
+
+    private class DownloadComplete extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equalsIgnoreCase(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+                viewFile();
+            }
+        }
+    }
+
+    private void viewFile() {
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(enqueuedDownload);
+        DownloadManager manager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
+
+        Uri uri = lastSuccessfulDownloadUri(manager, query);
+        if (uri != null) {
+            startActivity(uri);
+        }
+    }
+
+    private Uri lastSuccessfulDownloadUri(DownloadManager manager, DownloadManager.Query query) {
+        // Get URI if latest successfully downloaded file
+        Cursor c = manager.query(query);
+        if (c.moveToFirst()) {
+            int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+            if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+                String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                return Uri.parse(uriString);
+            }
+        }
+        return null;
+    }
+
+    private void startActivity(Uri uri) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            downloadFile(tmpUrl, tmlFileName);
+        }
     }
 }
