@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -107,6 +108,8 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
             // If no current folder id argument exists, we are in root folder
             if (getArguments().containsKey(CURRENT_FOLDER_ID_KEY)) {
                 currentFolderId = getArguments().getInt(CURRENT_FOLDER_ID_KEY);
+                getFolders(currentFolderId);
+                getFiles(currentFolderId);
             } else {
                 getRootFolder();
             }
@@ -271,28 +274,36 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-
-                // Item clicked is folder at folders.get(position)
                 if (position < folders.size()) {
-                    Folder clicked = folders.get(position);
-                    // TODO Cancel all previous calls
-                    folders.clear();
-                    files.clear();
-                    mAdapter.notifyDataSetChanged();
+                    handleFolderClick(position);
 
-                    getFolders(clicked.getId());
-                    getFiles(clicked.getId());
-
-                    // Clicked on file at files.get(position - folders.size())
                 } else {
-                    File clicked = files.get(position - folders.size());
-                    tmpUrl = clicked.getUrl();
-                    tmlFileName = clicked.getFileName();
-                    downloadFile(tmpUrl, tmlFileName);
+                    handleFileClick(position);
                 }
-
             }
         });
+    }
+
+    private void handleFileClick(int position) {
+        File clicked = files.get(position - folders.size());
+        tmpUrl = clicked.getUrl();
+        tmlFileName = clicked.getFileName();
+        downloadFile(tmpUrl, tmlFileName);
+    }
+
+    private void handleFolderClick(int position) {
+        Folder clicked = folders.get(position);
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FileBrowserFragment fileBrowserFragment = new FileBrowserFragment();
+        transaction.replace(R.id.content_frame, fileBrowserFragment);
+
+        transaction.addToBackStack(null);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(CURRENT_FOLDER_ID_KEY, clicked.getId());
+        fileBrowserFragment.setArguments(bundle);
+        transaction.commit();
     }
 
     @Override
