@@ -71,9 +71,8 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     // The id of the folder currently being browsed.
     private int currentFolderId;
     private DownloadComplete downloadComplete;
-    private String clickedUrl;
-    private String clickedFileName;
     private long enqueuedDownload;
+    private File clickedFile;
 
     public FileBrowserFragment() {
         // Required empty public constructor
@@ -303,10 +302,8 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     }
 
     private void handleFileClick(int position) {
-        File clicked = files.get(position - folders.size());
-        clickedUrl = clicked.getUrl();
-        clickedFileName = clicked.getFileName();
-        downloadFile(clickedUrl, clickedFileName);
+        clickedFile = files.get(position - folders.size());
+        downloadFile(clickedFile);
     }
 
     private void handleFolderClick(int position) {
@@ -334,10 +331,10 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
     // TODO Give warning if file is big
     // TODO Download file to cache folder instead of external?
-    public void downloadFile(String uri, String fileName) {
+    public void downloadFile(File file) {
         DownloadManager manager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(file.getUrl()));
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file.getFileName());
 
         String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
         if (PermissionUtils.isPermissionGranted(permission, getActivity())) {
@@ -393,7 +390,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            downloadFile(clickedUrl, clickedFileName);
+            downloadFile(clickedFile);
         }
     }
 }
