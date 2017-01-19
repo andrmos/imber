@@ -67,5 +67,9 @@
     <string name="btn_file_browser">Filer</string>
     <string name="error_getting_files">Kunne ikke laste filer</string>
     <string name="error_getting_folders">Kunne ikke laste mapper</string>
+    <string name="file_size_prompt_title">Stor fil</string>
+    <string name="file_size_prompt_message">Størrelsen på denne filen er %1$d MB.\nEr du sikker på at du vil laste ned filen?</string>
+    <string name="file_size_promt_positive_button">Last ned</string>
+    <string name="file_size_promt_negative_button">Avbryt</string>
 
 </resources>
