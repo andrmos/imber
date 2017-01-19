@@ -98,7 +98,20 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         super.onCreate(savedInstanceState);
         initVariables();
         initArguments();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         initBroadcastReceiver();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (getContext() != null && downloadComplete != null) {
+            getContext().unregisterReceiver(downloadComplete);
+        }
     }
 
     private void initArguments() {
@@ -129,8 +142,10 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
     private void initBroadcastReceiver() {
         // Register broadcastreceiver for finished download
+        Log.i(TAG, "initBroadcastReceiver");
         downloadComplete = new DownloadComplete();
         getContext().registerReceiver(downloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        getContext().registerReceiver(downloadComplete, new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
     }
 
     private void getRootFolder() {
@@ -326,14 +341,6 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         transaction.commit();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (getContext() != null && downloadComplete != null) {
-            getContext().unregisterReceiver(downloadComplete);
-        }
-    }
-
     // TODO Download file to cache folder instead of external?
     public void downloadFile(final File file) {
 
@@ -372,13 +379,13 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
     // TODO Refactor and change responsibility
     private void enqueueDownload(File file) {
-        DownloadManager manager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(file.getUrl()));
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file.getFileName());
 
         String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
         if (PermissionUtils.isPermissionGranted(permission, getActivity())) {
-            enqueuedDownload = manager.enqueue(request);
+            enqueuedDownload = downloadManager.enqueue(request);
 
         } else {
             requestPermissions(new String[]{permission}, 1);
@@ -390,6 +397,12 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equalsIgnoreCase(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
                 viewFile();
+            }
+
+            // Stop download if notification is clicked
+            if (intent.getAction().equalsIgnoreCase(DownloadManager.ACTION_NOTIFICATION_CLICKED)) {
+                DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
+                downloadManager.remove(enqueuedDownload);
             }
         }
     }
@@ -412,9 +425,11 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
             int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
             if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
                 String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+                c.close();
                 return Uri.parse(uriString);
             }
         }
+        c.close();
         return null;
     }
 
