@@ -141,14 +141,23 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
                     getFolders(currentFolderId);
                     getFiles(currentFolderId);
                 } else {
-                    // TODO
+                    showSnackbarRoot();
                 }
 
             }
 
             @Override
             public void onError(Call<Folder> call, Throwable t) {
-                // TODO
+                showSnackbarRoot();
+            }
+        });
+    }
+
+    private void showSnackbarRoot() {
+        callback.showSnackbar(getString(R.string.error_getting_folders), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getRootFolder();
             }
         });
     }
@@ -175,13 +184,13 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
                     nextPageFolders = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
-                    // TODO
+                    showSnackbarFolder(folderId);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Folder>> call, Throwable t) {
-                // TODO
+                showSnackbarFolder(folderId);
             }
         });
 
@@ -208,19 +217,28 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
                     nextPageFiles = PaginationUtils.getNextPageUrl(response.headers());
                 } else {
-                    // TODO
+                    showSnackbarFile(folderId);
                 }
             }
 
             @Override
             public void onFailure(Call<List<File>> call, Throwable t) {
-                // TODO
+                showSnackbarFile(folderId);
             }
         });
     }
 
-    private void showSnackbar(final int folderId, int error_getting_files) {
-        callback.showSnackbar(getString(error_getting_files), new View.OnClickListener() {
+    private void showSnackbarFolder(final int folderId) {
+        callback.showSnackbar(getString(R.string.error_getting_folders), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFolders(folderId);
+            }
+        });
+    }
+
+    private void showSnackbarFile(final int folderId) {
+        callback.showSnackbar(getString(R.string.error_getting_files), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getFiles(folderId);
