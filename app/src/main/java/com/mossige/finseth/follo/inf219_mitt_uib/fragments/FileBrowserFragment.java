@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,8 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
     private static final String CURRENT_FOLDER_ID_KEY = "currentFolderId";
     public static final String COURSE_KEY = "course";
+    // If file size is above this limit, prompt for confirmation: 30 MB
+    private static final int FILE_SIZE_WARNING_TRESHHOLD = 30000000;
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
@@ -329,20 +332,28 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         }
     }
 
-    // TODO Give warning if file is big
     // TODO Download file to cache folder instead of external?
     public void downloadFile(File file) {
-        DownloadManager manager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(file.getUrl()));
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file.getFileName());
 
-        String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        if (PermissionUtils.isPermissionGranted(permission, getActivity())) {
-            enqueuedDownload = manager.enqueue(request);
+        // File size in bytes
+        if (file.getSize() > FILE_SIZE_WARNING_TRESHHOLD) {
+            // TODO Implement
 
         } else {
-            requestPermissions(new String[]{permission}, 1);
+            DownloadManager manager = (DownloadManager) getContext().getSystemService(DOWNLOAD_SERVICE);
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(file.getUrl()));
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, file.getFileName());
+
+            String permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+            if (PermissionUtils.isPermissionGranted(permission, getActivity())) {
+                enqueuedDownload = manager.enqueue(request);
+
+            } else {
+                requestPermissions(new String[]{permission}, 1);
+            }
         }
+
+
     }
 
     private class DownloadComplete extends BroadcastReceiver {
