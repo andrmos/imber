@@ -52,6 +52,9 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
     private static final String TAG = "FileBrowserFragment";
 
+    private static final String CURRENT_FOLDER_ID_KEY = "currentFolderId";
+    public static final String COURSE_KEY = "course";
+
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;
 
@@ -70,8 +73,6 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private String tmpUrl;
     private String tmlFileName;
     private long enqueuedDownload;
-    private String tmpMime;
-    private String tmpContent;
 
     public FileBrowserFragment() {
         // Required empty public constructor
@@ -90,22 +91,33 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initVariables();
+        initArguments();
+        initBroadcastReceiver();
+    }
+
+    private void initArguments() {
+        if (getArguments() != null) {
+            // The course whose files are being viewed
+            if (getArguments().containsKey(COURSE_KEY)) {
+                String json = getArguments().getString(COURSE_KEY);
+                course = new Gson().fromJson(json, Course.class);
+            }
+
+            // If no current folder id argument exists, we are in root folder
+            if (getArguments().containsKey(CURRENT_FOLDER_ID_KEY)) {
+                currentFolderId = getArguments().getInt(CURRENT_FOLDER_ID_KEY);
+            } else {
+                getRootFolder();
+            }
+        }
+    }
+
+    private void initVariables() {
         files = new ArrayList<>();
         folders = new ArrayList<>();
         nextPageFiles = "";
         nextPageFolders = "";
-
-        if (getArguments() != null) {
-            if (getArguments().containsKey("course")) {
-                String json = getArguments().getString("course");
-                course = new Gson().fromJson(json, Course.class);
-            }
-        }
-
-        // TODO Handle back stack properly to navigate between folders
-        getRootFolder();
-
-        initBroadcastReceiver();
     }
 
     private void initBroadcastReceiver() {
