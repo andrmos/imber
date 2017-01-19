@@ -57,7 +57,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private static final String CURRENT_FOLDER_ID_KEY = "currentFolderId";
     public static final String COURSE_KEY = "course";
     // If file size is above this limit, prompt for confirmation: 30 MB
-    private static final int FILE_SIZE_WARNING_TRESHHOLD = 30000000;
+    private static final long FILE_SIZE_WARNING_TRESHHOLD = 30000000;
 
     private RecyclerView mainList;
     private RecyclerView.Adapter mAdapter;

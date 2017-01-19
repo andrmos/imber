@@ -18,7 +18,7 @@ public class File {
     @SerializedName("filename")
     private String fileName;
     private String url;
-    private int size;
+    private long size;
     @SerializedName("created_at")
     private DateTime createdAt;
     @SerializedName("updated_at")
@@ -31,7 +31,7 @@ public class File {
     @SerializedName("mime_class")
     private String mimeClass;
 
-    public File(int id, int folderId, String displayName, String fileName, String url, int size, DateTime createdAt, DateTime updatedAt, DateTime modifiedAt, boolean hidden, String contentType, String mimeClass) {
+    public File(int id, int folderId, String displayName, String fileName, String url, long size, DateTime createdAt, DateTime updatedAt, DateTime modifiedAt, boolean hidden, String contentType, String mimeClass) {
         this.id = id;
         this.folderId = folderId;
         this.displayName = displayName;
@@ -66,7 +66,7 @@ public class File {
         return url;
     }
 
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
