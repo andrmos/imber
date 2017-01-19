@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,17 +38,22 @@ public class FileBrowserRecyclerViewAdapter extends android.support.v7.widget.Re
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         // Folders should be shown on top, files below.
         String text;
+        int drawableResource;
         // Element is a folder
         if (position < folders.size()) {
             text = folders.get(position).getName();
+            drawableResource = R.drawable.ic_folder_black_24dp;
 
         // Element is a file
         } else {
             text = files.get(position - folders.size()).getDisplayName();
+            drawableResource = R.drawable.ic_file_download_black_24dp;
         }
 
         FileViewHolder viewHolder = (FileViewHolder) holder;
         viewHolder.name.setText(text);
+        // TODO Change color of image
+        viewHolder.image.setImageResource(drawableResource);
     }
 
     @Override
