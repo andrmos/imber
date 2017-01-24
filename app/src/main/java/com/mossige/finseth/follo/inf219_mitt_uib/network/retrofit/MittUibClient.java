@@ -5,20 +5,19 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.AssignmentEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.File;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.Folder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -151,9 +150,77 @@ public interface MittUibClient {
 
 
     /**
-     * @return The number of unread conversations for the current user
+     * @return The number of unread conversations for the current user.
      */
     @GET("conversations/unread_count")
     Call<JSONObject> getUnreadCount();
 
+    /**
+     * Returns a list of files for the given course.
+     *
+     * @param courseId  The specified course.
+     * @param only      Array of information to restrict to. Ex: 'names'.
+     * @return
+     */
+    @GET("courses/{id}/files")
+    Call<List<File>> getFiles(@Path("id") int courseId,
+                              @Query("only[]") List<String> only);
+
+    /**
+     * Returns a list of files in the given folder.
+     *
+     * @param folderId  The specified folder.
+     * @param only      Array of information to restrict to. Ex: 'names'.
+     * @return
+     */
+    @GET("folders/{id}/files")
+    Call<List<File>> getFilesByFolder(@Path("id") int folderId,
+                                      @Query("only[]") List<String> only);
+
+    /**
+     * Returns the details for a file.
+     *
+     * @param fileId The given file.
+     * @return
+     */
+    @GET("files/{id}")
+    Call<File> getFile(@Path("id") int fileId);
+
+    @GET
+    Call<List<File>> getFilesPaginate(@Url String url);
+
+    @GET("folders/{id}/folders")
+    Call<List<Folder>> getFolders(@Path("id") int folderId);
+
+    /**
+     * Returns a list of all folders for the given course.
+     *
+     * @param courseId  The given course id.
+     * @param only      Array of information to restrict to. Ex: 'names'.
+     * @return
+     */
+    @GET("courses/{id}/folders")
+    Call<List<Folder>> getFoldersByCourse(@Path("id") int courseId,
+                                          @Query("only[]") List<String> only);
+
+    /**
+     * Returns the details for a folder.
+     *
+     * @param folderId The given folder.
+     * @return
+     */
+    @GET("folders/{id}")
+    Call<Folder> getFolder(@Path("id") int folderId);
+
+    /**
+     * Returns the details for the root folder in a given course.
+     *
+     * @param courseId The given course.
+     * @return
+     */
+    @GET("courses/{id}/folders/root")
+    Call<Folder> getRootFolder(@Path("id") int courseId);
+
+    @GET
+    Call<List<Folder>> getFoldersPaginate(@Url String url);
 }

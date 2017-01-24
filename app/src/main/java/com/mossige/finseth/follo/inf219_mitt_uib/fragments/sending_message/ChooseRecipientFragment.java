@@ -338,7 +338,7 @@ public class ChooseRecipientFragment extends Fragment {
 
                     loaded = true;
 
-                    nextPage = PaginationUtils.getNextPageUrl(response.headers().get("Link"));
+                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
 
                 } else {
                     showSnackbar(searchTerms, firstPage);

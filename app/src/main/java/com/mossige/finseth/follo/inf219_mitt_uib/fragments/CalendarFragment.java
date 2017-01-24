@@ -216,7 +216,7 @@ public class CalendarFragment extends Fragment {
 
                     // If returned maximum amount of events, get events for next page
 
-                    String nextPage = PaginationUtils.getNextPageUrl(response.headers().get("Link"));
+                    String nextPage = PaginationUtils.getNextPageUrl(response.headers());
                     if (!nextPage.isEmpty()) {
                         getCalendarEvents(year, month, pageNum + 1);
                     }

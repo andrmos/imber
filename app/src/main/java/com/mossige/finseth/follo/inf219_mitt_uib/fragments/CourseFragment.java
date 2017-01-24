@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
@@ -91,7 +92,7 @@ public class CourseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_course, container, false);
         // Set toolbar title to course name
         String course_name = course.getName();
         getActivity().setTitle(course_name);
@@ -108,6 +109,21 @@ public class CourseFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    private void loadFileBrowserFragment() {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FileBrowserFragment fileBrowserFragment = new FileBrowserFragment();
+        transaction.replace(R.id.content_frame, fileBrowserFragment);
+        transaction.addToBackStack(null);
+
+        Bundle args = new Bundle();
+        String json = new Gson().toJson(course);
+        args.putString("course", json);
+        fileBrowserFragment.setArguments(args);
+
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void initRecycleView(View rootView) {
@@ -145,15 +161,19 @@ public class CourseFragment extends Fragment {
 
                     transaction.addToBackStack(null);
                     transaction.commit();
-                } else {
-                    Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");
-                }
 
-                if(position == 1){
+                } else if (position == 1) {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
                     mCallback.initCalendar();
+
+                } else if (position == 2) {
+                    // Clicked file browser card
+                    loadFileBrowserFragment();
+
+                } else {
+                    Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");
                 }
             }
         });

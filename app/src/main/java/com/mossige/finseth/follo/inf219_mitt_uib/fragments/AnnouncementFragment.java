@@ -103,7 +103,7 @@ public class AnnouncementFragment extends Fragment {
                     announcements.addAll(response.body());
                     mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
-                    nextPage = PaginationUtils.getNextPageUrl(response.headers().get("Link"));
+                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
 
                     mainList.setVisibility(View.VISIBLE);
                 } else {

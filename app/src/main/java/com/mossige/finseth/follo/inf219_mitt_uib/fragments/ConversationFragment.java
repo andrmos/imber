@@ -115,7 +115,7 @@ public class ConversationFragment extends Fragment {
                     loaded = true;
 
                     // Set URL to next page in request
-                    nextPage = PaginationUtils.getNextPageUrl(response.headers().get("Link"));
+                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
 
                 } else {
                     showSnackbar();
