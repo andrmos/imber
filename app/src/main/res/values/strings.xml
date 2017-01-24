@@ -71,5 +71,6 @@
     <string name="file_size_prompt_message">Størrelsen på denne filen er %1$d MB.\nEr du sikker på at du vil laste ned filen?</string>
     <string name="file_size_promt_positive_button">Last ned</string>
     <string name="file_size_promt_negative_button">Avbryt</string>
+    <string name="file_browser_card_text">Kursfiler</string>
 
 </resources>
