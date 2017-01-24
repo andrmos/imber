@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class SingleAnnouncementFragment extends Fragment{
 
             // Set text to every TextView in fragment_announcement.xml
             title_tv.setText(announcement.getTitle());
-            message_tv.setText(announcement.getMessage());
+            message_tv.setText(announcement.getMessageHtmlEscaped());
             sender_tv.setText(announcement.getUserName());
             date_tv.setText(announcement.getPostedAt().toString());
         }

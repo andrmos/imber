@@ -39,7 +39,7 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Genera
         // set text of text view in card
         SingleAnnouncementViewHolder announcementHolder = (SingleAnnouncementViewHolder) holder;
         announcementHolder.title.setText(data.get(position).getTitle());
-        announcementHolder.messagePeak.setText(data.get(position).getMessage());
+        announcementHolder.messagePeak.setText(data.get(position).getMessageHtmlEscaped());
     }
 
     @Override
