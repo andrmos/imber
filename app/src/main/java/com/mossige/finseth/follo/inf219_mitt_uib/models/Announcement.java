@@ -1,5 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
+import android.text.Html;
+
 import com.google.gson.annotations.SerializedName;
 
 import hirondelle.date4j.DateTime;
@@ -40,6 +42,17 @@ public class Announcement {
 
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * Returns the HTML escaped announcement message.
+     */
+    public String getMessageHtmlEscaped() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            return Html.fromHtml(message, Html.FROM_HTML_MODE_LEGACY).toString();
+        } else {
+            return Html.fromHtml(message).toString();
+        }
     }
 
     public DateTime getPostedAt() {
