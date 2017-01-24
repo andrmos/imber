@@ -108,19 +108,7 @@ public class CourseFragment extends Fragment {
             progressbar.setVisibility(View.VISIBLE);
         }
 
-        initFileBrowserButton(rootView);
-
         return rootView;
-    }
-
-    private void initFileBrowserButton(View rootView) {
-        Button b = (Button) rootView.findViewById(R.id.btn_file_browser);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadFileBrowserFragment();
-            }
-        });
     }
 
     private void loadFileBrowserFragment() {
@@ -179,7 +167,7 @@ public class CourseFragment extends Fragment {
                     fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
                     mCallback.initCalendar();
-                    
+
                 } else if (position == 2) {
                     // Clicked file browser card
                     loadFileBrowserFragment();
