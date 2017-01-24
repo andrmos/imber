@@ -179,6 +179,10 @@ public class CourseFragment extends Fragment {
                     fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
                     mCallback.initCalendar();
+                    
+                } else if (position == 2) {
+                    // Clicked file browser card
+                    loadFileBrowserFragment();
 
                 } else {
                     Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");

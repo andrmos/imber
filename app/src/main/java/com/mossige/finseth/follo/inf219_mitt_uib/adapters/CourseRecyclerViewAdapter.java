@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendasViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AnnouncementsViewHolder;
+import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.FileBrowserViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
@@ -64,6 +65,10 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agendas_card, parent, false);
             }
             holder = new AgendasViewHolder(v);
+
+        } else if (viewType == 2) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.file_browser_card, parent, false);
+            holder = new FileBrowserViewHolder(v);
         }
 
         return holder;
@@ -148,6 +153,6 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 }
