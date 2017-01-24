@@ -6,7 +6,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="name">Ola Nordman</string>
     <string name="mail">xxx000@student.uib.no</string>
-    <string name="quote">Unlike a drop of water which loses its identity when it joins the ocean, man does not lose his being in the society in which he lives. Man\'s life is independent. He is born not for the development of the society alone, but for the development of his self.</string>
+    <string name="info_login">Lim inn tilgangstoken i tekstfeltet under. For å generere en token, velg <b><i>Konto</i></b> og velg <b><i>Innstillinger</i></b>. Trykk på <b><i>+ Nytt tilgangstoken</i></b> og skriv <i>Mobilapplikasjon</i> i bruk og velg en sen utløpsdato. Trykk på <b><i>Generer token</i></b> og kopier den genererte token.</string>
+    <string name="about">Mitt UiB er en mobilapplikasjon for informasjonsplatformen til Universitetet i Bergen. Mobilapplikasjonen eksisterer for øyeblikket kun for androidtelefoner. </string>
+    <string name="made_by">Mobilapplikasjonen er laget av <b>André Mossige</b>, <b>Øystein Follo</b> og <b>Patrick Finseth</b>.</string>
+    <string name="licence">Prosjektet er lisensiert av MIT-lisensen.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
