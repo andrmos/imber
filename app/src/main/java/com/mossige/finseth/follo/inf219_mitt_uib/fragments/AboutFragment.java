@@ -24,7 +24,6 @@ public class AboutFragment extends Fragment {
 
     private static final String TAG = "AboutFragment";
     public static final String LICENSES_URL = "https://github.com/andrmos/mitt-uib-android-app/blob/master/LICENSE.md";
-    private WebView webView;
 
     public AboutFragment() {
         // Required empty public constructor
