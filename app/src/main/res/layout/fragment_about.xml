@@ -24,10 +24,4 @@
         android:text="@string/made_by"
         android:layout_marginTop="@dimen/activity_vertical_margin"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/licence"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
-
 </LinearLayout>
