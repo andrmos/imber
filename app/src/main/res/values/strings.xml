@@ -81,6 +81,6 @@
     <string name="course_removed">Fjernet</string>
     <string name="error_saving_course">Kunne ikke lagre faget</string>
     <string name="error_removing_course">Kunne ikke fjerne faget</string>
-    <string name="licence_option_title">Lisenser</string>
+    <string name="license_option_title">Lisenser</string>
 
 </resources>
