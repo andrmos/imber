@@ -50,6 +50,7 @@ public class ConversationFragment extends Fragment {
     MainActivityListener mCallback;
     // The URL to the next page in a request
     private String nextPage;
+    private FloatingActionButton fab;
 
     public ConversationFragment() {}
 
@@ -158,15 +159,8 @@ public class ConversationFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                // If there is a next link
-                if (!nextPage.isEmpty()) {
-                    requestConversations();
-                }
-            }
-        });
+        setEndlessScrollListener(recyclerView, mLayoutManager);
+        setFabScrollListener(recyclerView);
 
         // Create adapter that binds the views with some content
         mAdapter = new ConversationRecyclerViewAdapter(conversations);
@@ -176,8 +170,41 @@ public class ConversationFragment extends Fragment {
         initFabButton(rootView);
     }
 
+    private void setFabScrollListener(RecyclerView recyclerView) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                // Hide FAB if scrolling
+                if (dy > 0 || dy < 0 && fab.isShown()){
+                    fab.hide();
+                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                // Show FAB if no longer scrolling
+                if (newState == RecyclerView.SCROLL_STATE_IDLE){
+                    fab.show();
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+    }
+
+    private void setEndlessScrollListener(RecyclerView recyclerView, final LinearLayoutManager mLayoutManager) {
+        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                // If there is a next link
+                if (!nextPage.isEmpty()) {
+                    requestConversations();
+                }
+            }
+        });
+    }
+
     private void initFabButton(final View rootView) {
-        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
