@@ -30,10 +30,6 @@ android {
     }
 }
 
-repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}
-
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -49,7 +45,7 @@ dependencies {
     compile 'com.roomorama:caldroid:3.0.1'
     compile 'com.android.support:preference-v7:25.1.1'
     compile 'com.darwinsys:hirondelle-date4j:1.5.1'
-    compile 'com.github.castorflex.smoothprogressbar:library:1.0.1-SNAPSHOT@aar'
+    compile 'com.hannesdorfmann.smoothprogressbar:library:1.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     androidTestCompile 'junit:junit:4.12'
