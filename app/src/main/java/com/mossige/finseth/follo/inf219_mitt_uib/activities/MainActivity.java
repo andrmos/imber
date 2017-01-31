@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // Reset back stack when navigating to a new fragment from the nav bar
-        getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         boolean fragmentTransaction = true;
         switch(id){
