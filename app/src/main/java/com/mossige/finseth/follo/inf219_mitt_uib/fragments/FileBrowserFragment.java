@@ -104,14 +104,13 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         initBroadcastReceiver();
     }
 
     @Override
     public void onPause() {
-        super.onPause();
         if (getContext() != null) {
             try {
                 getContext().unregisterReceiver(downloadComplete);
@@ -119,6 +118,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
                 // Broadcast receiver is not registered. Do nothing.
             }
         }
+        super.onPause();
     }
 
     private void initArguments() {
@@ -150,8 +150,10 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private void initBroadcastReceiver() {
         // Register broadcastreceiver for finished download
         downloadComplete = new DownloadComplete();
-        getContext().registerReceiver(downloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-        getContext().registerReceiver(downloadComplete, new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
+        IntentFilter downloadFilter = new IntentFilter();
+        downloadFilter.addAction(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        downloadFilter.addAction(DownloadManager.ACTION_NOTIFICATION_CLICKED);
+        getContext().registerReceiver(downloadComplete, downloadFilter);
     }
 
     private void getRootFolder() {
