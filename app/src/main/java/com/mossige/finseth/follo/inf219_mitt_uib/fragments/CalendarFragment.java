@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,7 @@ public class CalendarFragment extends Fragment {
     private DateTime previousDateTime;
     private OnDateClickListener callBack;
     private MainActivityListener mCallback;
+    private MittUibClient mittUibClient;
 
     @Override
     public void onAttach(Context context) {
@@ -52,6 +52,8 @@ public class CalendarFragment extends Fragment {
         }catch(ClassCastException e){
             //Do nothing
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     public interface OnDateClickListener {
@@ -186,8 +188,6 @@ public class CalendarFragment extends Fragment {
      * @param pageNum Page number of calendar event request. Declared final since it's accessed from inner class.
      */
     private void getCalendarEvents(final int year, final int month, final int pageNum) {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-
         ArrayList<String> contextCodes = contextCodes();
         String type = "event";
 
@@ -202,7 +202,7 @@ public class CalendarFragment extends Fragment {
 
         int perPage = 50;
 
-        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDateString, endDateString, contextCodes, excludes, type, perPage, pageNum);
+        Call<List<CalendarEvent>> call = mittUibClient.getCalendarEvents(startDateString, endDateString, contextCodes, excludes, type, perPage, pageNum);
 
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
@@ -291,8 +291,7 @@ public class CalendarFragment extends Fragment {
 
         int perPage = 50;
 
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDateString, endDateString, contextCodes, null, type, perPage, null);
+        Call<List<CalendarEvent>> call = mittUibClient.getCalendarEvents(startDateString, endDateString, contextCodes, null, type, perPage, null);
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {

@@ -1,7 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
@@ -15,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -23,7 +20,6 @@ import android.widget.TextView;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.fragments.FileBrowserFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.SettingFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
@@ -39,7 +35,6 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements OnNavigationItemSelectedListener, MainActivityListener {
 
@@ -49,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private ArrayList<Course> courses;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private MittUibClient mittUibClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         courses = new ArrayList<>();
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
 
         requestProfile();
         requestUnreadCount();
@@ -162,9 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void requestCourses() {
-
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
-        Call<List<Course>> call = client.getCourses();
+        Call<List<Course>> call = mittUibClient.getCourses();
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
@@ -195,8 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void requestProfile() {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
-        Call<User> call = client.getProfile();
+        Call<User> call = mittUibClient.getProfile();
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, retrofit2.Response<User> response) {

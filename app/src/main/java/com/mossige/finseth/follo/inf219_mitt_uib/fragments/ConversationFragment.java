@@ -51,6 +51,7 @@ public class ConversationFragment extends Fragment {
     // The URL to the next page in a request
     private String nextPage;
     private FloatingActionButton fab;
+    private MittUibClient mittUibClient;
 
     public ConversationFragment() {}
 
@@ -63,6 +64,8 @@ public class ConversationFragment extends Fragment {
         }catch(ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     @Override
@@ -91,14 +94,13 @@ public class ConversationFragment extends Fragment {
     }
 
     private void requestConversations() {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
         Call<List<Conversation>> call;
 
         boolean firstPage = nextPage.isEmpty();
         if (firstPage) {
-            call = client.getConversations();
+            call = mittUibClient.getConversations();
         } else {
-            call = client.getConversationsPagination(nextPage);
+            call = mittUibClient.getConversationsPagination(nextPage);
         }
 
         nextPage = "";

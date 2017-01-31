@@ -31,6 +31,7 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
     private ArrayList<Course> favoriteCourses;
 
     private MainActivityListener mCallback;
+    private MittUibClient mittUibClient;
 
     @Override
     public void onAttach(Context context) {
@@ -41,6 +42,8 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         }catch(ClassCastException e){
             //Do nothing
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     @Override
@@ -87,9 +90,7 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
     }
 
     private void saveFavoriteCourse(final String id) {
-
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<Course> call = client.addFavortiteCourse(id);
+        Call<Course> call = mittUibClient.addFavortiteCourse(id);
         call.enqueue(new Callback<Course>() {
             @Override
             public void onResponse(Call<Course> call, retrofit2.Response<Course> response) {
@@ -112,8 +113,7 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
 
     private void requestCourses() {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<Course>> call = client.getCourses();
+        Call<List<Course>> call = mittUibClient.getCourses();
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
@@ -139,8 +139,7 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
     }
 
     private void requestFavoriteCourse() {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<Course>> call = client.getFavoriteCourses();
+        Call<List<Course>> call = mittUibClient.getFavoriteCourses();
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
@@ -165,8 +164,7 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
     }
 
     private void removeFavoriteCourse(final String id) {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<Course> call = client.removeFavortiteCourse(id);
+        Call<Course> call = mittUibClient.removeFavortiteCourse(id);
         call.enqueue(new Callback<Course>() {
             @Override
             public void onResponse(Call<Course> call, retrofit2.Response<Course> response) {

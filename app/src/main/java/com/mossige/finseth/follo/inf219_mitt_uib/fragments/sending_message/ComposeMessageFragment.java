@@ -52,6 +52,7 @@ public class ComposeMessageFragment extends Fragment {
     private TextInputLayout bodyInputLayout;
 
     MainActivityListener mCallback;
+    private MittUibClient mittUibClient;
 
     public ComposeMessageFragment() { }
 
@@ -117,6 +118,8 @@ public class ComposeMessageFragment extends Fragment {
         }catch (ClassCastException e){
             //Do nothing
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     private void cleanTextFields(){
@@ -134,8 +137,7 @@ public class ComposeMessageFragment extends Fragment {
         if (validateMessage(subject, body)) {
             SendMessage message = new SendMessage(subject, body, recipients);
 
-            MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-            Call<List<SendMessage>> call = client.createConversation(message);
+            Call<List<SendMessage>> call = mittUibClient.createConversation(message);
             call.enqueue(new Callback<List<SendMessage>>() {
                 @Override
                 public void onResponse(Call<List<SendMessage>> call, retrofit2.Response<List<SendMessage>> response) {

@@ -50,6 +50,7 @@ public class SingleConversationFragment extends Fragment {
     MainActivityListener mCallback;
     private View rootView;
     private FloatingActionButton fab;
+    private MittUibClient mittUibClient;
 
     @Override
     public void onAttach(Context context) {
@@ -60,6 +61,8 @@ public class SingleConversationFragment extends Fragment {
         }catch(ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     public SingleConversationFragment() {}
@@ -94,13 +97,10 @@ public class SingleConversationFragment extends Fragment {
     }
 
     private void requestSingleConversation() {
-
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-
         if (getArguments().containsKey("conversationID")) {
             int conversationId = getArguments().getInt("conversationID");
 
-            Call<Conversation> call = client.getConversation(conversationId);
+            Call<Conversation> call = mittUibClient.getConversation(conversationId);
             call.enqueue(new Callback<Conversation>() {
                 @Override
                 public void onResponse(Call<Conversation> call, retrofit2.Response<Conversation> response) {

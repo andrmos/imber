@@ -44,6 +44,7 @@ public class AnnouncementFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private int courseId;
     private MainActivityListener mCallback;
+    private MittUibClient mittUibClient;
 
     public AnnouncementFragment() { }
 
@@ -81,17 +82,16 @@ public class AnnouncementFragment extends Fragment {
         }catch(ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     private void requestAnnouncements(final int course_id) {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-
         Call<List<Announcement>> call;
         boolean firstPage = nextPage.isEmpty();
         if (firstPage) {
-            call = client.getAnnouncements(course_id);
+            call = mittUibClient.getAnnouncements(course_id);
         } else {
-            call = client.getAnnouncementsPagination(nextPage);
+            call = mittUibClient.getAnnouncementsPagination(nextPage);
         }
 
         call.enqueue(new Callback<List<Announcement>>() {

@@ -78,6 +78,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private DownloadComplete downloadComplete;
     private long enqueuedDownload;
     private File clickedFile;
+    private MittUibClient mittUibClient;
 
     public FileBrowserFragment() {
         // Required empty public constructor
@@ -91,6 +92,8 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         } catch (ClassCastException e) {
             //Do nothing
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     @Override
@@ -142,15 +145,13 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
     private void initBroadcastReceiver() {
         // Register broadcastreceiver for finished download
-        Log.i(TAG, "initBroadcastReceiver");
         downloadComplete = new DownloadComplete();
         getContext().registerReceiver(downloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
         getContext().registerReceiver(downloadComplete, new IntentFilter(DownloadManager.ACTION_NOTIFICATION_CLICKED));
     }
 
     private void getRootFolder() {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<Folder> call = client.getRootFolder(course.getId());
+        Call<Folder> call = mittUibClient.getRootFolder(course.getId());
         call.enqueue(new CancelableCallback<Folder>() {
             @Override
             public void onSuccess(Call<Folder> call, Response<Folder> response) {
@@ -182,14 +183,12 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     }
 
     private void getFolders(final int folderId) {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-
         Call<List<Folder>> call;
         boolean firstPage = nextPageFolders.isEmpty();
         if (firstPage) {
-            call = client.getFolders(folderId);
+            call = mittUibClient.getFolders(folderId);
         } else {
-            call = client.getFoldersPaginate(nextPageFolders);
+            call = mittUibClient.getFoldersPaginate(nextPageFolders);
         }
 
         call.enqueue(new Callback<List<Folder>>() {
@@ -216,14 +215,12 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     }
 
     private void getFiles(final int folderId) {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-
         Call<List<File>> call;
         boolean firstPage = nextPageFiles.isEmpty();
         if (firstPage) {
-            call = client.getFilesByFolder(folderId, null);
+            call = mittUibClient.getFilesByFolder(folderId, null);
         } else {
-            call = client.getFilesPaginate(nextPageFiles);
+            call = mittUibClient.getFilesPaginate(nextPageFiles);
         }
 
         call.enqueue(new Callback<List<File>>() {

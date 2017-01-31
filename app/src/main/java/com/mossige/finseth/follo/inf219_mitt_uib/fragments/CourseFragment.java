@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
@@ -57,6 +56,7 @@ public class CourseFragment extends Fragment {
     private boolean[] loaded;
 
     MainActivityListener mCallback;
+    private MittUibClient mittUibClient;
 
     @Override
     public void onAttach(Context context) {
@@ -67,6 +67,8 @@ public class CourseFragment extends Fragment {
         }catch(ClassCastException e){
             //Do nothing
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     public CourseFragment() {}
@@ -180,9 +182,8 @@ public class CourseFragment extends Fragment {
     }
 
     private void requestAnnouncements(final int course_id) {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
 
-        Call<List<Announcement>> call = client.getAnnouncements(course_id);
+        Call<List<Announcement>> call = mittUibClient.getAnnouncements(course_id);
         call.enqueue(new Callback<List<Announcement>>() {
             @Override
             public void onResponse(Call<List<Announcement>> call, retrofit2.Response<List<Announcement>> response) {
@@ -249,8 +250,7 @@ public class CourseFragment extends Fragment {
         String startDate = df.format(cal.getTime());
         String endDate = df.format(cal.getTime());
 
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDate, endDate, contextCodes, null, type, perPage, null);
+        Call<List<CalendarEvent>> call = mittUibClient.getCalendarEvents(startDate, endDate, contextCodes, null, type, perPage, null);
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
@@ -309,9 +309,7 @@ public class CourseFragment extends Fragment {
         String startDate = df.format(cal.getTime());
         String endDate = df.format(cal.getTime());
 
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<CalendarEvent>> call = client.getCalendarEvents(startDate, endDate, contextCodes, null, type, perPage, null);
-
+        Call<List<CalendarEvent>> call = mittUibClient.getCalendarEvents(startDate, endDate, contextCodes, null, type, perPage, null);
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {

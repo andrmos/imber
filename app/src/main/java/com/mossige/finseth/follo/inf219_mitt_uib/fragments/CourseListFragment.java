@@ -1,7 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,8 +20,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +45,7 @@ public class CourseListFragment extends Fragment {
     private boolean loaded;
 
     MainActivityListener mCallback;
+    private MittUibClient mittUibClient;
 
     public CourseListFragment() {}
 
@@ -69,6 +67,8 @@ public class CourseListFragment extends Fragment {
         }catch (ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
 
@@ -127,9 +127,7 @@ public class CourseListFragment extends Fragment {
     }
 
     private void requestCourses() {
-
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<Course>> call = client.getFavoriteCourses();
+        Call<List<Course>> call = mittUibClient.getFavoriteCourses();
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {

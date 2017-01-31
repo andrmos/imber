@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,6 +72,7 @@ public class ChooseRecipientFragment extends Fragment {
     private MainActivityListener mCallback;
 
     private int courseId;
+    private MittUibClient mittUibClient;
 
     public ChooseRecipientFragment() {
     }
@@ -86,6 +86,8 @@ public class ChooseRecipientFragment extends Fragment {
         } catch (ClassCastException e) {
             //Do nothing
         }
+
+        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     @Override
@@ -274,8 +276,7 @@ public class ChooseRecipientFragment extends Fragment {
 
 
     private void requestCourses() {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-        Call<List<Course>> call = client.getCourses();
+        Call<List<Course>> call = mittUibClient.getCourses();
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
@@ -308,15 +309,13 @@ public class ChooseRecipientFragment extends Fragment {
     }
 
     private void requestRecipients(final String searchTerms, final boolean firstPage) {
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getContext());
-
         String context = "course_" + courseId;
 
         Call<List<Recipient>> call;
         if (firstPage) {
-            call = client.getRecipients(searchTerms, context);
+            call = mittUibClient.getRecipients(searchTerms, context);
         } else {
-            call = client.getRecipientsPagination(nextPage);
+            call = mittUibClient.getRecipientsPagination(nextPage);
         }
 
         call.enqueue(new CancelableCallback<List<Recipient>>(searchTerms) {
