@@ -112,8 +112,12 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     @Override
     public void onPause() {
         super.onPause();
-        if (getContext() != null && downloadComplete != null) {
-            getContext().unregisterReceiver(downloadComplete);
+        if (getContext() != null) {
+            try {
+                getContext().unregisterReceiver(downloadComplete);
+            } catch (IllegalArgumentException e) {
+                // Broadcast receiver is not registered. Do nothing.
+            }
         }
     }
 
