@@ -52,7 +52,6 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
-    // TODO Possible to use dependency injection to get context?
     private static String getAccessToken(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         return sharedPreferences.getString("access_token", "");

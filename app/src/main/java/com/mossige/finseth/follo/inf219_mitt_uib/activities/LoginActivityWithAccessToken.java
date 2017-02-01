@@ -31,7 +31,6 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        // TODO Remove
         // Hard coded access token for development
         if(!PrivateConstants.ACCESS_TOKEN.isEmpty()) {
             storeToken(PrivateConstants.ACCESS_TOKEN);
@@ -57,7 +56,6 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
         }
     }
 
-    // TODO Change to retrieving profile, and bundle it to MainActivity
     private void validateAccessToken(final String token){
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
         Call<List<Course>> call = client.getCourses();
