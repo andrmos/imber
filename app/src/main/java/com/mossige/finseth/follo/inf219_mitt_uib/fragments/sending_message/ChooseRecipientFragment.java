@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,6 +74,7 @@ public class ChooseRecipientFragment extends Fragment {
 
     private int courseId;
     private MittUibClient mittUibClient;
+    private EndlessRecyclerViewScrollListener endlessScrollListener;
 
     public ChooseRecipientFragment() {
     }
@@ -204,9 +206,11 @@ public class ChooseRecipientFragment extends Fragment {
                     CancelableCallback.cancel(oldTag);
                 }
 
+                endlessScrollListener.resetState();
                 // Clear list to fill with new data
+                int size = mAdapter.getItemCount();
                 recipients.clear();
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemRangeRemoved(0, size);
                 requestRecipients(newText, true);
 
                 return true;
@@ -232,8 +236,9 @@ public class ChooseRecipientFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
                 CancelableCallback.cancelAll();
+                int size = mAdapter.getItemCount();
                 recipients.clear();
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemRangeRemoved(0, size);
 
                 courseId = courses.get(parent.getSelectedItemPosition()).getId();
                 requestRecipients("", true);
@@ -255,16 +260,7 @@ public class ChooseRecipientFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-
-                if (!nextPage.isEmpty()) {
-                    requestRecipients("", false);
-                }
-
-            }
-        });
+        recyclerView.addOnScrollListener(initEndlessScrollListener(mLayoutManager));
 
         // Create adapter that binds the views with some content
         mAdapter = new RecipientRecyclerViewAdapter(recipients);
@@ -273,6 +269,17 @@ public class ChooseRecipientFragment extends Fragment {
         initOnClickListener();
     }
 
+    private EndlessRecyclerViewScrollListener initEndlessScrollListener(final LinearLayoutManager mLayoutManager) {
+        endlessScrollListener = new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                if (!nextPage.isEmpty()) {
+                    requestRecipients("", false);
+                }
+            }
+        };
+        return endlessScrollListener;
+    }
 
 
     private void requestCourses() {
