@@ -53,8 +53,6 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         courses = new ArrayList<>();
         checkBoxes = new ArrayList<>();
 
-        // TODO add to back stack
-
         //Inflates view
         addPreferencesFromResource(R.xml.preference_favorite);
 

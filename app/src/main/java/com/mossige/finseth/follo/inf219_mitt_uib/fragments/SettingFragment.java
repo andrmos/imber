@@ -57,6 +57,9 @@ public class SettingFragment extends PreferenceFragmentCompat{
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 SettingFavoriteCourseFragment settingFavoriteCourseFragment = new SettingFavoriteCourseFragment();
                 transaction.replace(R.id.content_frame, settingFavoriteCourseFragment);
+
+                transaction.addToBackStack(null);
+
                 transaction.commit();
                 return true;
             }
