@@ -15,9 +15,11 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewScrollListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
@@ -46,13 +48,14 @@ public class CourseListFragment extends Fragment {
 
     MainActivityListener mCallback;
     private MittUibClient mittUibClient;
+    private String nextPage;
 
     public CourseListFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        nextPage = "";
         loaded = false;
         courses = new ArrayList<>();
 
@@ -97,8 +100,18 @@ public class CourseListFragment extends Fragment {
         mainList.setVisibility(View.VISIBLE);
 
         // Create the LayoutManager that holds all the views
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
+
+        mainList.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                // If there is a next link
+                if (!nextPage.isEmpty()) {
+                    requestCourses();
+                }
+            }
+        });
 
         // Create adapter that binds the views with some content
         mAdapter = new CourseListRecyclerViewAdapter(courses);
@@ -127,13 +140,21 @@ public class CourseListFragment extends Fragment {
     }
 
     private void requestCourses() {
-        Call<List<Course>> call = mittUibClient.getFavoriteCourses();
+        Call<List<Course>> call;
+        boolean firstPage = nextPage.isEmpty();
+        if (firstPage) {
+            call = mittUibClient.getFavoriteCourses();
+        } else {
+            call = mittUibClient.getCoursesPagination(nextPage);
+        }
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
                 if (response.isSuccessful()) {
                     courses.clear();
                     courses.addAll(response.body());
+
+                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
 
                     loaded = true;
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
