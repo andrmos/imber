@@ -6,6 +6,7 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.util.Log;
 import android.view.View;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
@@ -28,7 +29,6 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
     private ArrayList<CheckBoxPreference> checkBoxes;
     private ArrayList<Course> courses;
-    private ArrayList<Course> favoriteCourses;
 
     private MainActivityListener mCallback;
     private MittUibClient mittUibClient;
@@ -51,8 +51,9 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         super.onCreate(savedInstanceState);
 
         courses = new ArrayList<>();
-        favoriteCourses = new ArrayList<>();
         checkBoxes = new ArrayList<>();
+
+        // TODO add to back stack
 
         //Inflates view
         addPreferencesFromResource(R.xml.preference_favorite);
@@ -60,7 +61,6 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         getActivity().setTitle("Velg favorittfag");
 
         requestCourses();
-
     }
 
     @Override
@@ -74,19 +74,20 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         for(int i = 0; i < courses.size(); i++){
 
             //Add all courses as a checkbox
-            CheckBoxPreference cbp = new CheckBoxPreference(this.getActivity());
+            CheckBoxPreference cbp = new CheckBoxPreference(getActivity());
+            cbp.setPersistent(false);
             cbp.setTitle(courses.get(i).getCourseCode());
             cbp.setKey("" + courses.get(i).getId());
             cbp.setViewId(i);
             cbp.setOnPreferenceClickListener(this);
-            for(int j = 0; j < favoriteCourses.size(); j++){
-                if(courses.get(i).getId() == favoriteCourses.get(j).getId()){
-                    cbp.setChecked(true);
-                }
+
+            if (courses.get(i).isFavorite()) {
+                cbp.setChecked(true);
             }
+
             checkBoxes.add(cbp);
             screen.addPreference(cbp);
-            }
+        }
     }
 
     private void saveFavoriteCourse(final String id) {
@@ -94,9 +95,6 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         call.enqueue(new Callback<Course>() {
             @Override
             public void onResponse(Call<Course> call, retrofit2.Response<Course> response) {
-                if (response.isSuccessful()) {
-                    mCallback.showSnackbar(getString(R.string.course_saved), null);
-                }
             }
 
             @Override
@@ -113,39 +111,19 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
 
     private void requestCourses() {
-        Call<List<Course>> call = mittUibClient.getCourses();
+        ArrayList<String> include = new ArrayList<>();
+        include.add("favorites");
+
+        // Only return active courses, ex. courses from this semester.
+        String enrollmentState = "active";
+
+        Call<List<Course>> call = mittUibClient.getCourses(include, enrollmentState);
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
                 if (response.isSuccessful()) {
                     courses.clear();
                     courses.addAll(response.body());
-
-                    requestFavoriteCourse();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Course>> call, Throwable t) {
-                mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestCourses();
-                    }
-                });
-
-            }
-        });
-    }
-
-    private void requestFavoriteCourse() {
-        Call<List<Course>> call = mittUibClient.getFavoriteCourses();
-        call.enqueue(new Callback<List<Course>>() {
-            @Override
-            public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
-                if (response.isSuccessful()) {
-                    favoriteCourses.clear();
-                    favoriteCourses.addAll(response.body());
 
                     initSettings();
                 }
@@ -159,6 +137,7 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
                         requestCourses();
                     }
                 });
+
             }
         });
     }
@@ -168,9 +147,6 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         call.enqueue(new Callback<Course>() {
             @Override
             public void onResponse(Call<Course> call, retrofit2.Response<Course> response) {
-                if (response.isSuccessful()) {
-                    mCallback.showSnackbar(getString(R.string.course_removed), null);
-                }
             }
 
             @Override
