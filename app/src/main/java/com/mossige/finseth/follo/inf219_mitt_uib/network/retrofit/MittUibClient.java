@@ -40,7 +40,7 @@ public interface MittUibClient {
      * @return The active courses of the logged in user.
      */
     @GET("courses")
-    Call<List<Course>> getCourses();
+    Call<List<Course>> getCourses(@Query("include[]") List<String> includes);
 
     /**
      * @return The favorite active courses of the logged in user.

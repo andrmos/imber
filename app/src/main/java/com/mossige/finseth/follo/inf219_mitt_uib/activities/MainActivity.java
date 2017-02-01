@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void requestCourses() {
-        Call<List<Course>> call = mittUibClient.getCourses();
+        Call<List<Course>> call = mittUibClient.getCourses(null);
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {

@@ -58,7 +58,7 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
 
     private void validateAccessToken(final String token){
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
-        Call<List<Course>> call = client.getCourses();
+        Call<List<Course>> call = client.getCourses(null);
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
