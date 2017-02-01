@@ -1,5 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by PatrickFinseth on 16.02.16.
  */
@@ -9,6 +11,8 @@ public class Course {
     private String name;
     private String calender;
     private String course_code;
+    @SerializedName("is_favorite")
+    private boolean isFavorite;
 
     public Course(int id, String name, String calender, String courseCode){
         this.id = id;
@@ -31,6 +35,10 @@ public class Course {
 
     public String getCourseCode(){
         return course_code;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
     private String trimName(String name, String courseCode){
