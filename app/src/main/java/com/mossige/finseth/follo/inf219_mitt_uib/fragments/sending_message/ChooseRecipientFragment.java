@@ -1,6 +1,5 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments.sending_message;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -185,13 +184,8 @@ public class ChooseRecipientFragment extends Fragment {
     }
 
     private void initSearchView(Menu menu) {
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getContext().getSystemService(Context.SEARCH_SERVICE);
-
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        menu.findItem(R.id.search).setVisible(true);
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setVisibility(View.VISIBLE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -239,6 +233,7 @@ public class ChooseRecipientFragment extends Fragment {
                 int size = mAdapter.getItemCount();
                 recipients.clear();
                 mAdapter.notifyItemRangeRemoved(0, size);
+                endlessScrollListener.resetState();
 
                 courseId = courses.get(parent.getSelectedItemPosition()).getId();
                 requestRecipients("", true);
