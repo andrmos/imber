@@ -50,3 +50,16 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     androidTestCompile 'junit:junit:4.12'
 }
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'com.jakewharton.hugo'
