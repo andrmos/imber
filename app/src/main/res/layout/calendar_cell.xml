@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- TODO: Optimize layout -->
     <!-- Height is the height of the cell view -->
     <RelativeLayout
         android:id="@+id/container"
