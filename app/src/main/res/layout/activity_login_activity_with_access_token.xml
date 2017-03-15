@@ -31,9 +31,7 @@
     <EditText
         android:id="@+id/token"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:maxLines="1"
-        android:lines="1"/>
+        android:layout_height="50dp"/>
     
     <Button
 

@@ -12,7 +12,6 @@ import android.widget.EditText;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.PrivateConstants;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
 
@@ -31,33 +30,33 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        // Hard coded access token for development
-        if(!PrivateConstants.ACCESS_TOKEN.isEmpty()) {
-            storeToken(PrivateConstants.ACCESS_TOKEN);
-            changeActivity();
+        if (getIntent().getBooleanExtra("update_access_token", false)) {
+            promptAccessToken();
 
-        // Access token is stored in shared preference
         } else if (sharedPreferences.contains("access_token")) {
             changeActivity();
 
-        // Prompt for new access token
         } else {
-            setContentView(R.layout.activity_login_activity_with_access_token);
-
-            inputField = (EditText) findViewById(R.id.token);
-            Button login = (Button) findViewById(R.id.login_button);
-            login.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String accessToken = inputField.getText().toString();
-                    validateAccessToken(accessToken);
-                }
-            });
+            promptAccessToken();
         }
     }
 
+    private void promptAccessToken() {
+        setContentView(R.layout.activity_login_activity_with_access_token);
+
+        inputField = (EditText) findViewById(R.id.token);
+        Button login = (Button) findViewById(R.id.login_button);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String accessToken = inputField.getText().toString();
+                validateAccessToken(accessToken);
+            }
+        });
+    }
+
     private void validateAccessToken(final String token){
-        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
+        MittUibClient client = ServiceGenerator.createService(MittUibClient.class, token);
         Call<List<Course>> call = client.getCourses(null, null);
         call.enqueue(new Callback<List<Course>>() {
             @Override
@@ -89,7 +88,7 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
     }
 
     private void showSnackbar() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.login_access_token), R.string.error_invalid_access_token, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.login_access_token), R.string.error_invalid_access_token, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 

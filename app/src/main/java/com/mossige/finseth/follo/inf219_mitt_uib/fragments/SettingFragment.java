@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.activities.LoginActivityWithAccessToken;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
@@ -51,8 +53,8 @@ public class SettingFragment extends PreferenceFragmentCompat{
 
         getActivity().setTitle("Innstillinger");
 
-        Preference preference = findPreference("favorite");
-        preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference favoritePreference = findPreference("favorite");
+        favoritePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 SettingFavoriteCourseFragment settingFavoriteCourseFragment = new SettingFavoriteCourseFragment();
@@ -61,6 +63,16 @@ public class SettingFragment extends PreferenceFragmentCompat{
                 transaction.addToBackStack(null);
 
                 transaction.commit();
+                return true;
+            }
+        });
+
+        Preference accessTokenPreference = findPreference("update_access_token");
+        accessTokenPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getContext(), LoginActivityWithAccessToken.class);
+                intent.putExtra("update_access_token", true);
+                startActivity(intent);
                 return true;
             }
         });

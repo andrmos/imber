@@ -52,6 +52,28 @@ public class ServiceGenerator {
         return retrofit.create(serviceClass);
     }
 
+    public static <S> S createService(Class<S> serviceClass, final String token) {
+
+        // Add access_token to every request
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+
+                String accessToken = "Bearer " + token;
+                Request.Builder requestBuilder = original.newBuilder()
+                        .header("Authorization", accessToken)
+                        .method(original.method(), original.body());
+
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        });
+
+        Retrofit retrofit = builder.client(httpClient.build()).build();
+        return retrofit.create(serviceClass);
+    }
+
     private static String getAccessToken(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         return sharedPreferences.getString("access_token", "");
