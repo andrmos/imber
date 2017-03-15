@@ -1,6 +1,8 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
 import hirondelle.date4j.DateTime;
@@ -12,7 +14,7 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
 
     private static final String TAG = "CalendarEvent";
 
-//    private int id;
+    private String id;
     private String title;
     private String location;
     @SerializedName("start_at")
@@ -28,6 +30,14 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
         this.startDate = startDate;
         this.endDate = endDate;
         this.hidden = hidden;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle(){
@@ -102,26 +112,19 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
         CalendarEvent that = (CalendarEvent) o;
+        return id.equals(that.getId());
+    }
 
-//        if (id != that.id) return false;
-        if (hidden != that.hidden) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (location != null ? !location.equals(that.location) : that.location != null)
-            return false;
-        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null)
-            return false;
-        return endDate != null ? endDate.equals(that.endDate) : that.endDate == null;
-
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
     @Override
     public String toString() {
         return "CalendarEvent{" +
-//                "id=" + id +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", location='" + location + '\'' +
                 ", startDate=" + startDate +
