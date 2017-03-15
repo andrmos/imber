@@ -6,7 +6,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="name">Ola Nordman</string>
     <string name="mail">xxx000@student.uib.no</string>
-    <string name="info_login">Lim inn tilgangstoken i tekstfeltet under. For å generere en token, velg <b><i>Konto</i></b> og velg <b><i>Innstillinger</i></b>. Trykk på <b><i>+ Nytt tilgangstoken</i></b> og skriv <i>Mobilapplikasjon</i> i bruk og velg en sen utløpsdato. Trykk på <b><i>Generer token</i></b> og kopier den genererte token.</string>
     <string name="about">Mitt UiB er en mobilapplikasjon for informasjonsplatformen til Universitetet i Bergen. Mobilapplikasjonen eksisterer for øyeblikket kun for androidtelefoner. </string>
     <string name="made_by">Mobilapplikasjonen er laget av <b>André Mossige</b>, <b>Øystein Follo</b> og <b>Patrick Finseth</b>.</string>
     <string name="licence">Prosjektet er lisensiert av MIT-lisensen.</string>
@@ -81,5 +80,9 @@
     <string name="error_saving_course">Kunne ikke lagre faget</string>
     <string name="error_removing_course">Kunne ikke fjerne faget</string>
     <string name="license_option_title">Lisenser</string>
+    <string name="login_title">Koble til Mitt UiB</string>
+
+    <string name="info_permissions">Før du kan bruke denne appen må den kobles til Mitt UiB via en tilgangsnøkkel.\n\nDenne nøkkelen gir appen tilgang til følgende informasjon på Mitt UiB:\n\t\t- Fag\n\t\t- Kunngjøringer\n\t\t- Meldinger\n\t\t- Kalender\n\t\t- Filer\n\nDu kan når som helst fjerne appens tilgang til Mitt UiB.\n</string>
+    <string name="info_login">For å hente din nøkkel gjør du følgende:\n\t\t- Logg inn på <i><b>www.mitt.uib.no</b></i>.\n\t\t- Velg <b><i>Konto</i></b> og så <b><i>Innstillinger</i></b>.\n\t\t- Velg <b><i>Nytt tilgangstoken</i></b>.\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<i><b>bruk</b></i>".\n\t\t- La <i><b>utløpsdato</b></i> stå tom.\n\t\t- Velg <b><i>Generer token</i></b> og kopier den genererte nøkkelen.\n\t\t- Lim inn nøkkelen i feltet under.</string>
 
 </resources>
