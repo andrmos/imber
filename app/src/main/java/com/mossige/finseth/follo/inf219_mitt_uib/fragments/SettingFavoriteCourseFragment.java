@@ -6,14 +6,13 @@ import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
-import android.util.Log;
 import android.view.View;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

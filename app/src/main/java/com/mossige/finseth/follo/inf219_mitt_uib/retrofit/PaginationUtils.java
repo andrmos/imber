@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib.network;
+package com.mossige.finseth.follo.inf219_mitt_uib.retrofit;
 
 import okhttp3.Headers;
 

@@ -22,8 +22,8 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -25,10 +25,10 @@ import com.mossige.finseth.follo.inf219_mitt_uib.fragments.ConversationFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

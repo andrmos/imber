@@ -14,9 +14,9 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.PaginationUtils;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.PaginationUtils;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 

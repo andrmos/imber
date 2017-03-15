@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit;
+package com.mossige.finseth.follo.inf219_mitt_uib.retrofit;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.AssignmentEvent;

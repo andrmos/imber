@@ -21,8 +21,8 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
 

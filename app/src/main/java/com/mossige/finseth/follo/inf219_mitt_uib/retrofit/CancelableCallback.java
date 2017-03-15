@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit;
+package com.mossige.finseth.follo.inf219_mitt_uib.retrofit;
 
 import java.util.ArrayList;
 import java.util.Iterator;

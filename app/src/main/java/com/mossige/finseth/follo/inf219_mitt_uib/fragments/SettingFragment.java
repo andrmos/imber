@@ -1,39 +1,13 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.preference.CheckBoxPreference;
-import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceScreen;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.activities.LoginActivityWithAccessToken;
-import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.SendMessage;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.MittUibClient;
-import com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit.ServiceGenerator;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 
 /**

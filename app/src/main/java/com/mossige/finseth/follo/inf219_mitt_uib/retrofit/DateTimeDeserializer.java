@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib.network.retrofit;
+package com.mossige.finseth.follo.inf219_mitt_uib.retrofit;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
