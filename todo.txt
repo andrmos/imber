@@ -1,6 +1,5 @@
 TODO:
 - Realm for data persistence.
-- File Browser, example: http://www.christophbrill.de/de_DE/how-to-create-a-android-file-browser-in-15-minutes/
 
 Setup example with offline datastore: https://adityaladwa.wordpress.com/2016/10/25/offline-first-reactive-android-apps-repository-pattern-mvp-dagger-2-rxjava-contentprovider/ 
 
