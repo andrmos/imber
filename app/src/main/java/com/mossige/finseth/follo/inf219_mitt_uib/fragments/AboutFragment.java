@@ -2,19 +2,17 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.activities.LicenseActivity;
 
 
 /**
@@ -23,7 +21,6 @@ import com.mossige.finseth.follo.inf219_mitt_uib.R;
 public class AboutFragment extends Fragment {
 
     private static final String TAG = "AboutFragment";
-    public static final String LICENSES_URL = "https://github.com/andrmos/mitt-uib-android-app/blob/master/LICENSE.md";
 
     public AboutFragment() {
         // Required empty public constructor
@@ -59,9 +56,7 @@ public class AboutFragment extends Fragment {
      * Show the licenses in the device web browser.
      */
     private void showLicenses() {
-        String url = LICENSES_URL;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
+        Intent intent = new Intent(getContext(), LicenseActivity.class);
         startActivity(intent);
     }
 }
