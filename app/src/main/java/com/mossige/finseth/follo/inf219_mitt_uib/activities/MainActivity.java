@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(drawerToggle);
+        drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -234,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         snackbar = snackbar.setDuration(duration); // Gives false syntax error...
 
         if(listener != null) {
-            snackbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
+            snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.colorAccent));
             snackbar.setAction(getString(R.string.snackback_action_text), listener);
         }
 

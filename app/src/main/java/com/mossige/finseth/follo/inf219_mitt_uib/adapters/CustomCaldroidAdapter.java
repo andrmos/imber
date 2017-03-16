@@ -3,6 +3,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +55,7 @@ public class CustomCaldroidAdapter extends CaldroidGridAdapter {
 
         // Set color of the dates in previous / next month
         if (dateTime.getMonth() != month) {
-            tvDayNumber.setTextColor(resources.getColor(com.caldroid.R.color.caldroid_darker_gray));
+            tvDayNumber.setTextColor(ContextCompat.getColor(context, R.color.caldroid_darker_gray));
         }
 
         // Show circle on dates that contains an event
@@ -95,7 +96,7 @@ public class CustomCaldroidAdapter extends CaldroidGridAdapter {
 
         // Customize for selected dates
         if (selectedDates != null && selectedDates.indexOf(dateTime) != -1) {
-            cellView.setBackgroundColor(resources.getColor(com.caldroid.R.color.caldroid_sky_blue));
+            cellView.setBackgroundColor(ContextCompat.getColor(context, R.color.caldroid_sky_blue));
             tvDayNumber.setTextColor(Color.BLACK);
 
         } else {

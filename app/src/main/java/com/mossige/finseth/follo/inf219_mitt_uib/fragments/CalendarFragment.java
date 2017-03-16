@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,7 +153,7 @@ public class CalendarFragment extends Fragment {
 
                 Hours, minutes, seconds and nano seconds are ignored, since they are irrelevant when clicking on a date.
                  */
-                DateTime dateTime = new DateTime(date.getYear() + 1900, date.getMonth() + 1, date.getDate(), 0, 0, 0, 0);
+                @SuppressWarnings("deprecation") DateTime dateTime = new DateTime(date.getYear() + 1900, date.getMonth() + 1, date.getDate(), 0, 0, 0, 0);
 
                 // Callback to agenda fragment to update its calendar events
                 callBack.setAgendas(calendar.getEventsForDate(dateTime));
@@ -169,7 +170,7 @@ public class CalendarFragment extends Fragment {
      * @param dateTime
      */
     private void setBackground(DateTime dateTime) {
-        Drawable border = getResources().getDrawable(R.drawable.border);
+        Drawable border = ResourcesCompat.getDrawable(getResources(), R.drawable.border, null);
         if (previousDateTime != null) {
             // Clear background for previous selected DateTime
             caldroidFragment.clearBackgroundDrawableForDateTime(previousDateTime);
