@@ -14,8 +14,7 @@
     <ImageView
         android:layout_width="@dimen/uib_logo_width"
         android:layout_height="@dimen/uib_logo_height"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/uibugle_white" />
+        android:src="@drawable/imber" />
 
     <TextView
         android:id="@+id/name"
