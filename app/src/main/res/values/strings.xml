@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mitt UiB</string>
+    <string name="app_name">Imber</string>
     <string name="navigation_drawer">Navigation</string>
     <string name="title_activity_main2">MainActivity2</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -8,14 +8,10 @@
     <string name="mail">xxx000@student.uib.no</string>
     <string name="about">Imber er utviklet som et prosjekt i faget <i>INF219</i> og på eget initiativ.</string>
     <string name="made_by">Utviklerne bak Imber er <b>André Mossige</b>, <b>Øystein Follo</b> og <b>Patrick Finseth</b>.</string>
-    <string name="licence">Prosjektet er lisensiert av MIT-lisensen.</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_login">Logg inn</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Brukernavn</string>
-    <string name="prompt_password">Passord</string>
     <string name="action_sign_in">Logg inn</string>
     <string name="action_sign_in_short">Logg inn</string>
     <string name="error_invalid_email">Ugyldig primary_email-adresse</string>
@@ -43,16 +39,14 @@
     <string name="message_button">Send melding</string>
     <string name="subject_length_error">Maks 255 tegn</string>
     <string name="body_length_error">Meldingen er tom</string>
-
+    <string name="message_sent">Melding sendt!</string>
 
     <!-- Error messages -->
     <string name="error_profile">Feil ved lasting av profil…</string>
     <string name="error_course_list">Feil ved lasting av fag…</string>
     <string name="error_course_info">Feil ved lasting av faginfo…</string>
     <string name="error_conversation">Feil ved lasting av samtaler…</string>
-
     <string name="snackback_action_text">Prøv igjen</string>
-    <string name="message_sent">Melding sendt!</string>
     <string name="request_courses_error">Kunne ikke laste fag</string>
     <string name="no_recipients_error">Ingen mottakere valgt</string>
     <string name="error_loading_recipients">Kunne ikke laste mottakere</string>
