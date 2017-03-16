@@ -105,12 +105,8 @@ public class ChooseRecipientFragment extends Fragment {
             return true;
         }
 
-        if (id == R.id.search) {
-            // Do nothing
-            return true;
-        }
+        return id == R.id.search;
 
-        return false;
     }
 
     private void initComposeMessageFragment() {

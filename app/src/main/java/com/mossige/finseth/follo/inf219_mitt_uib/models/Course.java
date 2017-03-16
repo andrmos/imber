@@ -62,11 +62,8 @@ public class Course {
             return false;
         }
 
-        if (!this.getCourseCode().equals(that.getCourseCode())) {
-            return false;
-        }
+        return this.getCourseCode().equals(that.getCourseCode());
 
-        return true;
     }
 
 }

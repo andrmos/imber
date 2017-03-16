@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Imber</string>
-    <string name="navigation_drawer">Navigation</string>
-    <string name="title_activity_main2">MainActivity2</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="name">Ola Nordman</string>
@@ -9,18 +7,10 @@
     <string name="about">Imber er utviklet som et prosjekt i faget <i>INF219</i> og på eget initiativ.</string>
     <string name="made_by">Utviklerne bak Imber er <b>André Mossige</b>, <b>Øystein Follo</b> og <b>Patrick Finseth</b>.</string>
 
-    <string name="title_activity_login">Logg inn</string>
-
     <!-- Strings related to login -->
-    <string name="action_sign_in">Logg inn</string>
-    <string name="action_sign_in_short">Logg inn</string>
-    <string name="error_invalid_email">Ugyldig primary_email-adresse</string>
-    <string name="error_incorrect_password">Ugyldig passord</string>
-    <string name="error_field_required">Dette feltet må fylles ut</string>
 
     <string name="announcements_card_title">Kunngjøringer</string>
     <string name="agenda_card_title">Dagens agenda</string>
-    <string name="grades_card_title">Karakterer</string>
 
     <string name="preference_file_key">preference_file_key</string>
 
@@ -31,12 +21,10 @@
     <string name="conversation_title">Innboks</string>
 
     <string name="search_title">Søk</string>
-    <string name="search_hint">Mottaker</string>
 
     <!-- Compose message -->
     <string name="subject_hint">Emne</string>
     <string name="body_hint">Melding</string>
-    <string name="message_button">Send melding</string>
     <string name="subject_length_error">Maks 255 tegn</string>
     <string name="body_length_error">Meldingen er tom</string>
     <string name="message_sent">Melding sendt!</string>
@@ -44,7 +32,6 @@
     <!-- Error messages -->
     <string name="error_profile">Feil ved lasting av profil…</string>
     <string name="error_course_list">Feil ved lasting av fag…</string>
-    <string name="error_course_info">Feil ved lasting av faginfo…</string>
     <string name="error_conversation">Feil ved lasting av samtaler…</string>
     <string name="snackback_action_text">Prøv igjen</string>
     <string name="request_courses_error">Kunne ikke laste fag</string>
@@ -66,8 +53,6 @@
     <string name="file_browser_card_text">Kursfiler</string>
 
     <!-- Error favorite courses -->
-    <string name="course_saved">Lagret</string>
-    <string name="course_removed">Fjernet</string>
     <string name="error_saving_course">Kunne ikke lagre faget</string>
     <string name="error_removing_course">Kunne ikke fjerne faget</string>
     <string name="license_option_title">Lisenser</string>

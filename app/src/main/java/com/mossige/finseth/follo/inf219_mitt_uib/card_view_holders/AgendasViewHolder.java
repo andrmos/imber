@@ -26,7 +26,7 @@ public class AgendasViewHolder extends GeneralViewHolder {
         agenda1 = (TextView) v.findViewById(R.id.agenda1);
         agenda2 = (TextView) v.findViewById(R.id.agenda2);
         agenda3 = (TextView) v.findViewById(R.id.agenda3);
-        dividerAgenda1 = (View) v.findViewById(R.id.dividerAgenda1);
-        dividerAgenda2 = (View) v.findViewById(R.id.dividerAgenda2);
+        dividerAgenda1 = v.findViewById(R.id.dividerAgenda1);
+        dividerAgenda2 = v.findViewById(R.id.dividerAgenda2);
     }
 }

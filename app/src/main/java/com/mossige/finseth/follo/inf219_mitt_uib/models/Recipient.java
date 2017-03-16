@@ -52,10 +52,7 @@ public class Recipient {
             return false;
         }
 
-        if(!this.getId().equals(that.getId())) {
-            return false;
-        }
+        return this.getId().equals(that.getId());
 
-        return true;
     }
 }

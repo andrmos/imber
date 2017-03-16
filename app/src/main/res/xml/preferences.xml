@@ -1,18 +1,15 @@
 <android.support.v7.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/preference_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.preference.Preference
-        android:id="@+id/favorite_courses"
         android:key="favorite"
         android:title="Favorittfag"
         android:summary="Velg dine favorittfag">
     </android.support.v7.preference.Preference>
 
     <android.support.v7.preference.Preference
-        android:id="@+id/update_access_token"
         android:key="update_access_token"
         android:title="Tilgangsnøkkel"
         android:summary="Oppdater tilgangsnøkkelen fra Mitt UiB">

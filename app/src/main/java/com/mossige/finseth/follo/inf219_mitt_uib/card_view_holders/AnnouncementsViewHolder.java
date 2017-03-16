@@ -29,7 +29,7 @@ public class AnnouncementsViewHolder extends GeneralViewHolder {
         announcements1 = (TextView) v.findViewById(R.id.announcement1);
         announcements2 = (TextView) v.findViewById(R.id.announcement2);
         announcements3 = (TextView) v.findViewById(R.id.announcement3);
-        dividerAnn1 = (View) v.findViewById(R.id.dividerAnn1);
-        dividerAnn2 = (View) v.findViewById(R.id.dividerAnn2);
+        dividerAnn1 = v.findViewById(R.id.dividerAnn1);
+        dividerAnn2 = v.findViewById(R.id.dividerAnn2);
     }
 }

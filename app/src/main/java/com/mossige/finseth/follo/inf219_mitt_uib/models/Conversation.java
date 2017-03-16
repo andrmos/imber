@@ -84,10 +84,7 @@ public class Conversation {
             return false;
         }
 
-        if (!this.getLastMessage().equals(that.getLastMessage())) {
-            return false;
-        }
+        return this.getLastMessage().equals(that.getLastMessage());
 
-        return true;
     }
 }
