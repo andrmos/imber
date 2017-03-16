@@ -221,6 +221,7 @@ public class CalendarFragment extends Fragment {
                         getCalendarEvents(year, month, pageNum + 1);
                     }
 
+                    // TODO Pagination
                     requestAssignments(year, month);
                     calendar.setLoaded(year, month, true);
                     setBackgrounds(events);
