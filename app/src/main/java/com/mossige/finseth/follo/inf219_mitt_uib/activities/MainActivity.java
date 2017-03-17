@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.Snackbar;
@@ -60,24 +61,26 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         mittUibClient = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
 
-        String profileJson = getIntent().getStringExtra("profile");
-        if (profileJson != null) {
-            profile = new Gson().fromJson(profileJson, User.class);
-            updateNavDrawer();
-        } else {
-            // Only load profile if its not loaded in previous activity
-            requestProfile();
-        }
 
         requestUnreadCount();
         requestCourses(); // Need events in calendar
 
         initFragment(new CourseListFragment(), getSupportFragmentManager().beginTransaction());
 
+
         // Setup toolbar and navigation drawer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         initNavigationDrawer(toolbar);
+
+        String profileJson = getIntent().getStringExtra("profile");
+        if (profileJson != null) {
+            profile = new Gson().fromJson(profileJson, User.class);
+            updateNavDrawer();
+        } else {
+//             Only load profile if its not loaded in previous activity
+            requestProfile();
+        }
     }
 
     @Override
@@ -228,11 +231,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private void updateNavDrawer() {
         //Set name on navigation header
-        TextView nameTV = (TextView) findViewById(R.id.name);
+        TextView nameTV = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name);
         nameTV.setText(profile.getName());
 
         //Set email on navigation header
-        TextView emailTV = (TextView) findViewById(R.id.primary_email);
+        TextView emailTV = (TextView) navigationView.getHeaderView(0).findViewById(R.id.primary_email);
         emailTV.setText(profile.getPrimary_email());
     }
 
@@ -245,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     public void showSnackbar(String toastMessage, View.OnClickListener listener) {
         Snackbar snackbar =  Snackbar.make(findViewById(R.id.content_frame), toastMessage, Snackbar.LENGTH_INDEFINITE);
         int duration = 4000;
-        snackbar = snackbar.setDuration(duration); // Gives false syntax error...
+        snackbar = snackbar.setDuration(duration);
 
         if(listener != null) {
             snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.colorAccent));
