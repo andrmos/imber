@@ -10,8 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
+import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 
@@ -19,6 +21,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivityWithAccessToken extends AppCompatActivity {
 
@@ -34,7 +37,8 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
             promptAccessToken();
 
         } else if (sharedPreferences.contains("access_token")) {
-            changeActivity();
+            Intent intent = new Intent(getApplication(), MainActivity.class);
+            changeActivity(intent);
 
         } else {
             promptAccessToken();
@@ -56,28 +60,31 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
     }
 
     private void validateAccessToken(final String token){
+        final Intent intent = new Intent(getApplication(), MainActivity.class);
+
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, token);
-        Call<List<Course>> call = client.getCourses(null, null);
-        call.enqueue(new Callback<List<Course>>() {
+        Call<User> call = client.getProfile();
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
+            public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
                     storeToken(token);
-                    changeActivity();
+                    String profileJson = new Gson().toJson(response.body());
+                    intent.putExtra("profile", profileJson);
+                    changeActivity(intent);
                 } else {
                     showSnackbar();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Course>> call, Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 showSnackbar();
             }
         });
     }
 
-    private void changeActivity() {
-        Intent intent = new Intent(getApplication(), MainActivity.class);
+    private void changeActivity(Intent intent) {
         startActivity(intent);
     }
 

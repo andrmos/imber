@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         String profileJson = getIntent().getStringExtra("profile");
         if (profileJson != null) {
             profile = new Gson().fromJson(profileJson, User.class);
+            updateNavDrawer();
         } else {
             // Only load profile if its not loaded in previous activity
             requestProfile();
@@ -208,14 +209,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 if (response.isSuccessful()) {
 
                     profile = response.body();
-
-                    //Set name on navigation header
-                    TextView nameTV = (TextView) findViewById(R.id.name);
-                    nameTV.setText(profile.getName());
-
-                    //Set email on navigation header
-                    TextView emailTV = (TextView) findViewById(R.id.primary_email);
-                    emailTV.setText(profile.getPrimary_email());
+                    updateNavDrawer();
                 }
             }
 
@@ -230,6 +224,16 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             }
         });
 
+    }
+
+    private void updateNavDrawer() {
+        //Set name on navigation header
+        TextView nameTV = (TextView) findViewById(R.id.name);
+        nameTV.setText(profile.getName());
+
+        //Set email on navigation header
+        TextView emailTV = (TextView) findViewById(R.id.primary_email);
+        emailTV.setText(profile.getPrimary_email());
     }
 
     public void setMenuCounter(@IdRes int itemId, int count) {
