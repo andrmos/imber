@@ -1,9 +1,11 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.AgendasViewHolder;
@@ -51,6 +53,10 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
                 //Inflate no announcements picture
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_announcements,parent,false);
+                TextView imberLogo = (TextView) v.findViewById(R.id.imberLogo);
+                Typeface tf = Typeface.createFromAsset(parent.getContext().getAssets(), "fonts/Pattaya-Regular.ttf");
+                imberLogo.setTypeface(tf);
+
             }else {
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.announcements_card, parent, false);
             }
@@ -61,6 +67,10 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
 
                 //Inflate no agendas picture
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_agenda,parent,false);
+                TextView imberLogo = (TextView) v.findViewById(R.id.imberLogo);
+                Typeface tf = Typeface.createFromAsset(parent.getContext().getAssets(), "fonts/Pattaya-Regular.ttf");
+                imberLogo.setTypeface(tf);
+
             }else{
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.agendas_card, parent, false);
             }
