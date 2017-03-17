@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -153,6 +154,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        setImberLogo();
+    }
+
+    private void setImberLogo() {
+        TextView imberLogo = (TextView) navigationView.getHeaderView(0).findViewById(R.id.imberLogo);
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/Pattaya-Regular.ttf");
+        imberLogo.setTypeface(tf);
     }
 
     public void initCalendarFragment() {

@@ -10,17 +10,19 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-    <ImageView
-        android:layout_width="@dimen/uib_logo_width"
-        android:layout_height="@dimen/uib_logo_height"
-        android:src="@drawable/imber" />
+    
+    <TextView
+        android:id="@+id/imberLogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="48sp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
