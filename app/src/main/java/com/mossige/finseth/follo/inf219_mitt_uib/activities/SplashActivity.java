@@ -42,6 +42,8 @@ public class SplashActivity extends AppCompatActivity {
                         // Launch MainActivity
                         intent.putExtra("profile", json);
                         changeActivity(intent);
+                    } else {
+                        changeActivity(intent);
                     }
                 }
 
