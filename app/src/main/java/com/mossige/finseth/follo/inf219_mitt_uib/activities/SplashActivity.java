@@ -24,19 +24,42 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        if (sharedPreferences.contains("access_token")) {
-            // Launch MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+        String accessToken = sharedPreferences.getString("access_token", "");
+
+        if (!accessToken.isEmpty()) {
+            // Point of Splash Activity is to laod data necessary for app to work.
+            // TODO Also load courses in splash activity?
+
+            MittUibClient client = ServiceGenerator.createService(MittUibClient.class, accessToken);
+            Call<User> call = client.getProfile();
+            final Intent intent = new Intent(getBaseContext(), MainActivity.class);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.isSuccessful()) {
+                        String json = new Gson().toJson(response.body());
+                        // Launch MainActivity
+                        intent.putExtra("profile", json);
+                        changeActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    changeActivity(intent);
+                }
+            });
 
         } else {
             // Launch login
             Intent intent = new Intent(this, LoginActivityWithAccessToken.class);
-            startActivity(intent);
+            changeActivity(intent);
         }
+    }
 
+    private void changeActivity(Intent intent) {
+        startActivity(intent);
         finish();
     }
 }

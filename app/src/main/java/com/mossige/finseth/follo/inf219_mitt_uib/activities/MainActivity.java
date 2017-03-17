@@ -14,10 +14,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
@@ -58,7 +60,14 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         mittUibClient = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
 
-        requestProfile();
+        String profileJson = getIntent().getStringExtra("profile");
+        if (profileJson != null) {
+            profile = new Gson().fromJson(profileJson, User.class);
+        } else {
+            // Only load profile if its not loaded in previous activity
+            requestProfile();
+        }
+
         requestUnreadCount();
         requestCourses(); // Need events in calendar
 
@@ -80,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-             super.onBackPressed();
+            super.onBackPressed();
         }
     }
 
@@ -220,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 });
             }
         });
-        
+
     }
 
     public void setMenuCounter(@IdRes int itemId, int count) {
