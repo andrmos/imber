@@ -6,9 +6,10 @@
     <item>
 
         <bitmap
-            android:gravity="fill_horizontal"
-            android:src="@drawable/imber2"
-            />
+            android:gravity="center"
+            android:src="@drawable/ic_imber_red"
+            android:alpha="0.8" />
+
     </item>
 
 </layer-list>
