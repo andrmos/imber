@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="170dp"
-        android:src="@drawable/imber"
+        android:src="@drawable/imber2"
         android:layout_margin="16dp"/>
 
     <TextView
