@@ -2,6 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.activities.LicenseActivity;
@@ -32,6 +34,11 @@ public class AboutFragment extends Fragment {
         getActivity().setTitle(R.string.about_title);
         View view = inflater.inflate(R.layout.fragment_about, container, false);
         setHasOptionsMenu(true);
+
+        TextView imberLogo = (TextView) view.findViewById(R.id.imberLogo);
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(), "fonts/Pattaya-Regular.ttf");
+        imberLogo.setTypeface(tf);
+
         return view;
     }
 
