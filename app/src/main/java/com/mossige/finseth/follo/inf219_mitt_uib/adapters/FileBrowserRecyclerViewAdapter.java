@@ -52,7 +52,6 @@ public class FileBrowserRecyclerViewAdapter extends android.support.v7.widget.Re
 
         FileViewHolder viewHolder = (FileViewHolder) holder;
         viewHolder.name.setText(text);
-        // TODO Change color of image
         viewHolder.image.setImageResource(drawableResource);
     }
 
