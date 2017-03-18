@@ -6,6 +6,12 @@
     <color name="colorAccent">#FF6E40</color>
     <color name="white">#FFFFFF</color>
 
+    <!-- Alternative colors-->
+    <color name="colorAccent2">#3891A6</color>
+    <color name="grey">#4C5B5C</color>
+    <color name="white2">#FDFFFC</color>
+
+    <!-- Colors used by progress bar -->
     <array name="prgressbarColors">
         <item>@color/colorPrimaryLight</item>
         <item>@color/colorPrimary</item>
