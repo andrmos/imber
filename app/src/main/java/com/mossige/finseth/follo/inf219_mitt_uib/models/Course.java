@@ -16,7 +16,7 @@ public class Course {
 
     public Course(int id, String name, String calender, String courseCode){
         this.id = id;
-        this.name = trimName(name,courseCode);
+        this.name = name;
         this.calender = calender;
         this.course_code = courseCode;
     }
@@ -29,6 +29,18 @@ public class Course {
         return name;
     }
 
+    public String getTrimmedName() {
+        String trimmedName = name;
+
+        String [] splitArray = name.split("/");
+
+        if(splitArray.length > 1){
+            trimmedName = splitArray[1].trim();
+        }
+
+        return trimmedName;
+    }
+
     public String getCalenderUrl(){
         return calender;
     }
@@ -39,18 +51,6 @@ public class Course {
 
     public boolean isFavorite() {
         return isFavorite;
-    }
-
-    private String trimName(String name, String courseCode){
-        String trimmedName = name;
-
-        String [] splitArray = name.split("/");
-
-        if(splitArray[0].trim().equalsIgnoreCase(courseCode) && splitArray.length > 1){
-            trimmedName = splitArray[1].trim();
-        }
-
-        return trimmedName;
     }
 
     public boolean equals(Course that) {

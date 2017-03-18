@@ -96,8 +96,7 @@ public class CourseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_course, container, false);
         // Set toolbar title to course name
-        String course_name = course.getName();
-        getActivity().setTitle(course_name);
+        getActivity().setTitle(course.getTrimmedName());
 
         progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
