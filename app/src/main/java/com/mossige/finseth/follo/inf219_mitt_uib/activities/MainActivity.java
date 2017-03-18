@@ -2,8 +2,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.activities;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.Snackbar;
@@ -16,10 +15,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
@@ -50,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private MittUibClient mittUibClient;
+    private double backButtonClickTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +62,9 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         mittUibClient = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
 
-
-        requestUnreadCount();
         requestCourses(); // Need events in calendar
 
-        initFragment(new CourseListFragment(), getSupportFragmentManager().beginTransaction());
-
+        initCourseListFragment();
 
         // Setup toolbar and navigation drawer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -84,9 +81,12 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         }
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+    private void initCourseListFragment() {
+        CourseListFragment fragment = new CourseListFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, fragment, "courseList");
+        transaction.addToBackStack("courseList");
+        transaction.commit();
     }
 
     @Override
@@ -94,25 +94,67 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+
+            if (atCourseList()) {
+                handleCourseListOnBack();
+
+            } else {
+                // Reload CourseListFragment if no other fragments exist
+                int backstackCount = getSupportFragmentManager().getBackStackEntryCount();
+                if (backstackCount == 0) {
+                    initCourseListFragment();
+                } else {
+                    super.onBackPressed();
+                }
+            }
+
         }
     }
 
+    private void handleCourseListOnBack() {
+        // Add some delay for second back press
+        if (backButtonClickTime == 0) {
+            backButtonClickTime = System.currentTimeMillis();
+            confirmExitToast();
+
+        } else {
+            double elapsedTime = (System.currentTimeMillis() - backButtonClickTime) / 1000;
+            if (elapsedTime <= 2.5) {
+                // Quit app
+                finish();
+
+            } else {
+                backButtonClickTime = 0;
+                confirmExitToast();
+            }
+        }
+    }
+
+    private boolean atCourseList() {
+        CourseListFragment courseListFragment = (CourseListFragment) getSupportFragmentManager().findFragmentByTag("courseList");
+        return courseListFragment != null && courseListFragment.isVisible();
+    }
+
+    private void confirmExitToast() {
+        Toast.makeText(this, R.string.confirm_exit, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         // Setup fragment transaction for replacing fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // Reset back stack when navigating to a new fragment from the nav bar
-        getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getSupportFragmentManager().popBackStack("courseList", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         boolean fragmentTransaction = true;
         switch(id){
 
             case R.id.nav_course:
-                initFragment(new CourseListFragment(), transaction);
+                getSupportFragmentManager().popBackStack();
+                initCourseListFragment();
                 break;
 
             case R.id.nav_calendar:
@@ -128,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
                 break;
 
             case R.id.nav_inbox:
-                transaction.addToBackStack("inbox");
                 initFragment(new ConversationFragment(), transaction);
                 break;
 
@@ -219,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             @Override
             public void onResponse(Call<User> call, retrofit2.Response<User> response) {
                 if (response.isSuccessful()) {
-
                     profile = response.body();
                     updateNavDrawer();
                 }
@@ -248,11 +288,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         emailTV.setText(profile.getPrimary_email());
     }
 
-    public void setMenuCounter(@IdRes int itemId, int count) {
-        TextView view = (TextView) navigationView.getMenu().findItem(itemId).getActionView();
-        view.setText(count > 0 ? String.valueOf(count) : null);
-    }
-
     @Override
     public void showSnackbar(String toastMessage, View.OnClickListener listener) {
         Snackbar snackbar =  Snackbar.make(findViewById(R.id.content_frame), toastMessage, Snackbar.LENGTH_INDEFINITE);
@@ -273,11 +308,6 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     @Override
     public void initCalendar() {
         initCalendarFragment();
-    }
-
-    @Override
-    public void requestUnreadCount() {
-
     }
 
     private void initFragment(Fragment fragment, FragmentTransaction transaction){

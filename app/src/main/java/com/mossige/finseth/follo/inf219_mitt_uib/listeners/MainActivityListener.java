@@ -8,5 +8,4 @@ import android.view.View;
 public interface MainActivityListener {
         void showSnackbar(String toastMessage, View.OnClickListener listener);
         void initCalendar();
-        void requestUnreadCount();
 }

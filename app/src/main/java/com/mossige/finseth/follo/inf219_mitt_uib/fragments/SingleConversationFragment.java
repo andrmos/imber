@@ -121,9 +121,6 @@ public class SingleConversationFragment extends Fragment {
                         loaded = true;
                         mAdapter.notifyDataSetChanged();
 
-                        //Update unread count in navigation drawer
-                        mCallback.requestUnreadCount();
-
                         progressbar.setVisibility(View.GONE);
 
                     }
