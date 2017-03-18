@@ -67,5 +67,6 @@
     <string name="disclaimer">Ansvarsfraskrivelse: Imber er på ingen måte assosiert med Universitetet i Bergen.</string>
     <string name="access_token">Tilgangsnøkkel</string>
     <string name="confirm_exit">Trykk igjen for å avslutte</string>
+    <string name="no_files_message">Ingen filer :(</string>
 
 </resources>

@@ -20,9 +20,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
@@ -66,6 +68,9 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private ArrayList<File> files;
     private ArrayList<Folder> folders;
 
+    private boolean filesLoaded;
+    private boolean foldersLoeaded;
+
     private Course course;
     private MainActivityListener callback;
 
@@ -78,6 +83,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private long enqueuedDownload;
     private File clickedFile;
     private MittUibClient mittUibClient;
+    private TextView noContentTextView;
 
     public FileBrowserFragment() {
         // Required empty public constructor
@@ -206,6 +212,8 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
                     mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
                     nextPageFolders = PaginationUtils.getNextPageUrl(response.headers());
+                    foldersLoeaded = true;
+                    showMessageIfEmpty();
                 } else {
                     showSnackbarFolder(folderId);
                 }
@@ -237,6 +245,8 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
                     mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
                     nextPageFiles = PaginationUtils.getNextPageUrl(response.headers());
+                    filesLoaded = true;
+                    showMessageIfEmpty();
                 } else {
                     showSnackbarFile(folderId);
                 }
@@ -247,6 +257,14 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
                 showSnackbarFile(folderId);
             }
         });
+    }
+
+    private synchronized void showMessageIfEmpty() {
+        if (filesLoaded && foldersLoeaded) {
+            if (files.isEmpty() && folders.isEmpty()) {
+                noContentTextView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void showSnackbarFolder(final int folderId) {
@@ -275,6 +293,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
         initRecycleView(rootView);
         mainList.setVisibility(View.VISIBLE);
+        noContentTextView = (TextView) rootView.findViewById(R.id.noContentTextview);
 
         return rootView;
     }

@@ -17,5 +17,6 @@
     <dimen name="announcement_pad_top">8dp</dimen>
 
     <dimen name="agenda_card_margin">10dp</dimen>
+    <dimen name="no_files_message">20sp</dimen>
 
 </resources>
