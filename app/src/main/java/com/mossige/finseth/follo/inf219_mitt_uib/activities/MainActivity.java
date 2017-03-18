@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void showSnackbar() {
-        showSnackbar(getString(R.string.request_courses_error), new View.OnClickListener() {
+        showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requestCourses();

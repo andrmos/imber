@@ -1,41 +1,60 @@
 <resources>
+    <!-- Main activity -->
     <string name="app_name">Imber</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="name">Ola Nordman</string>
-    <string name="mail">xxx000@student.uib.no</string>
-    <string name="about">Imber er utviklet som et prosjekt i faget <i>INF219</i> og på eget initiativ.</string>
-    <string name="made_by">Utviklerne bak Imber er <b>André Mossige</b>, <b>Øystein Follo</b> og <b>Patrick Finseth</b>.</string>
+    <string name="temp_name">Ola Nordman</string>
+    <string name="temp_email">xxx000@student.uib.no</string>
+    <string name="preference_file_key">preference_file_key</string>
+    <string name="confirm_exit">Trykk igjen for å avslutte</string>
 
-    <!-- Strings related to login -->
-
+    <!-- Titles -->
+    <string name="about_title">Om</string>
+    <string name="license_option_title">Lisenser</string>
+    <string name="login_title">Oppsett</string>
     <string name="announcements_card_title">Kunngjøringer</string>
     <string name="agenda_card_title">Dagens agenda</string>
-
-    <string name="preference_file_key">preference_file_key</string>
-
-    <string name="about_title">Om</string>
     <string name="calendar_title">Kalender</string>
     <string name="course_list_title">Fag</string>
     <string name="announcements_title">Kunngjøringer</string>
     <string name="conversation_title">Innboks</string>
-
     <string name="search_title">Søk</string>
 
-    <!-- Compose message -->
+    <!-- About activity -->
+    <string name="about">Imber er utviklet som et prosjekt i faget <i>INF219</i> og på eget initiativ.</string>
+    <string name="made_by">Utviklerne bak Imber er <b>André Mossige</b>, <b>Øystein Follo</b> og <b>Patrick Finseth</b>.</string>
+    <string name="feedback_text">Tilbakemeldinger kan sendes til:</string>
+    <string name="feedback_email">imber.dev@gmail.com</string>
+
+    <!-- Login activity-->
+    <string name="info_permissions">For å bruke <i>Imber</i> må du koble til Mitt UiB via en tilgangsnøkkel.\n\nDenne nøkkelen gir <i>Imber</i> tilgang til:\n\t\t- Fag\n\t\t- Kunngjøringer\n\t\t- Meldinger\n\t\t- Kalender\n\t\t- Filer\n\n<b><i>Imber</i> lagrer ingen informasjon fra Mitt UiB.</b>\n</string>
+    <string name="info_login">For å hente en nøkkel gjør du følgende:\n\t\t- Logg inn på <i><b>www.mitt.uib.no</b></i>\n\t\t- Velg <b><i>Konto</i></b> og så <b><i>Innstillinger</i></b>\n\t\t- Velg <b><i>Nytt tilgangstoken</i></b>\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<i><b>Bruk</b></i>"\n\t\t- La <i><b>Utløpsdato</b></i> stå tom\n\t\t- Velg <b><i>Generer token</i></b> og kopier den genererte nøkkelen\n\t\t- Lim inn nøkkelen i feltet under</string>
+    <string name="access_token_button">Legg til nøkkel</string>
+    <string name="disclaimer">Ansvarsfraskrivelse: <i>Imber</i> er på ingen måte assosiert med Universitetet i Bergen.</string>
+    <string name="access_token">Tilgangsnøkkel</string>
+
+    <!-- Message activity -->
     <string name="subject_hint">Emne</string>
     <string name="body_hint">Melding</string>
     <string name="subject_length_error">Maks 255 tegn</string>
     <string name="body_length_error">Meldingen er tom</string>
     <string name="message_sent">Melding sendt</string>
+    <string name="no_recipients_error">Ingen mottakere valgt</string>
+
+    <!-- File browser fragment -->
+    <string name="btn_file_browser">Filer</string>
+    <string name="file_size_prompt_title">Stor fil</string>
+    <string name="file_size_prompt_message">Størrelsen på denne filen er %1$d MB.\nEr du sikker på at du vil laste ned filen?</string>
+    <string name="file_size_promt_positive_button">Last ned</string>
+    <string name="file_size_promt_negative_button">Avbryt</string>
+    <string name="file_browser_card_text">Kursfiler</string>
+    <string name="no_files_message">Ingen filer :(</string>
 
     <!-- Error messages -->
     <string name="error_profile">Kunne ikke laste profil</string>
     <string name="error_course_list">Kunne ikke laste fag</string>
-    <string name="error_conversation">Kunne ikke laste samtaler…</string>
+    <string name="error_conversation">Kunne ikke laste samtaler</string>
     <string name="snackback_action_text">Prøv igjen</string>
-    <string name="request_courses_error">Kunne ikke laste fag</string>
-    <string name="no_recipients_error">Ingen mottakere valgt</string>
     <string name="error_loading_recipients">Kunne ikke laste mottakere</string>
     <string name="error_sending_message">Kunne ikke sende melding</string>
     <string name="error_requesting_calendar">Kunne ikke laste kalender</string>
@@ -43,30 +62,9 @@
     <string name="error_requesting_agendas">Kunne ikke laste agendaene</string>
     <string name="error_requesting_announcements">Kunne ikke laste kunngjøringer</string>
     <string name="error_invalid_access_token">Tilgangsnøkkelen er ikke gyldig</string>
-    <string name="btn_file_browser">Filer</string>
     <string name="error_getting_files">Kunne ikke laste filer</string>
     <string name="error_getting_folders">Kunne ikke laste mapper</string>
-    <string name="file_size_prompt_title">Stor fil</string>
-    <string name="file_size_prompt_message">Størrelsen på denne filen er %1$d MB.\nEr du sikker på at du vil laste ned filen?</string>
-    <string name="file_size_promt_positive_button">Last ned</string>
-    <string name="file_size_promt_negative_button">Avbryt</string>
-    <string name="file_browser_card_text">Kursfiler</string>
-
-    <!-- Error favorite courses -->
     <string name="error_saving_course">Kunne ikke lagre faget</string>
     <string name="error_removing_course">Kunne ikke fjerne faget</string>
-    <string name="license_option_title">Lisenser</string>
-    <string name="login_title">Førstegangsoppsett</string>
-
-    <string name="info_permissions">Før du kan bruke Imber må du koble til Mitt UiB via en tilgangsnøkkel.\n\nDenne nøkkelen gir Imber tilgang til:\n\t\t- Fag\n\t\t- Kunngjøringer\n\t\t- Meldinger\n\t\t- Kalender\n\t\t- Filer\n\nDu kan når som helst fjerne Imbers tilgang til Mitt UiB.\n</string>
-    <string name="info_login">For å hente din nøkkel gjør du følgende:\n\t\t- Logg inn på <i><b>www.mitt.uib.no</b></i>.\n\t\t- Velg <b><i>Konto</i></b> og så <b><i>Innstillinger</i></b>.\n\t\t- Velg <b><i>Nytt tilgangstoken</i></b>.\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<i><b>bruk</b></i>".\n\t\t- La <i><b>utløpsdato</b></i> stå tom.\n\t\t- Velg <b><i>Generer token</i></b> og kopier den genererte nøkkelen.\n\t\t- Lim inn nøkkelen i feltet under.</string>
-    <string name="feedback_text">Tilbakemeldinger kan sendes til:</string>
-    <string name="feedback_email">imber.dev@gmail.com</string>
-    <string name="access_token_button">Legg til nøkkel</string>
-
-    <string name="disclaimer">Ansvarsfraskrivelse: Imber er på ingen måte assosiert med Universitetet i Bergen.</string>
-    <string name="access_token">Tilgangsnøkkel</string>
-    <string name="confirm_exit">Trykk igjen for å avslutte</string>
-    <string name="no_files_message">Ingen filer :(</string>
 
 </resources>
