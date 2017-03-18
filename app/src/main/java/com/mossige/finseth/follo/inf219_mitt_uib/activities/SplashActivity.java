@@ -8,12 +8,9 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,7 +52,7 @@ public class SplashActivity extends AppCompatActivity {
 
         } else {
             // Launch login
-            Intent intent = new Intent(this, LoginActivityWithAccessToken.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             changeActivity(intent);
         }
     }

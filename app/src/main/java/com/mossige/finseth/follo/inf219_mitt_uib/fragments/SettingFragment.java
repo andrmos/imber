@@ -7,7 +7,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.activities.LoginActivityWithAccessToken;
+import com.mossige.finseth.follo.inf219_mitt_uib.activities.LoginActivity;
 
 
 /**
@@ -44,7 +44,7 @@ public class SettingFragment extends PreferenceFragmentCompat{
         Preference accessTokenPreference = findPreference("update_access_token");
         accessTokenPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getContext(), LoginActivityWithAccessToken.class);
+                Intent intent = new Intent(getContext(), LoginActivity.class);
                 intent.putExtra("update_access_token", true);
                 startActivity(intent);
                 return true;

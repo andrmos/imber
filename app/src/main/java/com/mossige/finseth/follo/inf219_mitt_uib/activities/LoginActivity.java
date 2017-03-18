@@ -12,18 +12,15 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.User;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivityWithAccessToken extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private EditText inputField;
     private SharedPreferences sharedPreferences;
@@ -46,7 +43,7 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
     }
 
     private void promptAccessToken() {
-        setContentView(R.layout.activity_login_activity_with_access_token);
+        setContentView(R.layout.activity_login);
 
         inputField = (EditText) findViewById(R.id.token);
         Button login = (Button) findViewById(R.id.login_button);

@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activities.LoginActivityWithAccessToken"
+            android:name=".activities.LoginActivity"
             android:noHistory="true"
             android:screenOrientation="portrait">
         </activity>
