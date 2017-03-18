@@ -27,12 +27,12 @@
     <string name="body_hint">Melding</string>
     <string name="subject_length_error">Maks 255 tegn</string>
     <string name="body_length_error">Meldingen er tom</string>
-    <string name="message_sent">Melding sendt!</string>
+    <string name="message_sent">Melding sendt</string>
 
     <!-- Error messages -->
-    <string name="error_profile">Feil ved lasting av profil…</string>
-    <string name="error_course_list">Feil ved lasting av fag…</string>
-    <string name="error_conversation">Feil ved lasting av samtaler…</string>
+    <string name="error_profile">Kunne ikke laste profil</string>
+    <string name="error_course_list">Kunne ikke laste fag</string>
+    <string name="error_conversation">Kunne ikke laste samtaler…</string>
     <string name="snackback_action_text">Prøv igjen</string>
     <string name="request_courses_error">Kunne ikke laste fag</string>
     <string name="no_recipients_error">Ingen mottakere valgt</string>
@@ -56,11 +56,12 @@
     <string name="error_saving_course">Kunne ikke lagre faget</string>
     <string name="error_removing_course">Kunne ikke fjerne faget</string>
     <string name="license_option_title">Lisenser</string>
-    <string name="login_title">Koble til Mitt UiB</string>
+    <string name="login_title">Førstegangsoppsett</string>
 
-    <string name="info_permissions">Før du kan bruke denne appen må den kobles til Mitt UiB via en tilgangsnøkkel.\n\nDenne nøkkelen gir appen tilgang til følgende informasjon på Mitt UiB:\n\t\t- Fag\n\t\t- Kunngjøringer\n\t\t- Meldinger\n\t\t- Kalender\n\t\t- Filer\n\nDu kan når som helst fjerne appens tilgang til Mitt UiB.\n</string>
+    <string name="info_permissions">Før du kan bruke Imber må du koble til Mitt UiB via en tilgangsnøkkel.\n\nDenne nøkkelen gir Imber tilgang til:\n\t\t- Fag\n\t\t- Kunngjøringer\n\t\t- Meldinger\n\t\t- Kalender\n\t\t- Filer\n\nDu kan når som helst fjerne Imbers tilgang til Mitt UiB.\n</string>
     <string name="info_login">For å hente din nøkkel gjør du følgende:\n\t\t- Logg inn på <i><b>www.mitt.uib.no</b></i>.\n\t\t- Velg <b><i>Konto</i></b> og så <b><i>Innstillinger</i></b>.\n\t\t- Velg <b><i>Nytt tilgangstoken</i></b>.\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<i><b>bruk</b></i>".\n\t\t- La <i><b>utløpsdato</b></i> stå tom.\n\t\t- Velg <b><i>Generer token</i></b> og kopier den genererte nøkkelen.\n\t\t- Lim inn nøkkelen i feltet under.</string>
     <string name="feedback_text">Tilbakemeldinger kan sendes til:</string>
     <string name="feedback_email">imber.dev@gmail.com</string>
+    <string name="access_token_button">Legg til nøkkel</string>
 
 </resources>
