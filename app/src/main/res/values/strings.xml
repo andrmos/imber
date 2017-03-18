@@ -64,4 +64,7 @@
     <string name="feedback_email">imber.dev@gmail.com</string>
     <string name="access_token_button">Legg til nøkkel</string>
 
+    <string name="disclaimer">Ansvarsfraskrivelse: Imber er på ingen måte assosiert med Universitetet i Bergen.</string>
+    <string name="access_token">Tilgangsnøkkel</string>
+
 </resources>

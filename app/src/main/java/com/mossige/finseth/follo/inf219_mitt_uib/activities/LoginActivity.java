@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        setTitle(R.string.login_title);
 
         if (getIntent().getBooleanExtra("update_access_token", false)) {
             promptAccessToken();
