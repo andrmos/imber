@@ -164,7 +164,7 @@ public class ChooseRecipientFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.choose_recipient, container, false);
-        getActivity().setTitle("Velg mottaker");
+        getActivity().setTitle(getString(R.string.choose_recipient_title));
         initCourseSpinner();
         initRecycleView();
 

@@ -25,7 +25,7 @@ public class SettingFragment extends PreferenceFragmentCompat{
         //Inflates view
         addPreferencesFromResource(R.xml.preferences);
 
-        getActivity().setTitle("Innstillinger");
+        getActivity().setTitle(R.string.settings_title);
 
         Preference favoritePreference = findPreference("favorite");
         favoritePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

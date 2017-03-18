@@ -23,8 +23,7 @@
             android:layout_marginLeft="@dimen/fab_margin"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/title_textSize"
-            android:textStyle="bold"
-            android:text="Dummy agenda title"/>
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/agenda_time"
             android:layout_width="match_parent"
@@ -32,8 +31,7 @@
             android:layout_marginTop="@dimen/agenda_card_margin"
             android:layout_marginRight="@dimen/fab_margin"
             android:gravity="right"
-            android:textAlignment="gravity"
-            android:text="Dummy start" />
+            android:textAlignment="gravity" />
 
         <TextView
             android:id="@+id/agenda_location"

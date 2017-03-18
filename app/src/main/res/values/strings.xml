@@ -17,7 +17,7 @@
     <string name="calendar_title">Kalender</string>
     <string name="course_list_title">Fag</string>
     <string name="announcements_title">Kunngjøringer</string>
-    <string name="conversation_title">Innboks</string>
+    <string name="inbox_title">Innboks</string>
     <string name="search_title">Søk</string>
 
     <!-- About activity -->
@@ -66,5 +66,12 @@
     <string name="error_getting_folders">Kunne ikke laste mapper</string>
     <string name="error_saving_course">Kunne ikke lagre faget</string>
     <string name="error_removing_course">Kunne ikke fjerne faget</string>
+
+    <string name="no_events_message">Ingen hendelser idag</string>
+    <string name="no_announcements_message">Ingen kunngjøringer for faget</string>
+    <string name="write_message">Skriv melding</string>
+    <string name="settings_title">Innstillinger</string>
+    <string name="fav_course_title">Velg favorittfag</string>
+    <string name="choose_recipient_title">Velg mottaker</string>
 
 </resources>

@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/agenda_card_margin"
-                android:text="Ingenting på agendaen i dag"
+                android:text="@string/no_events_message"
                 android:textColor="@color/colorPrimaryLight"/>
 
         </LinearLayout>

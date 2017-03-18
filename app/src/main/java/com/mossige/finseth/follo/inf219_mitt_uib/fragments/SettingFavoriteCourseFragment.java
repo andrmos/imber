@@ -55,7 +55,7 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         //Inflates view
         addPreferencesFromResource(R.xml.preference_favorite);
 
-        getActivity().setTitle("Velg favorittfag");
+        getActivity().setTitle(getString(R.string.fav_course_title));
 
         requestCourses();
     }

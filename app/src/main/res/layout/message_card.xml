@@ -29,8 +29,7 @@
             android:layout_marginTop="@dimen/agenda_card_margin"
             android:layout_marginRight="@dimen/fab_margin"
             android:gravity="right"
-            android:textAlignment="gravity"
-            android:text="Dummy start" />
+            android:textAlignment="gravity" />
 
         <TextView
             android:id="@+id/message_body"

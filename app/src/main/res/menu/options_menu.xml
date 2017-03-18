@@ -9,7 +9,7 @@
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
     <item android:id="@+id/send"
-        android:title="Skriv melding"
+        android:title="@string/write_message"
         android:icon="@drawable/ic_send_white_24dp"
         app:showAsAction="always"/>
 </menu>

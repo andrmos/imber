@@ -173,8 +173,6 @@ public class CourseFragment extends Fragment {
                     // Clicked file browser card
                     loadFileBrowserFragment();
 
-                } else {
-                    Log.i(TAG, "onItemClicked: clicking item at position " + position + " is not supported.");
                 }
             }
         });

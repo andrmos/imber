@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/agenda_card_margin"
-                android:text="Ingen kunngjøringer for faget"
+                android:text="@string/no_announcements_message"
                 android:textColor="@color/colorPrimaryLight"/>
 
         </LinearLayout>
