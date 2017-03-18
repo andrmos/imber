@@ -1,6 +1,7 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  */
 public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
-    private static final String TAG = "AnnouncementRecyclerViewAdapter: ";
+    private static final String TAG = "AnnouncementAdapter";
 
     private ArrayList<Announcement> data;
 
@@ -39,7 +40,9 @@ public class AnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<Genera
         // set text of text view in card
         SingleAnnouncementViewHolder announcementHolder = (SingleAnnouncementViewHolder) holder;
         announcementHolder.title.setText(data.get(position).getTitle());
-        announcementHolder.messagePeak.setText(data.get(position).getMessageHtmlEscaped());
+
+        String message = data.get(position).getMessageHtmlEscaped().replace("\n", " ");
+        announcementHolder.messagePeak.setText(message);
     }
 
     @Override
