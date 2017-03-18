@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.AboutFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment;
@@ -35,6 +36,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.fragments.CourseListFragment;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +83,16 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         } else {
 //             Only load profile if its not loaded in previous activity
             requestProfile();
+        }
+
+        String coursesJson = getIntent().getStringExtra("courses");
+        if (coursesJson != null) {
+            Log.i(TAG, "onCreate: got courses from Splash");
+            Type courseListType = new TypeToken<ArrayList<Course>>(){}.getType();
+            ArrayList<Course> tempCourses = new Gson().fromJson(coursesJson, courseListType);
+            for (Course c : tempCourses) {
+                Log.i(TAG, "onCreate: " + c.getName());
+            }
         }
     }
 
@@ -182,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         transaction.commit();
     }
 
+    // TODO Move to CalendarFragment
     private void requestCourses() {
         Call<List<Course>> call = mittUibClient.getCourses(null, null);
         call.enqueue(new Callback<List<Course>>() {

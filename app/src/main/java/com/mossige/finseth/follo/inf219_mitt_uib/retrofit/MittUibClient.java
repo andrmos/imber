@@ -44,9 +44,10 @@ public interface MittUibClient {
                                   @Query("enrollment_state") String enrollmentState);
 
     /**
+     * per_page: Set to a high amount to not worry about pagination.
      * @return The favorite active courses of the logged in user.
      */
-    @GET("users/self/favorites/courses")
+    @GET("users/self/favorites/courses?per_page=1000")
     Call<List<Course>> getFavoriteCourses();
 
     /**

@@ -33,16 +33,19 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
-        if (getIntent().getBooleanExtra("update_access_token", false)) {
-            promptAccessToken();
-
-        } else if (sharedPreferences.contains("access_token")) {
-            Intent intent = new Intent(getApplication(), MainActivity.class);
-            changeActivity(intent);
-
-        } else {
-            promptAccessToken();
-        }
+        // TODO Remove since this is checked in SplashActivity
+//        if (getIntent().getBooleanExtra("update_access_token", false)) {
+//            promptAccessToken();
+//
+//        }
+//        else if (sharedPreferences.contains("access_token")) {
+//            Intent intent = new Intent(getApplication(), MainActivity.class);
+//            changeActivity(intent);
+//
+//        }
+//        else {
+//        }
+        promptAccessToken();
     }
 
     private void promptAccessToken() {
@@ -59,7 +62,7 @@ public class LoginActivityWithAccessToken extends AppCompatActivity {
         });
     }
 
-    private void validateAccessToken(final String token){
+    private void validateAccessToken(final String token) {
         final Intent intent = new Intent(getApplication(), MainActivity.class);
 
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, token);
