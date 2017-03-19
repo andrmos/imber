@@ -6,17 +6,17 @@
 
         <item
             android:id="@+id/nav_course"
-            android:icon="@android:drawable/ic_menu_agenda"
+            android:icon="@drawable/ic_list_black_24dp"
             android:title="@string/course_title" />
 
         <item
             android:id="@+id/nav_calendar"
-            android:icon="@android:drawable/ic_menu_my_calendar"
+            android:icon="@drawable/ic_today_black_24dp"
             android:title="@string/calendar_title" />
 
         <item
             android:id="@+id/nav_inbox"
-            android:icon="@android:drawable/ic_menu_send"
+            android:icon="@drawable/ic_message_black_24dp"
             android:title="@string/inbox_title"
             app:actionLayout="@layout/menu_counter"/>
 
@@ -27,12 +27,12 @@
         <menu>
             <item
                 android:id="@+id/nav_settings"
-                android:icon="@android:drawable/ic_menu_manage"
+                android:icon="@drawable/ic_settings_black_24dp"
                 android:title="@string/settings_title" />
 
             <item
                 android:id="@+id/nav_about"
-                android:icon="@android:drawable/ic_menu_help"
+                android:icon="@drawable/ic_help_outline_black_24dp"
                 android:title="@string/about_title"
                 />
 
