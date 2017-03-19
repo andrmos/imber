@@ -53,7 +53,7 @@ public class AnnouncementFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
         // Set label for toolbar
-        getActivity().setTitle(getString(R.string.announcements_title) + " - " + getArguments().getString("courseCode"));
+        getActivity().setTitle(getString(R.string.announcements_title));
 
         initRecycleView(rootView);
 

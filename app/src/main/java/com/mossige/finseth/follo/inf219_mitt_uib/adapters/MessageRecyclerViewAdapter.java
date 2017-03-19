@@ -1,7 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,10 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.Message;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
+import static com.mossige.finseth.follo.inf219_mitt_uib.utils.Constants.DATETIME_FORMAT_EN;
+import static com.mossige.finseth.follo.inf219_mitt_uib.utils.Constants.DATETIME_FORMAT_NO;
 
 /**
  * Created by Follo on 15.03.2016.
@@ -42,7 +45,12 @@ public class MessageRecyclerViewAdapter extends RecyclerView.Adapter<GeneralView
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         MessageViewHolder singleConversationHolder = (MessageViewHolder) holder;
         singleConversationHolder.conversation_author.setText(getAuthorName(data.get(position).getAuthorId()));
-        singleConversationHolder.conversation_time.setText(data.get(position).getCreatedAt().toString());
+        Locale locale = Locale.getDefault();
+        if (locale.getCountry().equalsIgnoreCase("no")) {
+            singleConversationHolder.conversation_time.setText(data.get(position).getCreatedAt().format(DATETIME_FORMAT_NO, locale));
+        } else {
+            singleConversationHolder.conversation_time.setText(data.get(position).getCreatedAt().format(DATETIME_FORMAT_EN, locale));
+        }
         singleConversationHolder.conversation_message.setText(data.get(position).getBody().trim());
     }
 

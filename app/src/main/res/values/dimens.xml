@@ -18,5 +18,7 @@
 
     <dimen name="agenda_card_margin">10dp</dimen>
     <dimen name="no_files_message">16sp</dimen>
+    <dimen name="card_top_padding">24dp</dimen>
+    <dimen name="card_side_padding">16dp</dimen>
 
 </resources>

@@ -2,7 +2,6 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,11 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
+
+import java.util.Locale;
+
+import static com.mossige.finseth.follo.inf219_mitt_uib.utils.Constants.DATETIME_FORMAT_EN;
+import static com.mossige.finseth.follo.inf219_mitt_uib.utils.Constants.DATETIME_FORMAT_NO;
 
 /**
  * Created by PatrickFinseth on 13.03.16.
@@ -40,9 +44,14 @@ public class SingleAnnouncementFragment extends Fragment{
 
             // Set text to every TextView in fragment_announcement.xml
             title_tv.setText(announcement.getTitle());
-            message_tv.setText(announcement.getMessageHtmlEscaped());
+            message_tv.setText(announcement.getMessageHtmlEscaped().trim());
             sender_tv.setText(announcement.getUserName());
-            date_tv.setText(announcement.getPostedAt().toString());
+            Locale locale = Locale.getDefault();
+            if (locale.getCountry().equalsIgnoreCase("no")) {
+                date_tv.setText(announcement.getPostedAt().format(DATETIME_FORMAT_NO, locale));
+            } else {
+                date_tv.setText(announcement.getPostedAt().format(DATETIME_FORMAT_EN, locale));
+            }
         }
 
         return view;
