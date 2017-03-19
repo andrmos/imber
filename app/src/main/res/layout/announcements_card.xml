@@ -29,7 +29,7 @@
                 android:textSize="@dimen/title_textSize"
                 android:textColor="@color/colorPrimary"
                 android:textStyle="bold"
-                android:text="@string/announcements_card_title"/>
+                android:text="@string/announcements_title"/>
 
             <View
                 android:layout_width="match_parent"

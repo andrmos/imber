@@ -5,14 +5,14 @@
 
     <android.support.v7.preference.Preference
         android:key="favorite"
-        android:title="Favorittfag"
-        android:summary="Velg dine favorittfag">
+        android:title="@string/fav_course_title"
+        android:summary="@string/fav_course_summary">
     </android.support.v7.preference.Preference>
 
     <android.support.v7.preference.Preference
         android:key="update_access_token"
-        android:title="Tilgangsnøkkel"
-        android:summary="Oppdater tilgangsnøkkelen fra Mitt UiB">
+        android:title="@string/access_token"
+        android:summary="@string/change_access_token_summary">
     </android.support.v7.preference.Preference>
 
 </android.support.v7.preference.PreferenceScreen>

@@ -78,7 +78,7 @@ public class CourseListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-        getActivity().setTitle(R.string.course_list_title);
+        getActivity().setTitle(R.string.course_title);
 
         smoothProgressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);

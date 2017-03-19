@@ -1,8 +1,8 @@
 <resources>
     <!-- Main activity -->
     <string name="app_name">Imber</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Åpne navigasjonsskuff</string>
+    <string name="navigation_drawer_close">Lukk navigasjonsskuff</string>
     <string name="temp_name">Ola Nordman</string>
     <string name="temp_email">xxx000@student.uib.no</string>
     <string name="preference_file_key">preference_file_key</string>
@@ -12,11 +12,10 @@
     <string name="about_title">Om</string>
     <string name="license_option_title">Lisenser</string>
     <string name="login_title">Oppsett</string>
-    <string name="announcements_card_title">Kunngjøringer</string>
-    <string name="agenda_card_title">Dagens agenda</string>
-    <string name="calendar_title">Kalender</string>
-    <string name="course_list_title">Fag</string>
     <string name="announcements_title">Kunngjøringer</string>
+    <string name="agenda_card_title">Dagens hendelser</string>
+    <string name="calendar_title">Kalender</string>
+    <string name="course_title">Fag</string>
     <string name="inbox_title">Innboks</string>
     <string name="search_title">Søk</string>
 
@@ -27,25 +26,25 @@
     <string name="feedback_email">imber.dev@gmail.com</string>
 
     <!-- Login activity-->
-    <string name="info_permissions">For å bruke <i>Imber</i> må du koble til Mitt UiB via en tilgangsnøkkel.\n\nDenne nøkkelen gir <i>Imber</i> tilgang til:\n\t\t- Fag\n\t\t- Kunngjøringer\n\t\t- Meldinger\n\t\t- Kalender\n\t\t- Filer\n\n<b><i>Imber</i> lagrer ingen informasjon fra Mitt UiB.</b>\n</string>
-    <string name="info_login">For å hente en nøkkel gjør du følgende:\n\t\t- Logg inn på <i><b>www.mitt.uib.no</b></i>\n\t\t- Velg <b><i>Konto</i></b> og så <b><i>Innstillinger</i></b>\n\t\t- Velg <b><i>Nytt tilgangstoken</i></b>\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<i><b>Bruk</b></i>"\n\t\t- La <i><b>Utløpsdato</b></i> stå tom\n\t\t- Velg <b><i>Generer token</i></b> og kopier den genererte nøkkelen\n\t\t- Lim inn nøkkelen i feltet under</string>
+    <string name="info_permissions">For å bruke <i>Imber</i> må du koble til Mitt UiB via en nøkkel.\n\nDenne nøkkelen gir <i>Imber</i> tilgang til:\n\t\t- Fag\n\t\t- Kunngjøringer\n\t\t- Meldinger\n\t\t- Kalender\n\t\t- Filer\n\nInformasjon fra Mitt UiB blir ikke lagret.\n</string>
+    <string name="info_login">For å hente en nøkkel gjør du følgende:\n\t\t- Logg inn på <b>www.mitt.uib.no</b>\n\t\t- Trykk <b>Konto</b> og så <b>Innstillinger</b>\n\t\t- Trykk <b>Nytt tilgangstoken</b>\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<b>Bruk</b>"\n\t\t- La <b>Utløpsdato</b> stå tom\n\t\t- Trykk <b>Generer tegn</b> og kopier nøkkelen\n\t\t- Lim inn nøkkelen i feltet under</string>
     <string name="access_token_button">Legg til nøkkel</string>
     <string name="disclaimer">Ansvarsfraskrivelse: <i>Imber</i> er på ingen måte assosiert med Universitetet i Bergen.</string>
-    <string name="access_token">Tilgangsnøkkel</string>
+    <string name="access_token">Nøkkel</string>
 
     <!-- Message activity -->
     <string name="subject_hint">Emne</string>
     <string name="body_hint">Melding</string>
     <string name="subject_length_error">Maks 255 tegn</string>
-    <string name="body_length_error">Meldingen er tom</string>
+    <string name="body_length_error">Melding tom</string>
     <string name="message_sent">Melding sendt</string>
     <string name="no_recipients_error">Ingen mottakere valgt</string>
 
     <!-- File browser fragment -->
     <string name="btn_file_browser">Filer</string>
     <string name="file_size_prompt_title">Stor fil</string>
-    <string name="file_size_prompt_message">Størrelsen på denne filen er %1$d MB.\nEr du sikker på at du vil laste ned filen?</string>
-    <string name="file_size_promt_positive_button">Last ned</string>
+    <string name="file_size_prompt_message">Filen er %1$d MB.\nLast ned fil?</string>
+    <string name="file_size_promt_positive_button">OK</string>
     <string name="file_size_promt_negative_button">Avbryt</string>
     <string name="file_browser_card_text">Kursfiler</string>
     <string name="no_files_message">Ingen filer :(</string>
@@ -59,19 +58,21 @@
     <string name="error_sending_message">Kunne ikke sende melding</string>
     <string name="error_requesting_calendar">Kunne ikke laste kalender</string>
     <string name="error_requesting_assignments">Kunne ikke laste innleveringer</string>
-    <string name="error_requesting_agendas">Kunne ikke laste agendaene</string>
+    <string name="error_requesting_agendas">Kunne ikke laste hendelser</string>
     <string name="error_requesting_announcements">Kunne ikke laste kunngjøringer</string>
-    <string name="error_invalid_access_token">Tilgangsnøkkelen er ikke gyldig</string>
+    <string name="error_invalid_access_token">Nøkkelen er ikke gyldig</string>
     <string name="error_getting_files">Kunne ikke laste filer</string>
     <string name="error_getting_folders">Kunne ikke laste mapper</string>
-    <string name="error_saving_course">Kunne ikke lagre faget</string>
-    <string name="error_removing_course">Kunne ikke fjerne faget</string>
+    <string name="error_saving_course">Kunne ikke lagre fag</string>
+    <string name="error_removing_course">Kunne ikke fjerne fag</string>
 
     <string name="no_events_message">Ingen hendelser idag</string>
     <string name="no_announcements_message">Ingen kunngjøringer for faget</string>
     <string name="write_message">Skriv melding</string>
     <string name="settings_title">Innstillinger</string>
-    <string name="fav_course_title">Velg favorittfag</string>
+    <string name="fav_course_title">Favorittfag</string>
+    <string name="fav_course_summary">Velg dine favorittfag</string>
+    <string name="change_access_token_summary">Endre nøkkel fra Mitt UiB</string>
     <string name="choose_recipient_title">Velg mottaker</string>
 
 </resources>
