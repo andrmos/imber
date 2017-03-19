@@ -73,6 +73,6 @@
     <string name="fav_course_title">Favorittfag</string>
     <string name="fav_course_summary">Velg dine favorittfag</string>
     <string name="change_access_token_summary">Endre nøkkel fra Mitt UiB</string>
-    <string name="choose_recipient_title">Velg mottaker</string>
+    <string name="choose_recipient_title">Velg mottakere</string>
 
 </resources>
