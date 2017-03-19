@@ -21,8 +21,7 @@
 
     <!-- About activity -->
     <string name="made_by">Utviklerne bak Imber er <b>André Mossige</b>, <b>Øystein Follo</b> og <b>Patrick Finseth</b>.</string>
-    <string name="feedback_text">Har du tilbakemeldinger eller funnet feil? Send til:</string>
-    <string name="feedback_email">imber.dev@gmail.com</string>
+    <string name="feedback_text">Har du tilbakemeldinger eller har funnet feil? Send til:\nimber.dev@gmail.com</string>
 
     <!-- Login activity-->
     <string name="info_permissions">For å bruke <i>Imber</i> må du koble til Mitt UiB via en nøkkel.\n\nDenne nøkkelen gir <i>Imber</i> tilgang til informasjon fra Mitt UiB.\n<b>Informasjonen blir ikke lagret.</b>\n</string>

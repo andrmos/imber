@@ -26,11 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/feedback_text"/>
+        android:text="@string/feedback_text"
+        android:autoLink="email"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autoLink="email"
-        android:text="@string/feedback_email"/>
 </LinearLayout>

@@ -13,7 +13,6 @@
     <string name="course_title">Courses</string>
     <string name="disclaimer">Disclaimer: <i>Imber</i> is in no way associated with University of Bergen.</string>
     <string name="fav_course_title">Favorite courses</string>
-    <string name="feedback_email">imber.dev@gmail.com</string>
     <string name="file_size_promt_positive_button">OK</string>
     <string name="file_size_promt_negative_button">Cancel</string>
     <string name="file_size_prompt_title">Big file size</string>
@@ -35,7 +34,7 @@
     <string name="error_requesting_calendar">Couldn\'t load calendar</string>
     <string name="error_saving_course">Couldn\'t save course</string>
     <string name="error_sending_message">Couldn\'t send message</string>
-    <string name="feedback_text">Got feedback? Send to:</string>
+    <string name="feedback_text">Got feedback? Send to:\nimber.dev@gmail.com</string>
     <string name="file_size_prompt_message">File size is %1$d MB. Download file?</string>
     <string name="inbox_title">Inbox</string>
     <string name="license_option_title">Licenses</string>
