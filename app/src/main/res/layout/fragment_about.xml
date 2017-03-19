@@ -13,8 +13,8 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/app_name"
         android:textSize="100sp"
-        android:alpha="0.8"
-        android:textColor="@color/colorPrimary"/>
+        android:alpha="0.87"
+        android:textColor="@color/colorAccent"/>
 
     <TextView
         android:layout_width="match_parent"
