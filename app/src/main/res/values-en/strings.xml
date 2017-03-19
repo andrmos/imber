@@ -56,7 +56,7 @@
     <string name="write_message">Compose message</string>
     <string name="access_token_button">Add access token</string>
     <string name="made_by">Imber is created by <b>André Mossige</b>, <b>Oystein Follo</b> and <b>Patrick Finseth</b>.</string>
-    <string name="info_login">To get your token, do the following:\n\t\t- Login at <b>www.mitt.uib.no</b>\n\t\t- Click <b>Account</b> and then <b>Settings</b>\n\t\t- Click <b>New access token</b>\n\t\t- Write <i>Mobile app</i> in <b>Purpose</b>\n\t\t- Let <b>Expires</b> remain empty\n\t\t- Click <b>Generate token</b> and copy the token\n\t\t- Paste the token in the field below</string>
+    <string name="info_login">To get your token, do the following:\n\t\t- Login at https://mitt.uib.no \n\t\t- Click <b>Account</b> and then <b>Settings</b>\n\t\t- Click <b>New access token</b>\n\t\t- Write <i>Mobile app</i> in <b>Purpose</b>\n\t\t- Let <b>Expires</b> remain empty\n\t\t- Click <b>Generate token</b> and copy the token\n\t\t- Paste the token in the field below</string>
     <string name="info_permissions">To use <i>Imber</i>, you have to connect to Mitt UiB using an access token.\n\nThe token gives <i>Imber</i> access to information from Mitt UiB.\n<b>This information is not stored.</b>\n</string>
     <string name="temp_email">xxx000@student.uib.no</string>
 </resources>

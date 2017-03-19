@@ -26,7 +26,7 @@
 
     <!-- Login activity-->
     <string name="info_permissions">For å bruke <i>Imber</i> må du koble til Mitt UiB via en nøkkel.\n\nDenne nøkkelen gir <i>Imber</i> tilgang til informasjon fra Mitt UiB.\n<b>Informasjonen blir ikke lagret.</b>\n</string>
-    <string name="info_login">For å hente en nøkkel gjør du følgende:\n\t\t- Logg inn på <b>www.mitt.uib.no</b>\n\t\t- Trykk <b>Konto</b> og så <b>Innstillinger</b>\n\t\t- Trykk <b>Nytt tilgangstoken</b>\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<b>Bruk</b>"\n\t\t- La <b>Utløpsdato</b> stå tom\n\t\t- Trykk <b>Generer tegn</b> og kopier nøkkelen\n\t\t- Lim inn nøkkelen i feltet under</string>
+    <string name="info_login">For å hente en nøkkel gjør du følgende:\n\t\t- Logg inn på https://mitt.uib.no\n\t\t- Trykk <b>Konto</b> og så <b>Innstillinger</b>\n\t\t- Trykk <b>Nytt tilgangstoken</b>\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<b>Bruk</b>"\n\t\t- La <b>Utløpsdato</b> stå tom\n\t\t- Trykk <b>Generer tegn</b> og kopier nøkkelen\n\t\t- Lim inn nøkkelen i feltet under</string>
     <string name="access_token_button">Legg til nøkkel</string>
     <string name="disclaimer">Ansvarsfraskrivelse: <i>Imber</i> er på ingen måte assosiert med Universitetet i Bergen.</string>
     <string name="access_token">Nøkkel</string>
