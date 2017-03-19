@@ -5,7 +5,7 @@
     <string name="navigation_drawer_close">Lukk navigasjonsskuff</string>
     <string name="temp_name">Ola Nordman</string>
     <string name="temp_email">xxx000@student.uib.no</string>
-    <string name="preference_file_key">preference_file_key</string>
+    <string name="preference_file_key" translatable="false">preference_file_key</string>
     <string name="confirm_exit">Trykk igjen for å avslutte</string>
 
     <!-- Titles -->
@@ -20,13 +20,12 @@
     <string name="search_title">Søk</string>
 
     <!-- About activity -->
-    <string name="about">Imber er utviklet som et prosjekt i faget <i>INF219</i> og på eget initiativ.</string>
     <string name="made_by">Utviklerne bak Imber er <b>André Mossige</b>, <b>Øystein Follo</b> og <b>Patrick Finseth</b>.</string>
-    <string name="feedback_text">Tilbakemeldinger kan sendes til:</string>
+    <string name="feedback_text">Har du tilbakemeldinger eller funnet feil? Send til:</string>
     <string name="feedback_email">imber.dev@gmail.com</string>
 
     <!-- Login activity-->
-    <string name="info_permissions">For å bruke <i>Imber</i> må du koble til Mitt UiB via en nøkkel.\n\nDenne nøkkelen gir <i>Imber</i> tilgang til:\n\t\t- Fag\n\t\t- Kunngjøringer\n\t\t- Meldinger\n\t\t- Kalender\n\t\t- Filer\n\nInformasjon fra Mitt UiB blir ikke lagret.\n</string>
+    <string name="info_permissions">For å bruke <i>Imber</i> må du koble til Mitt UiB via en nøkkel.\n\nDenne nøkkelen gir <i>Imber</i> tilgang til informasjon fra Mitt UiB.\n<b>Informasjonen blir ikke lagret.</b>\n</string>
     <string name="info_login">For å hente en nøkkel gjør du følgende:\n\t\t- Logg inn på <b>www.mitt.uib.no</b>\n\t\t- Trykk <b>Konto</b> og så <b>Innstillinger</b>\n\t\t- Trykk <b>Nytt tilgangstoken</b>\n\t\t- Fyll inn "<i>Mobilapplikasjon</i>" under "<b>Bruk</b>"\n\t\t- La <b>Utløpsdato</b> stå tom\n\t\t- Trykk <b>Generer tegn</b> og kopier nøkkelen\n\t\t- Lim inn nøkkelen i feltet under</string>
     <string name="access_token_button">Legg til nøkkel</string>
     <string name="disclaimer">Ansvarsfraskrivelse: <i>Imber</i> er på ingen måte assosiert med Universitetet i Bergen.</string>
@@ -36,13 +35,13 @@
     <string name="subject_hint">Emne</string>
     <string name="body_hint">Melding</string>
     <string name="subject_length_error">Maks 255 tegn</string>
-    <string name="body_length_error">Melding tom</string>
+    <string name="body_length_error">Melding er tom</string>
     <string name="message_sent">Melding sendt</string>
     <string name="no_recipients_error">Ingen mottakere valgt</string>
 
     <!-- File browser fragment -->
     <string name="btn_file_browser">Filer</string>
-    <string name="file_size_prompt_title">Stor fil</string>
+    <string name="file_size_prompt_title">Stor filstørrelse</string>
     <string name="file_size_prompt_message">Filen er %1$d MB.\nLast ned fil?</string>
     <string name="file_size_promt_positive_button">OK</string>
     <string name="file_size_promt_negative_button">Avbryt</string>
