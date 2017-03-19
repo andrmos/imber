@@ -277,6 +277,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private synchronized void showMessageIfEmpty() {
         if (filesLoaded && foldersLoaded) {
             if (files.isEmpty() && folders.isEmpty()) {
+                progressBar.progressiveStop();
                 noContentTextView.setVisibility(View.VISIBLE);
             }
         }
