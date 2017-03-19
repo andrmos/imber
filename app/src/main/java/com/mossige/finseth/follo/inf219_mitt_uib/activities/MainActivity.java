@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         //Set email on navigation header
         TextView emailTV = (TextView) navigationView.getHeaderView(0).findViewById(R.id.primary_email);
-        emailTV.setText(profile.getPrimary_email());
+        emailTV.setText(profile.getPrimary_email().toLowerCase());
     }
 
     @Override
