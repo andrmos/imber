@@ -135,7 +135,9 @@ public class ComposeMessageFragment extends Fragment {
                 @Override
                 public void onResponse(Call<List<SendMessage>> call, retrofit2.Response<List<SendMessage>> response) {
                     if (response.isSuccessful()) {
-                        mCallback.showSnackbar(getString(R.string.message_sent), null);
+                        if (isAdded()) {
+                            mCallback.showSnackbar(getString(R.string.message_sent), null);
+                        }
                         cleanTextFields();
                         replaceFragment();
                     } else {
@@ -154,12 +156,14 @@ public class ComposeMessageFragment extends Fragment {
     }
 
     private void showSnackbar(final ArrayList<Integer> recipients, final String subject, final String body) {
-        mCallback.showSnackbar(getString(R.string.error_sending_message), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                postMessageRequest(recipients,subject,body);
-            }
-        });
+        if (isAdded()) {
+            mCallback.showSnackbar(getString(R.string.error_sending_message), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    postMessageRequest(recipients,subject,body);
+                }
+            });
+        }
     }
 
     private void replaceFragment (){

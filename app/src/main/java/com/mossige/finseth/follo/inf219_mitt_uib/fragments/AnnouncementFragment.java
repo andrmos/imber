@@ -120,12 +120,14 @@ public class AnnouncementFragment extends Fragment {
     }
 
     private void showSnackbar(final int course_id) {
-        mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestAnnouncements(course_id);
-            }
-        });
+        if (isAdded()) {
+            mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    requestAnnouncements(course_id);
+                }
+            });
+        }
     }
 
     private void initRecycleView(View rootView) {

@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             profile = new Gson().fromJson(profileJson, User.class);
             updateNavDrawer();
         } else {
-//             Only load profile if its not loaded in previous activity
+            // Only load profile if its not loaded in previous activity
             requestProfile();
         }
     }
@@ -215,7 +215,11 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         for (Course c : courses) {
             ids.add(c.getId());
         }
-        bundle.putInt("user_id", profile.getId());
+
+        if (profile != null) {
+            bundle.putInt("user_id", profile.getId());
+        }
+
         bundle.putIntegerArrayList("ids", ids);
         calendarFragment.setArguments(bundle);
 

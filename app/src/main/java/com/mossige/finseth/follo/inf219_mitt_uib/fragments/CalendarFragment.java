@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -238,6 +239,22 @@ public class CalendarFragment extends Fragment {
                     requestAssignments(year, month);
 
                 } else {
+
+                    if (isAdded()) {
+                        mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                getCalendarEvents(year,month,pageNum);
+                            }
+                        });
+                        calendar.setLoaded(year, month, false);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                if (isAdded()) {
                     mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -246,17 +263,6 @@ public class CalendarFragment extends Fragment {
                     });
                     calendar.setLoaded(year, month, false);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
-                mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getCalendarEvents(year,month,pageNum);
-                    }
-                });
-                calendar.setLoaded(year, month, false);
             }
         });
     }
@@ -303,6 +309,21 @@ public class CalendarFragment extends Fragment {
                     setBackgrounds(events);
                     calendar.addEvents(events);
                 } else {
+                    if (isAdded()) {
+                        mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                requestAssignments(year,month);
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                if (isAdded()) {
                     mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -310,17 +331,6 @@ public class CalendarFragment extends Fragment {
                         }
                     });
                 }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
-                mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestAssignments(year,month);
-                    }
-                });
             }
         });
     }

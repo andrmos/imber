@@ -165,13 +165,16 @@ public class CourseListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
-                if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
-                mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestCourses();
-                    }
-                });
+                if (isAdded()) {
+                    if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
+
+                    mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestCourses();
+                        }
+                    });
+                }
             }
         });
 

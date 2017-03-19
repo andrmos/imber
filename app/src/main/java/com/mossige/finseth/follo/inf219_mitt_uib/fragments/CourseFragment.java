@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,12 +195,14 @@ public class CourseFragment extends Fragment {
 
                 } else {
                     progressbar.setVisibility(View.GONE);
-                    mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            requestAnnouncements(course_id);
-                        }
-                    });
+                    if (isAdded()) {
+                        mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                requestAnnouncements(course_id);
+                            }
+                        });
+                    }
                 }
 
             }
@@ -209,12 +210,14 @@ public class CourseFragment extends Fragment {
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
                 progressbar.setVisibility(View.GONE);
-                mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestAnnouncements(course_id);
-                    }
-                });
+                if (isAdded()) {
+                    mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestAnnouncements(course_id);
+                        }
+                    });
+                }
             }
         });
     }
@@ -267,6 +270,20 @@ public class CourseFragment extends Fragment {
                     }
 
                 } else {
+                    if (isAdded()) {
+                        mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                requestAgendas();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                if (isAdded()) {
                     mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -274,16 +291,6 @@ public class CourseFragment extends Fragment {
                         }
                     });
                 }
-            }
-
-            @Override
-            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
-                mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestAgendas();
-                    }
-                });
             }
         });
 
@@ -321,6 +328,20 @@ public class CourseFragment extends Fragment {
                         progressbar.setVisibility(View.GONE);
                     }
                 } else {
+                    if (isAdded()) {
+                        mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                requestAssignments();
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
+                if (isAdded()) {
                     mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -328,16 +349,6 @@ public class CourseFragment extends Fragment {
                         }
                     });
                 }
-            }
-
-            @Override
-            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
-                mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestAssignments();
-                    }
-                });
             }
         });
     }

@@ -27,9 +27,9 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Recipient;
-import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.CancelableCallback;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
@@ -295,12 +295,14 @@ public class ChooseRecipientFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                 }
 
-                mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestCourses();
-                    }
-                });
+                if (isAdded()) {
+                    mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestCourses();
+                        }
+                    });
+                }
             }
         });
     }
@@ -353,12 +355,14 @@ public class ChooseRecipientFragment extends Fragment {
             progressBar.setVisibility(View.GONE);
         }
 
-        mCallback.showSnackbar(getString(R.string.error_loading_recipients), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestRecipients(searchTerms, firstPage);
-            }
-        });
+        if (isAdded()) {
+            mCallback.showSnackbar(getString(R.string.error_loading_recipients), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    requestRecipients(searchTerms, firstPage);
+                }
+            });
+        }
     }
 
     private void initOnClickListener() {

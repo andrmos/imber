@@ -96,12 +96,14 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
             @Override
             public void onFailure(Call<Course> call, Throwable t) {
-                mCallback.showSnackbar(getString(R.string.error_saving_course), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        saveFavoriteCourse(id);
-                    }
-                });
+                if (isAdded()) {
+                    mCallback.showSnackbar(getString(R.string.error_saving_course), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            saveFavoriteCourse(id);
+                        }
+                    });
+                }
             }
         });
     }
@@ -128,12 +130,14 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
-                mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestCourses();
-                    }
-                });
+                if (isAdded()) {
+                    mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestCourses();
+                        }
+                    });
+                }
 
             }
         });
@@ -148,12 +152,14 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
 
             @Override
             public void onFailure(Call<Course> call, Throwable t) {
-                mCallback.showSnackbar(getString(R.string.error_removing_course), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        removeFavoriteCourse(id);
-                    }
-                });
+                if (isAdded()) {
+                    mCallback.showSnackbar(getString(R.string.error_removing_course), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            removeFavoriteCourse(id);
+                        }
+                    });
+                }
             }
         });
     }
