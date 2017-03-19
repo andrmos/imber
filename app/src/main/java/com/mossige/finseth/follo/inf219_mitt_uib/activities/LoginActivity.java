@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String accessToken = inputField.getText().toString();
+                String accessToken = inputField.getText().toString().replace("\n", "");
                 validateAccessToken(accessToken);
             }
         });
