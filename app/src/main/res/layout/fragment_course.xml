@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -19,5 +19,5 @@
         </android.support.v7.widget.RecyclerView>
 
 
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

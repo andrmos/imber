@@ -121,7 +121,9 @@ public class SingleConversationFragment extends Fragment {
                         loaded = true;
                         mAdapter.notifyDataSetChanged();
 
-                        progressbar.setVisibility(View.GONE);
+                        if (isAdded()) {
+                            progressbar.progressiveStop();
+                        }
 
                     }
                 }
@@ -138,7 +140,7 @@ public class SingleConversationFragment extends Fragment {
     }
 
     private void showSnackbar() {
-        progressbar.setVisibility(View.GONE);
+        progressbar.progressiveStop();
         Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
         snackbar.setDuration(4000); // Gives false syntax error
         snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {

@@ -18,13 +18,14 @@ import com.mossige.finseth.follo.inf219_mitt_uib.listeners.EndlessRecyclerViewSc
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.ItemClickSupport;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Announcement;
-import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
+import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -45,12 +46,22 @@ public class AnnouncementFragment extends Fragment {
     private int courseId;
     private MainActivityListener mCallback;
     private MittUibClient mittUibClient;
+    private boolean loaded;
+    private SmoothProgressBar progressBar;
 
     public AnnouncementFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+
+        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+        // Hide progress bar if data is already loaded
+        if (loaded) {
+            progressBar.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         // Set label for toolbar
         getActivity().setTitle(getString(R.string.announcements_title));
@@ -98,6 +109,10 @@ public class AnnouncementFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Announcement>> call, retrofit2.Response<List<Announcement>> response) {
 
+                if (isAdded() && !loaded) {
+                    progressBar.progressiveStop();
+                }
+
                 if (response.isSuccessful()) {
                     int currentSize = mAdapter.getItemCount();
                     announcements.addAll(response.body());
@@ -105,6 +120,8 @@ public class AnnouncementFragment extends Fragment {
 
                     nextPage = PaginationUtils.getNextPageUrl(response.headers());
 
+
+                    loaded = true;
                     mainList.setVisibility(View.VISIBLE);
                 } else {
                     showSnackbar(course_id);
@@ -114,7 +131,10 @@ public class AnnouncementFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
-                showSnackbar(course_id);
+                if (isAdded()) {
+                    progressBar.progressiveStop();
+                    showSnackbar(course_id);
+                }
             }
         });
     }

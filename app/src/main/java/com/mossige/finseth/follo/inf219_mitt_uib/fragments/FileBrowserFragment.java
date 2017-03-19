@@ -20,7 +20,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +43,7 @@ import com.mossige.finseth.follo.inf219_mitt_uib.utils.PermissionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,7 +69,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private ArrayList<Folder> folders;
 
     private boolean filesLoaded;
-    private boolean foldersLoeaded;
+    private boolean foldersLoaded;
 
     private Course course;
     private MainActivityListener callback;
@@ -84,6 +84,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     private File clickedFile;
     private MittUibClient mittUibClient;
     private TextView noContentTextView;
+    private SmoothProgressBar progressBar;
 
     public FileBrowserFragment() {
         // Required empty public constructor
@@ -212,16 +213,23 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
                     mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
                     nextPageFolders = PaginationUtils.getNextPageUrl(response.headers());
-                    foldersLoeaded = true;
+                    foldersLoaded = true;
                     showMessageIfEmpty();
                 } else {
                     showSnackbarFolder(folderId);
+                }
+
+                if (isAdded() && (!filesLoaded || !foldersLoaded)) {
+                    progressBar.progressiveStop();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Folder>> call, Throwable t) {
-                showSnackbarFolder(folderId);
+                if (isAdded()) {
+                    progressBar.progressiveStop();
+                    showSnackbarFolder(folderId);
+                }
             }
         });
 
@@ -250,17 +258,24 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
                 } else {
                     showSnackbarFile(folderId);
                 }
+
+                if (isAdded() && (!filesLoaded && !foldersLoaded)) {
+                    progressBar.progressiveStop();
+                }
             }
 
             @Override
             public void onFailure(Call<List<File>> call, Throwable t) {
-                showSnackbarFile(folderId);
+                if (isAdded()) {
+                    progressBar.progressiveStop();
+                    showSnackbarFile(folderId);
+                }
             }
         });
     }
 
     private synchronized void showMessageIfEmpty() {
-        if (filesLoaded && foldersLoeaded) {
+        if (filesLoaded && foldersLoaded) {
             if (files.isEmpty() && folders.isEmpty()) {
                 noContentTextView.setVisibility(View.VISIBLE);
             }
@@ -290,6 +305,13 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_file_browser, container, false);
         getActivity().setTitle(R.string.btn_file_browser);
+
+        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+        if (filesLoaded || foldersLoaded) {
+            progressBar.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         initRecycleView(rootView);
         mainList.setVisibility(View.VISIBLE);

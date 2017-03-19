@@ -291,11 +291,12 @@ public class ChooseRecipientFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
-                if(progressBar != null){
-                    progressBar.setVisibility(View.GONE);
-                }
 
                 if (isAdded()) {
+                    if(progressBar != null){
+                        progressBar.progressiveStop();
+                    }
+
                     mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -331,7 +332,9 @@ public class ChooseRecipientFragment extends Fragment {
                         recipients.add(r);
                     }
 
-                    progressBar.setVisibility(View.GONE);
+                    if (isAdded()) {
+                        progressBar.progressiveStop();
+                    }
                     mAdapter.notifyItemRangeInserted(currentSize, recipients.size());
 
                     loaded = true;
@@ -351,11 +354,12 @@ public class ChooseRecipientFragment extends Fragment {
     }
 
     private void showSnackbar(final String searchTerms, final boolean firstPage) {
-        if(progressBar != null){
-            progressBar.setVisibility(View.GONE);
-        }
 
         if (isAdded()) {
+            if(progressBar != null){
+                progressBar.progressiveStop();
+            }
+
             mCallback.showSnackbar(getString(R.string.error_loading_recipients), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

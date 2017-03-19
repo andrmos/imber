@@ -1,5 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.google.gson.Gson;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.CourseListRecyclerViewAdapter;
@@ -147,10 +149,15 @@ public class CourseListFragment extends Fragment {
         } else {
             call = mittUibClient.getCoursesPagination(nextPage);
         }
+
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
                 if (response.isSuccessful()) {
+                    if (smoothProgressBar != null) {
+                        smoothProgressBar.progressiveStop();
+                    }
+
                     courses.clear();
                     courses.addAll(response.body());
 
@@ -158,15 +165,15 @@ public class CourseListFragment extends Fragment {
 
                     loaded = true;
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
-
-                    if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
                 if (isAdded()) {
-                    if (smoothProgressBar != null) smoothProgressBar.setVisibility(View.GONE);
+                    if (smoothProgressBar != null){
+                        smoothProgressBar.progressiveStop();
+                    }
 
                     mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
                         @Override

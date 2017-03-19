@@ -107,7 +107,7 @@ public class ConversationFragment extends Fragment {
         call.enqueue(new Callback<List<Conversation>>() {
             @Override
             public void onResponse(Call<List<Conversation>> call, retrofit2.Response<List<Conversation>> response) {
-                progressbar.setVisibility(View.GONE);
+                progressbar.progressiveStop();
 
                 if (response.isSuccessful()) {
                     int currentSize = mAdapter.getItemCount();
@@ -127,8 +127,10 @@ public class ConversationFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Conversation>> call, Throwable t) {
-                progressbar.setVisibility(View.GONE);
-                showSnackbar();
+                if (isAdded()) {
+                    progressbar.progressiveStop();
+                    showSnackbar();
+                }
             }
         });
     }
@@ -156,7 +158,7 @@ public class ConversationFragment extends Fragment {
         // Create RecycleView
         // findViewById() belongs to Activity, so need to access it from the root view of the fragment
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-
+        recyclerView.setVisibility(View.VISIBLE);
         // Create the LayoutManager that holds all the views
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);

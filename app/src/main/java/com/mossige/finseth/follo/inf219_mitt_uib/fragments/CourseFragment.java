@@ -190,12 +190,12 @@ public class CourseFragment extends Fragment {
 
                     if (isLoaded()) {
                         mainList.setVisibility(View.VISIBLE);
-                        progressbar.setVisibility(View.GONE);
+                        progressbar.progressiveStop();
                     }
 
                 } else {
-                    progressbar.setVisibility(View.GONE);
                     if (isAdded()) {
+                        progressbar.progressiveStop();
                         mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -209,8 +209,8 @@ public class CourseFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
-                progressbar.setVisibility(View.GONE);
                 if (isAdded()) {
+                    progressbar.progressiveStop();
                     mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -266,7 +266,7 @@ public class CourseFragment extends Fragment {
 
                     if (isLoaded()) {
                         mainList.setVisibility(View.VISIBLE);
-                        progressbar.setVisibility(View.GONE);
+                        progressbar.progressiveStop();
                     }
 
                 } else {
@@ -325,10 +325,11 @@ public class CourseFragment extends Fragment {
 
                     if (isLoaded()) {
                         mainList.setVisibility(View.VISIBLE);
-                        progressbar.setVisibility(View.GONE);
+                        progressbar.progressiveStop();
                     }
                 } else {
                     if (isAdded()) {
+                        progressbar.progressiveStop();
                         mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
