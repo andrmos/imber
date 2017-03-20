@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         mittUibClient = ServiceGenerator.createService(MittUibClient.class, getApplicationContext());
 
+        // TODO Update course ids after you have selected favorite courses
         requestCourses(); // Need events in calendar
 
         initCourseListFragment();
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void requestCourses() {
-        Call<List<Course>> call = mittUibClient.getCourses(null, null);
+        Call<List<Course>> call = mittUibClient.getFavoriteCourses();
         call.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
