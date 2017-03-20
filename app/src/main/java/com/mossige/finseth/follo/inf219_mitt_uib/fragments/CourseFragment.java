@@ -250,7 +250,7 @@ public class CourseFragment extends Fragment {
         String startDate = df.format(cal.getTime());
         String endDate = df.format(cal.getTime());
 
-        Call<List<CalendarEvent>> call = mittUibClient.getCalendarEvents(startDate, endDate, contextCodes, null, type, perPage, null);
+        Call<List<CalendarEvent>> call = mittUibClient.getEvents(startDate, endDate, contextCodes, null, type, perPage);
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
@@ -313,7 +313,7 @@ public class CourseFragment extends Fragment {
         String startDate = df.format(cal.getTime());
         String endDate = df.format(cal.getTime());
 
-        Call<List<CalendarEvent>> call = mittUibClient.getCalendarEvents(startDate, endDate, contextCodes, null, type, perPage, null);
+        Call<List<CalendarEvent>> call = mittUibClient.getEvents(startDate, endDate, contextCodes, null, type, perPage);
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {

@@ -111,13 +111,16 @@ public interface MittUibClient {
      * @return
      */
     @GET("calendar_events")
-    Call<List<CalendarEvent>> getCalendarEvents(@Query("start_date") String startDate,
-                                                @Query("end_date") String end_date,
-                                                @Query("context_codes[]") List<String> contextCodes,
-                                                @Query("excludes[]") List<String> excludes,
-                                                @Query("type") String type,
-                                                @Query("per_page") Integer perPage,
-                                                @Query("page_num") Integer pageNum);
+    Call<List<CalendarEvent>> getEvents(@Query("start_date") String startDate,
+                                        @Query("end_date") String end_date,
+                                        @Query("context_codes[]") List<String> contextCodes,
+                                        @Query("excludes[]") List<String> excludes,
+                                        @Query("type") String type,
+                                        @Query("per_page") Integer perPage);
+
+
+    @GET
+    Call<List<CalendarEvent>> getEventsPaginate(@Url String url);
 
     /**
      * Retrieve the list of assignment events for the current user.
@@ -133,7 +136,7 @@ public interface MittUibClient {
                                                     @Query("end_date") String end_date,
                                                     @Query("context_codes[]") List<String> contextCodes,
                                                     @Query("excludes[]") List<String> excludes,
-                                                    @Query("page_num") Integer pageNum);
+                                                    @Query("page_num") Integer pageNum); // TODO remove page num
 
     /**
      * Retrieve valid recipients (users, courses and groups) that the current user can send messages to.

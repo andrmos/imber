@@ -39,19 +39,21 @@ public class CalendarFragment extends Fragment {
 
     private CaldroidFragment caldroidFragment;
     private MyCalendar calendar;
-    private ArrayList<Integer> courseIds;
     private DateTime previousDateTime;
     private OnDateClickListener callBack;
     private MainActivityListener mCallback;
     private MittUibClient mittUibClient;
+    private ArrayList<String> globalContextCodes;
+    private String nextPage;
+    private String nextPageAssignment;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        try{
+        try {
             mCallback = (MainActivityListener) context;
-        }catch(ClassCastException e){
+        } catch (ClassCastException e) {
             //Do nothing
         }
 
@@ -68,15 +70,33 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        nextPage = "";
+        nextPageAssignment = "";
+        calendar = new MyCalendar();
+        initContextCodes();
+    }
 
+    /**
+     * Creates the list of context codes with the right format.
+     * The list is used by the API to know what courses to get events for.
+     */
+    private void initContextCodes() {
         Bundle arguments = getArguments();
         if (arguments != null) {
-            courseIds = arguments.getIntegerArrayList("ids");
-        } else {
-            courseIds = new ArrayList<>(); // Empty ids
-        }
+            if (arguments.containsKey("ids")) {
+                ArrayList<Integer> courseIds = arguments.getIntegerArrayList("ids");
 
-        calendar = new MyCalendar();
+                // Add all course ids for use in context_codes in url
+                globalContextCodes = new ArrayList<>();
+                for (int i = 0; i < courseIds.size(); i++) {
+                    globalContextCodes.add("course_" + courseIds.get(i));
+                }
+            }
+
+            if (arguments.containsKey("user_id")) {
+                globalContextCodes.add("user_" + arguments.getInt("user_id"));
+            }
+        }
     }
 
     @Override
@@ -92,6 +112,7 @@ public class CalendarFragment extends Fragment {
         agendaFragment.setArguments(getArguments());
         ft.replace(R.id.agenda_container, agendaFragment);
 
+        // TODO Why not have agendas and calendar in same fragment??????!??
         caldroidFragment = initCalendarFragment();
         ft.replace(R.id.calendar_container, caldroidFragment);
 
@@ -122,8 +143,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private CaldroidListener initCaldroidListener() {
-
-        final CaldroidListener listener = new CaldroidListener() {
+        return new CaldroidListener() {
 
             /**
              * Retrieve calendar events for selected month, and the two months before and after.
@@ -131,14 +151,36 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onChangeMonth(int month, int year) {
                 DateTime curMonth = new DateTime(year, month, 1, 0, 0, 0, 0); // Only need year and month
-                DateTime prevMonth = curMonth.minus(0, 1, 0, 0, 0, 0, 0, DateTime.DayOverflow.FirstDay);
-                DateTime nextMonth = curMonth.plus(0, 1, 0, 0, 0, 0, 0, DateTime.DayOverflow.FirstDay);
+//                DateTime prevMonth = curMonth.minus(0, 1, 0, 0, 0, 0, 0, DateTime.DayOverflow.FirstDay);
+//                DateTime nextMonth = curMonth.plus(0, 1, 0, 0, 0, 0, 0, DateTime.DayOverflow.FirstDay);
 
-                DateTime[] months = {curMonth, nextMonth, prevMonth};
-                for (DateTime m : months) {
-                    if (!calendar.loaded(m.getYear(), m.getMonth())) {
-                        getCalendarEvents(m.getYear(), m.getMonth(), 1);
+//                DateTime[] months = {curMonth, nextMonth, prevMonth};
+//                for (DateTime m : months) {
+//                    if (!calendar.loaded(m.getYear(), m.getMonth())) {
+//                        getEvents(m.getYear(), m.getMonth(), 1);
+//                    }
+//                }
+
+                // TODO Refactor
+                // API only support 10 context codes in each call.
+                // This is the required calls based on amount of context codes.
+                int requiredSplits = (int) Math.ceil((double) globalContextCodes.size() / 10);
+                int j = 0;
+                for (int i = 0; i < requiredSplits; i++) {
+                    // The context codes for a call
+                    ArrayList<String> contextCodeSingleCall = new ArrayList<>();
+                    for (; contextCodeSingleCall.size() <= 9 && j < globalContextCodes.size(); j++) {
+                        contextCodeSingleCall.add(globalContextCodes.get(j));
                     }
+
+                    if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth(), "event")) {
+                        getEvents(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall);
+                    }
+
+                    if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth(), "assignment")) {
+                        getAssignments(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall);
+                    }
+
                 }
             }
 
@@ -162,7 +204,6 @@ public class CalendarFragment extends Fragment {
                 setBackground(dateTime);
             }
         };
-        return listener;
     }
 
     /**
@@ -185,13 +226,12 @@ public class CalendarFragment extends Fragment {
     /**
      * Get all calendar events for a month, and add them to the 'events' field.
      *
-     * @param year     The year to get the calendar events.
-     * @param month    The month to get the calendar events.
-     * @param pageNum Page number of calendar event request. Declared final since it's accessed from inner class.
+     * @param year  The year to get the calendar events.
+     * @param month The month to get the calendar events.
      */
-    private void getCalendarEvents(final int year, final int month, final int pageNum) {
-        ArrayList<String> contextCodes = contextCodes();
-        String type = "event";
+    private void getEvents(final int year, final int month, final ArrayList<String> contextCodes) {
+//        final ArrayList<String> contextCodes = contextCodes();
+        final String type = "event";
 
         //What to exlude
         ArrayList<String> excludes = new ArrayList<>();
@@ -204,9 +244,18 @@ public class CalendarFragment extends Fragment {
 
         int perPage = 50;
 
-        Call<List<CalendarEvent>> call = mittUibClient.getCalendarEvents(startDateString, endDateString, contextCodes, excludes, type, perPage, pageNum);
+        // TODO Fix pagination: several calls are made, and will use each others nextPage field...
+        // TODO Should use a arraylist?
+        Call<List<CalendarEvent>> call;
+        boolean firstPage = nextPage.isEmpty();
+        if (firstPage) {
+            call = mittUibClient.getEvents(startDateString, endDateString, contextCodes, excludes, type, perPage);
+        } else {
+            call = mittUibClient.getEventsPaginate(nextPage);
+        }
 
         call.enqueue(new Callback<List<CalendarEvent>>() {
+
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
                 if (response.isSuccessful()) {
@@ -218,14 +267,12 @@ public class CalendarFragment extends Fragment {
 
                     // If returned maximum amount of events, get events for next page
 
-                    String nextPage = PaginationUtils.getNextPageUrl(response.headers());
+                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
                     if (!nextPage.isEmpty()) {
-                        getCalendarEvents(year, month, pageNum + 1);
+                        getEvents(year, month, contextCodes);
                     }
 
-                    // TODO Pagination
-                    requestAssignments(year, month);
-                    calendar.setLoaded(year, month, true);
+                    calendar.setLoaded(year, month, type, true);
                     setBackgrounds(events);
 
                     // If in current month, set todays agendas
@@ -236,18 +283,16 @@ public class CalendarFragment extends Fragment {
                         }
                     }
 
-                    requestAssignments(year, month);
-
                 } else {
 
                     if (isAdded()) {
                         mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                getCalendarEvents(year,month,pageNum);
+                                getEvents(year, month, contextCodes);
                             }
                         });
-                        calendar.setLoaded(year, month, false);
+                        calendar.setLoaded(year, month, type, false);
                     }
                 }
             }
@@ -258,48 +303,34 @@ public class CalendarFragment extends Fragment {
                     mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            getCalendarEvents(year,month,pageNum);
+                            getEvents(year, month, contextCodes);
                         }
                     });
-                    calendar.setLoaded(year, month, false);
+                    calendar.setLoaded(year, month, type, false);
                 }
             }
         });
     }
 
-    private ArrayList<String> contextCodes() {
-        //        Add all course ids for use in context_codes in url
-        ArrayList<String> contextCodes = new ArrayList<>();
-        for (Integer i : courseIds) {
-            // TODO Max size of context codes is 10, rest is ignored...
-            contextCodes.add("course_" + i);
-        }
+    private void getAssignments(final int year, final int month, final ArrayList<String> contextCodes) {
 
-        if(getArguments() != null){
-            if(getArguments().containsKey("user_id")){
-                contextCodes.add("user_" + getArguments().getInt("user_id"));
-            }
-        }
-        return contextCodes;
-    }
+        final String type = "assignment";
 
-    private void requestAssignments(final int year, final int month) {
-        //Course ids for context_codes in url
-        ArrayList<String> contextCodes = new ArrayList<>();
-        for (Integer i : courseIds) {
-            contextCodes.add("course_" + i);
-        }
-
-        String type = "assignment";
-
-        DateTime startDate = DateTime.forDateOnly(year, month, 1);
-        DateTime endDate = startDate.getEndOfMonth();
+        final DateTime startDate = DateTime.forDateOnly(year, month, 1);
+        final DateTime endDate = startDate.getEndOfMonth();
         String startDateString = startDate.toString();
         String endDateString = endDate.format("YYYY-MM-DD");
 
         int perPage = 50;
 
-        Call<List<CalendarEvent>> call = mittUibClient.getCalendarEvents(startDateString, endDateString, contextCodes, null, type, perPage, null);
+        Call<List<CalendarEvent>> call;
+        boolean firstPage = nextPageAssignment.isEmpty();
+        if (firstPage) {
+            call = mittUibClient.getEvents(startDateString, endDateString, contextCodes, null, type, perPage);
+        } else {
+            call = mittUibClient.getEventsPaginate(nextPageAssignment);
+        }
+
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
@@ -307,13 +338,27 @@ public class CalendarFragment extends Fragment {
                     ArrayList<CalendarEvent> events = new ArrayList<>();
                     events.addAll(response.body());
                     setBackgrounds(events);
+
+                    nextPageAssignment = PaginationUtils.getNextPageUrl(response.headers());
+                    if (!nextPage.isEmpty()) {
+                        getEvents(year, month, contextCodes);
+                    }
+
+                    // TODO Add set loaded
                     calendar.addEvents(events);
+                    calendar.setLoaded(year, month, type, true);
                 } else {
                     if (isAdded()) {
                         mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                requestAssignments(year,month);
+                                mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        getAssignments(year, month, contextCodes);
+                                    }
+                                });
+                                calendar.setLoaded(year, month, type, false);
                             }
                         });
                     }
@@ -327,7 +372,13 @@ public class CalendarFragment extends Fragment {
                     mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            requestAssignments(year,month);
+                            mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    getAssignments(year, month, contextCodes);
+                                }
+                            });
+                            calendar.setLoaded(year, month, type, false);
                         }
                     });
                 }
