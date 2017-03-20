@@ -39,7 +39,7 @@ public interface MittUibClient {
     /**
      * @return The active courses of the logged in user.
      */
-    @GET("courses")
+    @GET("courses?per_page=1000")
     Call<List<Course>> getCourses(@Query("include[]") List<String> includes,
                                   @Query("enrollment_state") String enrollmentState);
 
