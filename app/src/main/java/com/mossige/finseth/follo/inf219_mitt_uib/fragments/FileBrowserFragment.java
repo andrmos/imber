@@ -259,7 +259,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
                     showSnackbarFile(folderId);
                 }
 
-                if (isAdded() && (!filesLoaded && !foldersLoaded)) {
+                if (isAdded() && (!filesLoaded || !foldersLoaded)) {
                     progressBar.progressiveStop();
                 }
             }
