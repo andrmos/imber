@@ -46,20 +46,22 @@ public class MyCalendar {
      *
      * @param year
      * @param month
+     * @param type "event" or "assignment"
      * @param value
      */
-    public void setLoaded(int year, int month, boolean value) {
-        loaded.put(year + "-" + month, value);
+    public void setLoaded(int year, int month, String type, boolean value) {
+        loaded.put(year + "-" + month + " " + type, value);
     }
 
     /**
      *
      * @param year
      * @param month
+     * @param type "event" or "assignment"
      * @return
      */
-    public boolean loaded(int year, int month) {
-        Boolean ret = loaded.get(year + "-" + month);
+    public boolean loaded(int year, int month, String type) {
+        Boolean ret = loaded.get(year + "-" + month + " " + type);
         if (ret != null) {
             return ret;
         } else {
