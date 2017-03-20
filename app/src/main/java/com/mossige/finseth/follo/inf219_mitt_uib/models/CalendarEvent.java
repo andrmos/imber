@@ -16,6 +16,7 @@ public class CalendarEvent implements Comparable<CalendarEvent> {
 
     private String id;
     private String title;
+    @SerializedName("location_address")
     private String location;
     @SerializedName("start_at")
     private DateTime startDate;
