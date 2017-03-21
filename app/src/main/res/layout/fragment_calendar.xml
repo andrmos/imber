@@ -10,7 +10,10 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:mcv_selectionColor="@color/colorAccent" />
+        android:layout_marginTop="@dimen/calendar_margin_top"
+        app:mcv_selectionColor="@color/colorAccent"
+        app:mcv_firstDayOfWeek="monday"
+        app:mcv_tileHeight="35dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

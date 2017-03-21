@@ -20,5 +20,6 @@
     <dimen name="no_files_message">16sp</dimen>
     <dimen name="card_top_padding">24dp</dimen>
     <dimen name="card_side_padding">16dp</dimen>
+    <dimen name="calendar_margin_top">8dp</dimen>
 
 </resources>
