@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "620757816104",
+    "firebase_url": "https://imber-1901c.firebaseio.com",
+    "project_id": "imber-1901c",
+    "storage_bucket": "imber-1901c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620757816104:android:99e582b5cff35d07",
+        "android_client_info": {
+          "package_name": "com.mossige.finseth.follo.inf219_mitt_uib"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620757816104-j0au0ja2ncbe3rvrv7asqjtemj4f5rb9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mossige.finseth.follo.inf219_mitt_uib",
+            "certificate_hash": "5e053d15de92874a38fbb87d16aca9db20115941"
+          }
+        },
+        {
+          "client_id": "620757816104-77clic20di4lu7248erupgbm9mok0sa5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7sZ3RCyNkMg_e_TW8A-SYkYHvrtwYC1I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620757816104-77clic20di4lu7248erupgbm9mok0sa5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
