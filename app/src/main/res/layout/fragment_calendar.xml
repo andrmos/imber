@@ -5,22 +5,26 @@
     android:orientation="vertical"
     tools:context="com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment">
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/calendar_margin_top"
-        app:mcv_selectionColor="@color/colorAccent"
         app:mcv_firstDayOfWeek="monday"
-        app:mcv_tileHeight="35dp"
-        app:mcv_showOtherDates="other_months"/>
+        app:mcv_selectionColor="@color/colorAccent"
+        app:mcv_showOtherDates="other_months"
+        app:mcv_tileHeight="35dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/listDivider" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical" >
-    </android.support.v7.widget.RecyclerView>
+        android:scrollbars="vertical" />
 
 </LinearLayout>
