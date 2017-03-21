@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -127,18 +128,20 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         mainList.setAdapter(mAdapter);
     }
 
-    @DebugLog
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         DateTime dateSelected = DateTime.forDateOnly(date.getYear(), date.getMonth() + 1, date.getDay());
         setAgendas(calendar.getEventsForDate(dateSelected));
     }
 
-    @DebugLog
     @Override
     public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
         DateTime curMonth = DateTime.forDateOnly(date.getYear(), date.getMonth() + 1, 1);
-        // TODO Refactor
+        handleMothChange(curMonth);
+    }
+
+    private void handleMothChange(DateTime curMonth) {
+        // API supports 10 context codes in each call
         int requiredSplits = (int) Math.ceil((double) globalContextCodes.size() / 10);
         int j = 0;
         for (int i = 0; i < requiredSplits; i++) {
@@ -155,7 +158,6 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
             if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth(), "assignment")) {
                 getAssignments(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall, UUID.randomUUID());
             }
-
         }
     }
 
@@ -203,7 +205,12 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                 if (response.isSuccessful()) {
 
                     ArrayList<CalendarEvent> events = new ArrayList<>();
-                    events.addAll(response.body());
+
+                    for (CalendarEvent e : response.body()) {
+                        if (!e.isHidden()) {
+                            events.add(e);
+                        }
+                    }
 
                     calendar.addEvents(events);
                     calendar.setLoaded(year, month, type, true);
@@ -267,7 +274,6 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         int perPage = 50;
 
         Call<List<CalendarEvent>> call;
-//        boolean firstPage = nextPageAssignment.isEmpty();
         boolean firstPage = nextPageLinks.get(id) == null;
         if (firstPage) {
             call = mittUibClient.getEvents(startDateString, endDateString, contextCodes, null, type, perPage);
@@ -280,7 +286,11 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
                 if (response.isSuccessful()) {
                     ArrayList<CalendarEvent> events = new ArrayList<>();
-                    events.addAll(response.body());
+                    for (CalendarEvent e : response.body()) {
+                        if (!e.isHidden()) {
+                            events.add(e);
+                        }
+                    }
 
                     handleNextPageAssignment(response, id, year, month, contextCodes);
 

@@ -136,7 +136,7 @@ public interface MittUibClient {
                                                     @Query("end_date") String end_date,
                                                     @Query("context_codes[]") List<String> contextCodes,
                                                     @Query("excludes[]") List<String> excludes,
-                                                    @Query("page_num") Integer pageNum); // TODO remove page num
+                                                    @Query("page_num") Integer pageNum);
 
     /**
      * Retrieve valid recipients (users, courses and groups) that the current user can send messages to.
