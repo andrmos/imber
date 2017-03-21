@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:620757816104:android:99e582b5cff35d07",
         "android_client_info": {
-          "package_name": "com.mossige.finseth.follo.inf219_mitt_uib"
+          "package_name": "no.mofifo.imber"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "620757816104-j0au0ja2ncbe3rvrv7asqjtemj4f5rb9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mossige.finseth.follo.inf219_mitt_uib",
+            "package_name": "no.mofifo.imber",
             "certificate_hash": "5e053d15de92874a38fbb87d16aca9db20115941"
           }
         },

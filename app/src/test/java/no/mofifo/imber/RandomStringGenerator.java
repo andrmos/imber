@@ -1,4 +1,4 @@
-package com.mossige.finseth.follo.inf219_mitt_uib;
+package no.mofifo.imber;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;

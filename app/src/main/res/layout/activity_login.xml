@@ -5,7 +5,7 @@
     android:id="@+id/login_access_token"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mossige.finseth.follo.inf219_mitt_uib.activities.LoginActivity">
+    tools:context=".activities.LoginActivity">
 
     <LinearLayout
         android:orientation="vertical"
