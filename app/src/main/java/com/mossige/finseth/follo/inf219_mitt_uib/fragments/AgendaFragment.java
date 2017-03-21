@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
-import com.roomorama.caldroid.CaldroidFragment;
 
 import java.util.ArrayList;
 

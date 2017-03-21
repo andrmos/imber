@@ -10,6 +10,10 @@
     <color name="colorAccentDark">#4C5B5C</color>
     <color name="colorAccentLight">#FDFFFC</color>
 
+    <!-- Other colors -->
+    <color name="black">#000000</color>
+
+
     <!-- Old accent color -->
     <!--<color name="colorAccent">#FF6E40</color>-->
 

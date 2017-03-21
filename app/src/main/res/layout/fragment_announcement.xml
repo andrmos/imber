@@ -29,7 +29,7 @@
                     android:layout_marginStart="@dimen/card_side_padding"
                     android:layout_marginEnd="@dimen/card_side_padding"
                     android:textSize="24sp"
-                    android:textColor="@color/caldroid_black"
+                    android:textColor="@color/black"
                     android:alpha="0.87"/>
 
                 <LinearLayout
