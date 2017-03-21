@@ -5,43 +5,18 @@
     android:orientation="vertical"
     tools:context="com.mossige.finseth.follo.inf219_mitt_uib.fragments.CalendarFragment">
 
-    <!-- MyCal content view. MyCal is put inside this view -->
-    <!--<FrameLayout-->
-        <!--android:id="@+id/calendar_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-    <!--</FrameLayout>-->
-
-    <!--<CalendarView-->
-        <!--android:id="@+id/calendar_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
-    <!--</CalendarView>-->
-
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:mcv_selectionColor="@color/colorAccent"
-        />
+        app:mcv_selectionColor="@color/colorAccent" />
 
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/recycler_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:scrollbars="vertical" >-->
-    <!--</android.support.v7.widget.RecyclerView>-->
-
-    <!-- TODO Fix weight property -->
-    <!-- Agenda content view. Fragments with a days agendas are put inside this view -->
-    <FrameLayout
-        android:id="@+id/agenda_container"
-        android:orientation="vertical"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" > <!-- Lower view fills rest of screen -->
-    </FrameLayout>
-
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" >
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

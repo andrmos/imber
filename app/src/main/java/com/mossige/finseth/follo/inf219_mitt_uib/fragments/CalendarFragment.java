@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
+import com.mossige.finseth.follo.inf219_mitt_uib.adapters.AgendaRecyclerViewAdapter;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.CalendarEvent;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
@@ -37,12 +39,13 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
 
     private MyCalendar calendar;
     private DateTime previousDateTime;
-    private OnDateClickListener callBack;
     private MainActivityListener mCallback;
     private MittUibClient mittUibClient;
     private ArrayList<String> globalContextCodes;
     private String nextPage;
     private String nextPageAssignment;
+    private AgendaRecyclerViewAdapter mAdapter;
+    private ArrayList<CalendarEvent> agendas;
 
     @Override
     public void onAttach(Context context) {
@@ -57,10 +60,6 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
         mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
-    public interface OnDateClickListener {
-        void setAgendas(ArrayList<CalendarEvent> events);
-    }
-
     public CalendarFragment() {
     }
 
@@ -70,6 +69,7 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
         nextPage = "";
         nextPageAssignment = "";
         calendar = new MyCalendar();
+        agendas = new ArrayList<>();
         initContextCodes();
     }
 
@@ -100,35 +100,36 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_calendar, container, false);
         getActivity().setTitle(R.string.calendar_title);
-
-        FragmentTransaction ft = getChildFragmentManager().beginTransaction();
+        initRecycleView(rootView);
 
         MaterialCalendarView calendarView = (MaterialCalendarView) rootView.findViewById(R.id.calendarView);
         calendarView.setOnDateChangedListener(this);
         calendarView.setOnMonthChangedListener(this);
 
-
-        // TODO Remove AgendaFragment and add recycler view to CalendarFragment itself
-        AgendaFragment agendaFragment = new AgendaFragment();
-        // Init callback to allow communication with AgendaFragment
-        callBack = agendaFragment;
-        agendaFragment.setArguments(getArguments());
-        ft.replace(R.id.agenda_container, agendaFragment);
-        ft.commit();
-
+        // Get events for current month
         this.onMonthChanged(calendarView, CalendarDay.today());
-
-//        caldroidFragment = initCalendarFragment();
-//        ft.replace(R.id.calendar_container, caldroidFragment);
-//
         return rootView;
+    }
+
+    private void initRecycleView(View rootView) {
+        // Create RecycleView
+        // findViewById() belongs to Activity, so need to access it from the root view of the fragment
+        RecyclerView mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+
+        // Create the LayoutManager that holds all the views
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        mainList.setLayoutManager(mLayoutManager);
+
+        // Create adapter that binds the views with some content
+        mAdapter = new AgendaRecyclerViewAdapter(agendas);
+        mainList.setAdapter(mAdapter);
     }
 
     @DebugLog
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         DateTime dateSelected = DateTime.forDateOnly(date.getYear(), date.getMonth() + 1, date.getDay());
-        callBack.setAgendas(calendar.getEventsForDate(dateSelected));
+        setAgendas(calendar.getEventsForDate(dateSelected));
     }
 
     @DebugLog
@@ -154,6 +155,13 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
             }
 
         }
+    }
+
+    private void setAgendas(ArrayList<CalendarEvent> events) {
+        agendas.clear();
+        mAdapter.notifyDataSetChanged();
+        agendas.addAll(events);
+        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -228,9 +236,7 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
                     // If in current month, set todays agendas
                     DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
                     if (today.gteq(startDate) && today.lteq(endDate)) {
-                        if (callBack != null) {
-                            callBack.setAgendas(calendar.getEventsForDate(today));
-                        }
+                            setAgendas(calendar.getEventsForDate(today));
                     }
 
                 } else {
