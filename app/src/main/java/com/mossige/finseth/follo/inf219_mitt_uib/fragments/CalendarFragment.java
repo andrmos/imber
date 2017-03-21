@@ -106,6 +106,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         MaterialCalendarView calendarView = (MaterialCalendarView) rootView.findViewById(R.id.calendarView);
         calendarView.setOnDateChangedListener(this);
         calendarView.setOnMonthChangedListener(this);
+        calendarView.setDateSelected(CalendarDay.today(), true);
 
         // Get events for current month
         this.onMonthChanged(calendarView, CalendarDay.today());
