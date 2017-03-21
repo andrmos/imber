@@ -13,7 +13,8 @@
         android:layout_marginTop="@dimen/calendar_margin_top"
         app:mcv_selectionColor="@color/colorAccent"
         app:mcv_firstDayOfWeek="monday"
-        app:mcv_tileHeight="35dp"/>
+        app:mcv_tileHeight="35dp"
+        app:mcv_showOtherDates="other_months"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

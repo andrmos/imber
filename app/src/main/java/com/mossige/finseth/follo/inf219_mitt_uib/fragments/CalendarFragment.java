@@ -21,6 +21,8 @@ import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +34,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 
-public class CalendarFragment extends Fragment implements com.prolificinteractive.materialcalendarview.OnDateSelectedListener,
-        com.prolificinteractive.materialcalendarview.OnMonthChangedListener {
+public class CalendarFragment extends Fragment implements OnDateSelectedListener, OnMonthChangedListener {
 
     private static final String TAG = "CalendarFragment";
 
     private MyCalendar calendar;
-    private DateTime previousDateTime;
     private MainActivityListener mCallback;
     private MittUibClient mittUibClient;
     private ArrayList<String> globalContextCodes;
@@ -165,24 +165,6 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
     }
 
     /**
-     * Sets background drawable for DateTime and clears previous selected date.
-     *
-     * @param dateTime
-     */
-    private void setBackground(DateTime dateTime) {
-        // TODO Implement for new calendar view
-//        Drawable border = ResourcesCompat.getDrawable(getResources(), R.drawable.border, null);
-//        if (previousDateTime != null) {
-//            // Clear background for previous selected DateTime
-//            caldroidFragment.clearBackgroundDrawableForDateTime(previousDateTime);
-//        }
-//        // Add border drawable to selected date
-//        caldroidFragment.setBackgroundDrawableForDateTime(border, dateTime);
-//        caldroidFragment.refreshView();
-//        previousDateTime = dateTime;
-    }
-
-    /**
      * Get all calendar events for a month, and add them to the 'events' field.
      *
      * @param year  The year to get the calendar events.
@@ -231,12 +213,11 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
                     }
 
                     calendar.setLoaded(year, month, type, true);
-//                    setBackgrounds(events);
 
                     // If in current month, set todays agendas
                     DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
                     if (today.gteq(startDate) && today.lteq(endDate)) {
-                            setAgendas(calendar.getEventsForDate(today));
+                        setAgendas(calendar.getEventsForDate(today));
                     }
 
                 } else {
@@ -293,16 +274,15 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
                 if (response.isSuccessful()) {
                     ArrayList<CalendarEvent> events = new ArrayList<>();
                     events.addAll(response.body());
-//                    setBackgrounds(events);
 
                     nextPageAssignment = PaginationUtils.getNextPageUrl(response.headers());
                     if (!nextPage.isEmpty()) {
                         getEvents(year, month, contextCodes);
                     }
 
-                    // TODO Add set loaded
                     calendar.addEvents(events);
                     calendar.setLoaded(year, month, type, true);
+
                 } else {
                     if (isAdded()) {
                         mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
@@ -340,20 +320,5 @@ public class CalendarFragment extends Fragment implements com.prolificinteractiv
                 }
             }
         });
-    }
-
-    /**
-     * Sets backgrounds for dates.
-     *
-     * @param events events containing an agenda
-     */
-    private void setBackgrounds(ArrayList<CalendarEvent> events) {
-        // TODO Implement for new calendar view
-//        Map<String, Object> extraData = caldroidFragment.getExtraData();
-//        for (CalendarEvent e : events) {
-//            String key = e.getStartDate().getYear() + "-" + e.getStartDate().getMonth() + "-" + e.getStartDate().getDay();
-//            extraData.put(key, true);
-//        }
-//        caldroidFragment.refreshView();
     }
 }
