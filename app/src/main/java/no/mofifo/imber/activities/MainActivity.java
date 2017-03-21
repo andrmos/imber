@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -285,12 +286,18 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private void updateNavDrawer() {
         //Set name on navigation header
-        TextView nameTV = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name);
-        nameTV.setText(profile.getName());
+        if (profile != null) {
+            TextView nameTV = (TextView) navigationView.getHeaderView(0).findViewById(R.id.name);
+            if (nameTV != null) {
+                nameTV.setText(profile.getName());
+            }
 
-        //Set email on navigation header
-        TextView emailTV = (TextView) navigationView.getHeaderView(0).findViewById(R.id.primary_email);
-        emailTV.setText(profile.getPrimary_email().toLowerCase());
+            //Set email on navigation header
+            TextView emailTV = (TextView) navigationView.getHeaderView(0).findViewById(R.id.primary_email);
+            if (emailTV != null) {
+                emailTV.setText(profile.getPrimary_email().toLowerCase());
+            }
+        }
     }
 
     @Override
