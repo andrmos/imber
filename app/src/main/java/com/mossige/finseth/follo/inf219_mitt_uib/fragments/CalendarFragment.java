@@ -3,6 +3,7 @@ package com.mossige.finseth.follo.inf219_mitt_uib.fragments;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.listeners.MainActivityListener;
@@ -19,6 +21,8 @@ import com.mossige.finseth.follo.inf219_mitt_uib.models.MyCalendar;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.PaginationUtils;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.MittUibClient;
 import com.mossige.finseth.follo.inf219_mitt_uib.retrofit.ServiceGenerator;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -29,11 +33,13 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
+import hugo.weaving.DebugLog;
 import retrofit2.Call;
 import retrofit2.Callback;
 
 
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment implements com.prolificinteractive.materialcalendarview.OnDateSelectedListener,
+        com.prolificinteractive.materialcalendarview.OnMonthChangedListener {
 
     private static final String TAG = "CalendarFragment";
 
@@ -106,17 +112,24 @@ public class CalendarFragment extends Fragment {
 
         FragmentTransaction ft = getChildFragmentManager().beginTransaction();
 
+        MaterialCalendarView calendarView = (MaterialCalendarView) rootView.findViewById(R.id.calendarView);
+        calendarView.setOnDateChangedListener(this);
+        calendarView.setOnMonthChangedListener(this);
+
+
+        // TODO Remove AgendaFragment and add recycler view to CalendarFragment itself
         AgendaFragment agendaFragment = new AgendaFragment();
         // Init callback to allow communication with AgendaFragment
         callBack = agendaFragment;
         agendaFragment.setArguments(getArguments());
         ft.replace(R.id.agenda_container, agendaFragment);
-
-        // TODO Why not have agendas and calendar in same fragment??????!??
-        caldroidFragment = initCalendarFragment();
-        ft.replace(R.id.calendar_container, caldroidFragment);
-
         ft.commit();
+
+        this.onMonthChanged(calendarView, CalendarDay.today());
+
+//        caldroidFragment = initCalendarFragment();
+//        ft.replace(R.id.calendar_container, caldroidFragment);
+//
         return rootView;
     }
 
@@ -140,6 +153,38 @@ public class CalendarFragment extends Fragment {
         caldroidFragment.setCaldroidListener(initCaldroidListener());
 
         return caldroidFragment;
+    }
+
+    @DebugLog
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        DateTime dateSelected = DateTime.forDateOnly(date.getYear(), date.getMonth() + 1, 1);
+        callBack.setAgendas(calendar.getEventsForDate(dateSelected));
+    }
+
+    @DebugLog
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        DateTime curMonth = DateTime.forDateOnly(date.getYear(), date.getMonth() + 1, 1);
+        // TODO Refactor
+        int requiredSplits = (int) Math.ceil((double) globalContextCodes.size() / 10);
+        int j = 0;
+        for (int i = 0; i < requiredSplits; i++) {
+            // The context codes for a call
+            ArrayList<String> contextCodeSingleCall = new ArrayList<>();
+            for (; contextCodeSingleCall.size() <= 9 && j < globalContextCodes.size(); j++) {
+                contextCodeSingleCall.add(globalContextCodes.get(j));
+            }
+
+            if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth(), "event")) {
+                getEvents(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall);
+            }
+
+            if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth(), "assignment")) {
+                getAssignments(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall);
+            }
+
+        }
     }
 
     private CaldroidListener initCaldroidListener() {
@@ -273,7 +318,7 @@ public class CalendarFragment extends Fragment {
                     }
 
                     calendar.setLoaded(year, month, type, true);
-                    setBackgrounds(events);
+//                    setBackgrounds(events);
 
                     // If in current month, set todays agendas
                     DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
@@ -337,7 +382,7 @@ public class CalendarFragment extends Fragment {
                 if (response.isSuccessful()) {
                     ArrayList<CalendarEvent> events = new ArrayList<>();
                     events.addAll(response.body());
-                    setBackgrounds(events);
+//                    setBackgrounds(events);
 
                     nextPageAssignment = PaginationUtils.getNextPageUrl(response.headers());
                     if (!nextPage.isEmpty()) {
