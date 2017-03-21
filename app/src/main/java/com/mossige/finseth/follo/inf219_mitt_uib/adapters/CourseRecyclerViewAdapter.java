@@ -126,7 +126,7 @@ public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewH
         DateTime start = agendas.get(i).getStartDate();
         DateTime end = agendas.get(i).getEndDate();
 
-        String summary = agendas.get(i).getTitle() + " ";
+        String summary = agendas.get(i).getTrimmedTitle() + " ";
 
         //Gives time two digit representation
         summary += start.getDay() + ".";
