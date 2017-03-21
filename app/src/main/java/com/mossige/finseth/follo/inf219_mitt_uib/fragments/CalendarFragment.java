@@ -25,13 +25,16 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import hirondelle.date4j.DateTime;
 import hugo.weaving.DebugLog;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class CalendarFragment extends Fragment implements OnDateSelectedListener, OnMonthChangedListener {
@@ -42,8 +45,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
     private MainActivityListener mCallback;
     private MittUibClient mittUibClient;
     private ArrayList<String> globalContextCodes;
-    private String nextPage;
-    private String nextPageAssignment;
+    private HashMap<UUID, String> nextPageLinks;
     private AgendaRecyclerViewAdapter mAdapter;
     private ArrayList<CalendarEvent> agendas;
 
@@ -66,8 +68,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        nextPage = "";
-        nextPageAssignment = "";
+        nextPageLinks = new HashMap<>();
         calendar = new MyCalendar();
         agendas = new ArrayList<>();
         initContextCodes();
@@ -147,11 +148,11 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
             }
 
             if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth(), "event")) {
-                getEvents(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall);
+                getEvents(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall, UUID.randomUUID());
             }
 
             if (!calendar.loaded(curMonth.getYear(), curMonth.getMonth(), "assignment")) {
-                getAssignments(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall);
+                getAssignments(curMonth.getYear(), curMonth.getMonth(), contextCodeSingleCall, UUID.randomUUID());
             }
 
         }
@@ -169,8 +170,9 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
      *
      * @param year  The year to get the calendar events.
      * @param month The month to get the calendar events.
+     * @param id    The id of the call. Used to know what nextPage to use.
      */
-    private void getEvents(final int year, final int month, final ArrayList<String> contextCodes) {
+    private void getEvents(final int year, final int month, final ArrayList<String> contextCodes, final UUID id) {
         final String type = "event";
 
         //What to exlude
@@ -184,14 +186,13 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
 
         int perPage = 50;
 
-        // TODO Fix pagination: several calls are made, and will use each others nextPage field...
-        // TODO Should use a arraylist?
         Call<List<CalendarEvent>> call;
-        boolean firstPage = nextPage.isEmpty();
+        // If there is no link mapped to id, call if first call
+        boolean firstPage = nextPageLinks.get(id) == null;
         if (firstPage) {
             call = mittUibClient.getEvents(startDateString, endDateString, contextCodes, excludes, type, perPage);
         } else {
-            call = mittUibClient.getEventsPaginate(nextPage);
+            call = mittUibClient.getEventsPaginate(nextPageLinks.get(id));
         }
 
         call.enqueue(new Callback<List<CalendarEvent>>() {
@@ -204,15 +205,9 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                     events.addAll(response.body());
 
                     calendar.addEvents(events);
-
-                    // If returned maximum amount of events, get events for next page
-
-                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
-                    if (!nextPage.isEmpty()) {
-                        getEvents(year, month, contextCodes);
-                    }
-
                     calendar.setLoaded(year, month, type, true);
+
+                    handleNextPageEvent(response, id, year, month, contextCodes);
 
                     // If in current month, set todays agendas
                     DateTime today = DateTime.today(TimeZone.getTimeZone("Europe/Oslo"));
@@ -226,7 +221,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                         mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                getEvents(year, month, contextCodes);
+                                getEvents(year, month, contextCodes, id);
                             }
                         });
                         calendar.setLoaded(year, month, type, false);
@@ -240,7 +235,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                     mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            getEvents(year, month, contextCodes);
+                            getEvents(year, month, contextCodes, id);
                         }
                     });
                     calendar.setLoaded(year, month, type, false);
@@ -249,7 +244,17 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         });
     }
 
-    private void getAssignments(final int year, final int month, final ArrayList<String> contextCodes) {
+    private void handleNextPageEvent(Response<List<CalendarEvent>> response, UUID id, int year, int month, ArrayList<String> contextCodes) {
+        String nextPage = PaginationUtils.getNextPageUrl(response.headers());
+        if (!nextPage.isEmpty()) {
+            nextPageLinks.put(id, nextPage);
+            getEvents(year, month, contextCodes, id);
+        } else {
+            nextPageLinks.remove(id);
+        }
+    }
+
+    private void getAssignments(final int year, final int month, final ArrayList<String> contextCodes, final UUID id) {
 
         final String type = "assignment";
 
@@ -261,11 +266,12 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         int perPage = 50;
 
         Call<List<CalendarEvent>> call;
-        boolean firstPage = nextPageAssignment.isEmpty();
+//        boolean firstPage = nextPageAssignment.isEmpty();
+        boolean firstPage = nextPageLinks.get(id) == null;
         if (firstPage) {
             call = mittUibClient.getEvents(startDateString, endDateString, contextCodes, null, type, perPage);
         } else {
-            call = mittUibClient.getEventsPaginate(nextPageAssignment);
+            call = mittUibClient.getEventsPaginate(nextPageLinks.get(id));
         }
 
         call.enqueue(new Callback<List<CalendarEvent>>() {
@@ -275,10 +281,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                     ArrayList<CalendarEvent> events = new ArrayList<>();
                     events.addAll(response.body());
 
-                    nextPageAssignment = PaginationUtils.getNextPageUrl(response.headers());
-                    if (!nextPage.isEmpty()) {
-                        getEvents(year, month, contextCodes);
-                    }
+                    handleNextPageAssignment(response, id, year, month, contextCodes);
 
                     calendar.addEvents(events);
                     calendar.setLoaded(year, month, type, true);
@@ -291,7 +294,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                                 mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        getAssignments(year, month, contextCodes);
+                                        getAssignments(year, month, contextCodes, id);
                                     }
                                 });
                                 calendar.setLoaded(year, month, type, false);
@@ -311,7 +314,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                             mCallback.showSnackbar(getString(R.string.error_requesting_calendar), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    getAssignments(year, month, contextCodes);
+                                    getAssignments(year, month, contextCodes, id);
                                 }
                             });
                             calendar.setLoaded(year, month, type, false);
@@ -320,5 +323,15 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                 }
             }
         });
+    }
+
+    private void handleNextPageAssignment(Response<List<CalendarEvent>> response, UUID id, int year, int month, ArrayList<String> contextCodes) {
+        String nextPage = PaginationUtils.getNextPageUrl(response.headers());
+        if (!nextPage.isEmpty()) {
+            nextPageLinks.put(id, nextPage);
+            getEvents(year, month, contextCodes, id);
+        } else {
+            nextPageLinks.remove(id);
+        }
     }
 }
