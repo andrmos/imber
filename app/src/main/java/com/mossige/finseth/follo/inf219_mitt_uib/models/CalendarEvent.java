@@ -1,8 +1,6 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
 
-import android.util.Log;
-
 import com.google.gson.annotations.SerializedName;
 
 import hirondelle.date4j.DateTime;

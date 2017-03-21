@@ -7,10 +7,8 @@ import android.view.ViewGroup;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.ConversationViewHolder;
-import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.CourseViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders.GeneralViewHolder;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Conversation;
-import com.mossige.finseth.follo.inf219_mitt_uib.models.Course;
 import com.mossige.finseth.follo.inf219_mitt_uib.models.Participant;
 
 import java.util.ArrayList;

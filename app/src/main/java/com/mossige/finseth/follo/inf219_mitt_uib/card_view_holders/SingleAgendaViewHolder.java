@@ -5,8 +5,6 @@ import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
 
-import org.w3c.dom.Text;
-
 /**
  * View holder defining the agenda RecyclerView card for a users next agendas.
  *

@@ -1,12 +1,9 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.card_view_holders;
 
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mossige.finseth.follo.inf219_mitt_uib.R;
-
-import java.util.ArrayList;
 
 /**
  * View holder defining the agenda RecyclerView card for a users next agendas.

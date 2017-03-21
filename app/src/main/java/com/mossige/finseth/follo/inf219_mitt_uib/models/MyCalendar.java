@@ -1,12 +1,9 @@
 package com.mossige.finseth.follo.inf219_mitt_uib.models;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import hirondelle.date4j.DateTime;
 
