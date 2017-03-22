@@ -69,9 +69,9 @@ public class SettingFavoriteCourseFragment extends PreferenceFragmentCompat impl
         PreferenceScreen screen = getPreferenceScreen();
 
         for(int i = 0; i < courses.size(); i++){
-
+            
             //Add all courses as a checkbox
-            CheckBoxPreference cbp = new CheckBoxPreference(getActivity());
+            CheckBoxPreference cbp = new CheckBoxPreference(getContext());
             cbp.setPersistent(false);
             cbp.setTitle(courses.get(i).getCourseCode());
             cbp.setKey("" + courses.get(i).getId());
