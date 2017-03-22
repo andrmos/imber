@@ -39,18 +39,25 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Genera
         // set text of text view in card
         ConversationViewHolder conversationHolder = (ConversationViewHolder) holder;
 
-        //Capitalize first char in subject
-        String capSubject = data.get(position).getSubject().substring(0,1).toUpperCase() + data.get(position).getSubject().substring(1);
-        String participants = "";
-        for(Participant p : data.get(position).getParticipants()){
-            participants +=  p.getName() + ", ";
+        Conversation conversation = data.get(position);
+        if (conversation != null) {
+            String capSubject = "";
+            if (!conversation.getSubject().isEmpty()) {
+                //Capitalize first char in subject
+                capSubject = conversation.getSubject().substring(0, 1).toUpperCase() + conversation.getSubject().substring(1);
+            }
+
+            String participants = "";
+            for (Participant p : conversation.getParticipants()) {
+                participants += p.getName() + ", ";
+            }
+
+            participants = participants.trim();
+            participants = participants.substring(0, participants.length() - 1);
+
+            conversationHolder.conversation_subject.setText(capSubject);
+            conversationHolder.conversation_participants.setText(participants);
         }
-
-        participants = participants.trim();
-        participants = participants.substring(0,participants.length()-1);
-
-        conversationHolder.conversation_subject.setText(capSubject);
-        conversationHolder.conversation_participants.setText(participants);
     }
 
     @Override
