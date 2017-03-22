@@ -2,6 +2,7 @@ package no.mofifo.imber.activities;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        disableUriExposureCheck();
+
         getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         courses = new ArrayList<>();
@@ -81,6 +84,17 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             // Only load profile if its not loaded in previous activity
             requestProfile();
         }
+    }
+
+    /**
+     *  On SDK version 25 and up, we cannot expose file-URIs to other apps.
+     *  This is done in the file browser when downloading files.
+     *  This method disables some system checks, so we can expose file-URIs again.
+     *  TODO: change to use FileProviders instead of URIs.
+     */
+    private void disableUriExposureCheck() {
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
 
     private void initCourseListFragment() {
