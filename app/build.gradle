@@ -9,8 +9,8 @@ android {
         applicationId "no.mofifo.imber"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 2       // Internal version, has to be incremented for each release (int)
-        versionName "1.0.1" // Version code shown to users
+        versionCode 3       // Internal version, has to be incremented for each release (int)
+        versionName "1.0.2" // Version code shown to users
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
