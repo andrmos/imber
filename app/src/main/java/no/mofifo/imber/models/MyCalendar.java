@@ -33,7 +33,7 @@ public class MyCalendar {
         ArrayList<CalendarEvent> retCalendar = new ArrayList<>();
 
         for (CalendarEvent event : this.calendar) {
-            if (event.getStartDate().hasYearMonthDay() && date.isSameDayAs(event.getStartDate()) && !retCalendar.contains(event)) {
+            if (event.getStartDate() != null && event.getStartDate().hasYearMonthDay() && date.isSameDayAs(event.getStartDate()) && !retCalendar.contains(event)) {
                 retCalendar.add(event);
             }
         }
