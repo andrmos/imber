@@ -1,5 +1,7 @@
 package no.mofifo.imber.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,7 +33,7 @@ public class MyCalendar {
         ArrayList<CalendarEvent> retCalendar = new ArrayList<>();
 
         for (CalendarEvent event : this.calendar) {
-            if (date.isSameDayAs(event.getStartDate()) && !retCalendar.contains(event)) {
+            if (event.getStartDate().hasYearMonthDay() && date.isSameDayAs(event.getStartDate()) && !retCalendar.contains(event)) {
                 retCalendar.add(event);
             }
         }
