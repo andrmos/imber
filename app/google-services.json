@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:620757816104:android:99e582b5cff35d07",
         "android_client_info": {
-          "package_name": "no.mofifo.imber"
+          "package_name": "com.mossige.finseth.follo.inf219_mitt_uib"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "620757816104-j0au0ja2ncbe3rvrv7asqjtemj4f5rb9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "no.mofifo.imber",
+            "package_name": "com.mossige.finseth.follo.inf219_mitt_uib",
             "certificate_hash": "5e053d15de92874a38fbb87d16aca9db20115941"
           }
         },
@@ -44,6 +44,68 @@
               "client_type": 3
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620757816104:android:e9805b6c85d3de14",
+        "android_client_info": {
+          "package_name": "no.mofifo.imber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620757816104-77clic20di4lu7248erupgbm9mok0sa5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7sZ3RCyNkMg_e_TW8A-SYkYHvrtwYC1I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620757816104:android:cbb6943d694f2605",
+        "android_client_info": {
+          "package_name": "no.mofifo.imber.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620757816104-77clic20di4lu7248erupgbm9mok0sa5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7sZ3RCyNkMg_e_TW8A-SYkYHvrtwYC1I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

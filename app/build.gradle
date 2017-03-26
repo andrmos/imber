@@ -12,17 +12,22 @@ android {
         versionCode 3       // Internal version, has to be incremented for each release (int)
         versionName "1.0.2" // Version code shown to users
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
+
     buildTypes {
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [appName: "Imber"]
         }
 
         debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-DEBUG'
+            manifestPlaceholders = [appName: "Imber debug"] // Custom app name for debug
         }
 
         releaseUnsigned.initWith(buildTypes.release)
