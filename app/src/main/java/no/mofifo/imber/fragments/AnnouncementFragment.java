@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+
 import no.mofifo.imber.R;
 import no.mofifo.imber.adapters.AnnouncementRecyclerViewAdapter;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
@@ -31,7 +32,7 @@ import retrofit2.Callback;
 
 /**
  * Fragment for announcement listing
- *
+ * <p>
  * Created by Patrick Finseth on 13.03.16
  */
 public class AnnouncementFragment extends Fragment {
@@ -49,7 +50,8 @@ public class AnnouncementFragment extends Fragment {
     private boolean loaded;
     private SmoothProgressBar progressBar;
 
-    public AnnouncementFragment() { }
+    public AnnouncementFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,7 +92,7 @@ public class AnnouncementFragment extends Fragment {
 
         try {
             mCallback = (MainActivityListener) context;
-        }catch(ClassCastException e){
+        } catch (ClassCastException e) {
             Log.i(TAG, "onAttach: " + e.toString());
         }
         mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
@@ -109,22 +111,25 @@ public class AnnouncementFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Announcement>> call, retrofit2.Response<List<Announcement>> response) {
 
-                if (isAdded() && !loaded) {
-                    progressBar.progressiveStop();
-                }
+                if (isAdded()) {
 
-                if (response.isSuccessful()) {
-                    int currentSize = mAdapter.getItemCount();
-                    announcements.addAll(response.body());
-                    mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
+                    if (!loaded) {
+                        progressBar.progressiveStop();
+                    }
 
-                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
+                    if (response.isSuccessful()) {
+                        if (mAdapter != null) {
+                            int currentSize = mAdapter.getItemCount();
+                            announcements.addAll(response.body());
+                            mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
+                        }
+                        nextPage = PaginationUtils.getNextPageUrl(response.headers());
+                        loaded = true;
+                        mainList.setVisibility(View.VISIBLE);
 
-
-                    loaded = true;
-                    mainList.setVisibility(View.VISIBLE);
-                } else {
-                    showSnackbar(course_id);
+                    } else {
+                        showSnackbar(course_id);
+                    }
                 }
 
             }
