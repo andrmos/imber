@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+
 import no.mofifo.imber.R;
 import no.mofifo.imber.adapters.CourseRecyclerViewAdapter;
 import no.mofifo.imber.listeners.ItemClickSupport;
@@ -61,16 +62,17 @@ public class CourseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        try{
+        try {
             mCallback = (MainActivityListener) context;
-        }catch(ClassCastException e){
+        } catch (ClassCastException e) {
             //Do nothing
         }
 
         mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
-    public CourseFragment() {}
+    public CourseFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,7 +82,7 @@ public class CourseFragment extends Fragment {
         agendas = new ArrayList<>();
         loaded = new boolean[3];
 
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             if (getArguments().containsKey("course")) {
                 String json = getArguments().getString("course");
                 course = new Gson().fromJson(json, Course.class);
@@ -97,7 +99,7 @@ public class CourseFragment extends Fragment {
         // Set toolbar title to course name
         getActivity().setTitle(course.getTrimmedName());
 
-        progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+        progressbar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
         initRecycleView(rootView);
 
         // Hide progress bar if data is already loaded
@@ -184,17 +186,17 @@ public class CourseFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Announcement>> call, retrofit2.Response<List<Announcement>> response) {
 
-                if (response.isSuccessful()) {
-                    announcements.addAll(response.body());
-                    loaded[0] = true;
+                if (isAdded()) {
+                    if (response.isSuccessful()) {
+                        announcements.addAll(response.body());
+                        loaded[0] = true;
 
-                    if (isLoaded()) {
-                        mainList.setVisibility(View.VISIBLE);
-                        progressbar.progressiveStop();
-                    }
+                        if (isLoaded()) {
+                            mainList.setVisibility(View.VISIBLE);
+                            progressbar.progressiveStop();
+                        }
 
-                } else {
-                    if (isAdded()) {
+                    } else {
                         progressbar.progressiveStop();
                         mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
                             @Override
@@ -254,23 +256,22 @@ public class CourseFragment extends Fragment {
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
-                if (response.isSuccessful()) {
 
+                if (isAdded()) {
+                    if (response.isSuccessful()) {
+                        agendas.clear();
+                        agendas.addAll(response.body());
 
-                    agendas.clear();
-                    agendas.addAll(response.body());
+                        loaded[1] = true;
 
-                    loaded[1] = true;
+                        requestAssignments();
 
-                    requestAssignments();
+                        if (isLoaded()) {
+                            mainList.setVisibility(View.VISIBLE);
+                            progressbar.progressiveStop();
+                        }
 
-                    if (isLoaded()) {
-                        mainList.setVisibility(View.VISIBLE);
-                        progressbar.progressiveStop();
-                    }
-
-                } else {
-                    if (isAdded()) {
+                    } else {
                         mCallback.showSnackbar(getString(R.string.error_requesting_agendas), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -317,18 +318,19 @@ public class CourseFragment extends Fragment {
         call.enqueue(new Callback<List<CalendarEvent>>() {
             @Override
             public void onResponse(Call<List<CalendarEvent>> call, retrofit2.Response<List<CalendarEvent>> response) {
-                if (response.isSuccessful()) {
 
-                    agendas.addAll(response.body());
+                if (isAdded()) {
+                    if (response.isSuccessful()) {
 
-                    loaded[2] = true;
+                        agendas.addAll(response.body());
 
-                    if (isLoaded()) {
-                        mainList.setVisibility(View.VISIBLE);
-                        progressbar.progressiveStop();
-                    }
-                } else {
-                    if (isAdded()) {
+                        loaded[2] = true;
+
+                        if (isLoaded()) {
+                            mainList.setVisibility(View.VISIBLE);
+                            progressbar.progressiveStop();
+                        }
+                    } else {
                         progressbar.progressiveStop();
                         mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                             @Override
