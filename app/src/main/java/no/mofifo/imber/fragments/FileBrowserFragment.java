@@ -167,13 +167,14 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         call.enqueue(new CancelableCallback<Folder>() {
             @Override
             public void onSuccess(Call<Folder> call, Response<Folder> response) {
-
-                if (response.isSuccessful()) {
-                    currentFolderId = response.body().getId();
-                    getFolders(currentFolderId);
-                    getFiles(currentFolderId);
-                } else {
-                    showSnackbarRoot();
+                if (isAdded()) {
+                    if (response.isSuccessful()) {
+                        currentFolderId = response.body().getId();
+                        getFolders(currentFolderId);
+                        getFiles(currentFolderId);
+                    } else {
+                        showSnackbarRoot();
+                    }
                 }
 
             }
@@ -186,12 +187,14 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
     }
 
     private void showSnackbarRoot() {
-        callback.showSnackbar(getString(R.string.error_getting_folders), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getRootFolder();
-            }
-        });
+        if (callback != null && isAdded()) {
+            callback.showSnackbar(getString(R.string.error_getting_folders), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getRootFolder();
+                }
+            });
+        }
     }
 
     private void getFolders(final int folderId) {
@@ -206,21 +209,24 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         call.enqueue(new Callback<List<Folder>>() {
             @Override
             public void onResponse(Call<List<Folder>> call, Response<List<Folder>> response) {
-                if (response.isSuccessful()) {
-                    int currentSize = folders.size();
-                    folders.addAll(response.body());
+                if (isAdded()) {
 
-                    mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
+                    if (response.isSuccessful()) {
+                        int currentSize = folders.size();
+                        folders.addAll(response.body());
 
-                    nextPageFolders = PaginationUtils.getNextPageUrl(response.headers());
-                    foldersLoaded = true;
-                    showMessageIfEmpty();
-                } else {
-                    showSnackbarFolder(folderId);
-                }
+                        mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
-                if (isAdded() && (!filesLoaded || !foldersLoaded)) {
-                    progressBar.progressiveStop();
+                        nextPageFolders = PaginationUtils.getNextPageUrl(response.headers());
+                        foldersLoaded = true;
+                        showMessageIfEmpty();
+                    } else {
+                        showSnackbarFolder(folderId);
+                    }
+
+                    if (!filesLoaded || !foldersLoaded) {
+                        progressBar.progressiveStop();
+                    }
                 }
             }
 
@@ -247,20 +253,22 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         call.enqueue(new Callback<List<File>>() {
             @Override
             public void onResponse(Call<List<File>> call, Response<List<File>> response) {
-                if (response.isSuccessful()) {
-                    int currentSize = mAdapter.getItemCount();
-                    files.addAll(response.body());
-                    mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
+                if (isAdded()) {
+                    if (response.isSuccessful()) {
+                        int currentSize = mAdapter.getItemCount();
+                        files.addAll(response.body());
+                        mAdapter.notifyItemRangeInserted(currentSize, response.body().size());
 
-                    nextPageFiles = PaginationUtils.getNextPageUrl(response.headers());
-                    filesLoaded = true;
-                    showMessageIfEmpty();
-                } else {
-                    showSnackbarFile(folderId);
-                }
+                        nextPageFiles = PaginationUtils.getNextPageUrl(response.headers());
+                        filesLoaded = true;
+                        showMessageIfEmpty();
+                    } else {
+                        showSnackbarFile(folderId);
+                    }
 
-                if (isAdded() && (!filesLoaded || !foldersLoaded)) {
-                    progressBar.progressiveStop();
+                    if (!filesLoaded || !foldersLoaded) {
+                        progressBar.progressiveStop();
+                    }
                 }
             }
 
