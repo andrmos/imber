@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import no.mofifo.imber.R;
@@ -375,7 +376,20 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
     private void handleFileClick(int position) {
         clickedFile = files.get(position - folders.size());
-        downloadFile(clickedFile);
+
+        // Remove whitespace at start and end
+        String trimmedUrl = clickedFile.getUrl().trim();
+        // Only support downloading files starting with 'http' or 'https'
+        if (startsWithHttpOrHttps(trimmedUrl)) {
+            downloadFile(clickedFile);
+        } else {
+            // File does not start with 'http' or 'https', cannot download file
+            Toast.makeText(getContext(), R.string.error_downloading_file, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private boolean startsWithHttpOrHttps(String url) {
+        return url.startsWith("http") || url.startsWith("https");
     }
 
     private void handleFolderClick(int position) {
@@ -395,7 +409,6 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
 
     // TODO Download file to cache folder instead of external?
     public void downloadFile(final File file) {
-
         // File size in bytes
         if (file.getSize() > FILE_SIZE_WARNING_TRESHHOLD) {
             showPromt(file);
@@ -403,8 +416,6 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         } else {
             enqueueDownload(file);
         }
-
-
     }
 
     private void showPromt(final File file) {

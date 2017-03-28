@@ -72,5 +72,6 @@
     <string name="fav_course_summary">Velg dine favorittfag</string>
     <string name="change_access_token_summary">Endre nøkkel fra Mitt UiB</string>
     <string name="choose_recipient_title">Velg mottakere</string>
+    <string name="error_downloading_file">Imber har ikke støtte for denne filen</string>
 
 </resources>
