@@ -16,6 +16,11 @@
 #   public *;
 #}
 
+-printmapping mapping.txt
+
+# Preserve line numbers and file names for Firebase Crash Reports
+-renamesourcefileattribute MyApplication
+-keepattributes SourceFile,LineNumberTable
 
 -keep class no.mofifo.imber.models.** { *; }
 
