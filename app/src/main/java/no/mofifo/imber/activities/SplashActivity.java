@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import no.mofifo.imber.R;
-import no.mofifo.imber.models.User;
+import no.mofifo.imber.models.Profile;
 import no.mofifo.imber.retrofit.MittUibClient;
 import no.mofifo.imber.retrofit.ServiceGenerator;
 
@@ -29,11 +29,11 @@ public class SplashActivity extends AppCompatActivity {
             // TODO Also load courses in splash activity?
 
             MittUibClient client = ServiceGenerator.createService(MittUibClient.class, accessToken);
-            Call<User> call = client.getProfile();
+            Call<Profile> call = client.getProfile();
             final Intent intent = new Intent(getBaseContext(), MainActivity.class);
-            call.enqueue(new Callback<User>() {
+            call.enqueue(new Callback<Profile>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(Call<Profile> call, Response<Profile> response) {
                     if (response.isSuccessful()) {
                         String json = new Gson().toJson(response.body());
                         // Launch MainActivity
@@ -45,7 +45,7 @@ public class SplashActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(Call<Profile> call, Throwable t) {
                     changeActivity(intent);
                 }
             });

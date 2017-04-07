@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -30,7 +29,7 @@ import no.mofifo.imber.fragments.SettingFragment;
 import no.mofifo.imber.fragments.ConversationFragment;
 import no.mofifo.imber.listeners.MainActivityListener;
 import no.mofifo.imber.models.Course;
-import no.mofifo.imber.models.User;
+import no.mofifo.imber.models.Profile;
 import no.mofifo.imber.retrofit.MittUibClient;
 
 import no.mofifo.imber.fragments.CourseListFragment;
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
     private static final String TAG = "MainActivity";
 
-    private User profile;
+    private Profile profile;
     private ArrayList<Course> courses;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         String profileJson = getIntent().getStringExtra("profile");
         if (profileJson != null) {
-            profile = new Gson().fromJson(profileJson, User.class);
+            profile = new Gson().fromJson(profileJson, Profile.class);
             updateNavDrawer();
         } else {
             // Only load profile if its not loaded in previous activity
@@ -275,10 +274,10 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void requestProfile() {
-        Call<User> call = mittUibClient.getProfile();
-        call.enqueue(new Callback<User>() {
+        Call<Profile> call = mittUibClient.getProfile();
+        call.enqueue(new Callback<Profile>() {
             @Override
-            public void onResponse(Call<User> call, retrofit2.Response<User> response) {
+            public void onResponse(Call<Profile> call, retrofit2.Response<Profile> response) {
                 if (response.isSuccessful()) {
                     profile = response.body();
                     updateNavDrawer();
@@ -286,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<Profile> call, Throwable t) {
                 showSnackbar(getString(R.string.error_profile), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

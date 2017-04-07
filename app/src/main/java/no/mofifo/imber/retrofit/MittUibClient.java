@@ -9,7 +9,7 @@ import no.mofifo.imber.models.File;
 import no.mofifo.imber.models.Folder;
 import no.mofifo.imber.models.Recipient;
 import no.mofifo.imber.models.SendMessage;
-import no.mofifo.imber.models.User;
+import no.mofifo.imber.models.Profile;
 
 import org.json.JSONObject;
 
@@ -34,7 +34,7 @@ public interface MittUibClient {
      * @return The logged in users profile data.
      */
     @GET("users/self/profile")
-    Call<User> getProfile();
+    Call<Profile> getProfile();
 
     /**
      * @return The active courses of the logged in user.

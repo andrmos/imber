@@ -1,13 +1,13 @@
 package no.mofifo.imber.models;
 
 /**
- * User model
+ * Profile model
  * https://canvas.instructure.com/doc/api/users.html
  *
  * @author Øystein Follo
  * @date 23.02.2016
  */
-public class User {
+public class Profile {
 
     private int id;
     private String name;
@@ -15,7 +15,7 @@ public class User {
     private String login_id;
     private String sortable_name;
 
-    public User(int id, String name, String primary_email, String login_id, String sortable_name) {
+    public Profile(int id, String name, String primary_email, String login_id, String sortable_name) {
         this.id = id;
         this.login_id = login_id;
         this.primary_email = primary_email;

@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 import no.mofifo.imber.R;
-import no.mofifo.imber.models.User;
+import no.mofifo.imber.models.Profile;
 import no.mofifo.imber.retrofit.MittUibClient;
 import no.mofifo.imber.retrofit.ServiceGenerator;
 
@@ -61,10 +61,10 @@ public class LoginActivity extends AppCompatActivity {
         final Intent intent = new Intent(getApplication(), MainActivity.class);
 
         MittUibClient client = ServiceGenerator.createService(MittUibClient.class, token);
-        Call<User> call = client.getProfile();
-        call.enqueue(new Callback<User>() {
+        Call<Profile> call = client.getProfile();
+        call.enqueue(new Callback<Profile>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if (response.isSuccessful()) {
                     storeToken(token);
                     String profileJson = new Gson().toJson(response.body());
@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<User> call, Throwable t) {
+            public void onFailure(Call<Profile> call, Throwable t) {
                 showSnackbar();
             }
         });
