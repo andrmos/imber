@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import no.mofifo.imber.adapters.CourseListRecyclerViewAdapter;
 import no.mofifo.imber.R;
+import no.mofifo.imber.course.CourseFragmentView;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
 import no.mofifo.imber.listeners.ItemClickSupport;
 import no.mofifo.imber.listeners.MainActivityListener;
@@ -33,7 +34,7 @@ import retrofit2.Callback;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CourseListFragment extends Fragment {
+public class CourseListFragment extends Fragment implements CourseFragmentView {
 
     private static final String TAG = "CourseListFragment";
 
