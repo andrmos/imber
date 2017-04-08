@@ -51,6 +51,9 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
     private MittUibClient mittUibClient;
     private String nextPage;
 
+    /** This fragments presenter */
+    private CoursesFragmentPresenter presenter;
+
     public CoursesFragment() {}
 
     @Override
@@ -59,6 +62,8 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
         nextPage = "";
         loaded = false;
         courses = new ArrayList<>();
+
+        presenter = new CoursesFragmentPresenter(this);
 
         requestCourses();
     }
