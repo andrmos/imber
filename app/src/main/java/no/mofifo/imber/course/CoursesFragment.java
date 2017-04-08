@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+
+import butterknife.BindString;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import no.mofifo.imber.adapters.CourseListRecyclerViewAdapter;
 import no.mofifo.imber.R;
 import no.mofifo.imber.fragments.CourseDetailFragment;
@@ -38,12 +42,14 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
 
     private static final String TAG = "CourseListFragment";
 
-    private RecyclerView mainList;
+    @BindView(R.id.recycler_view) RecyclerView mainList;
+    @BindView(R.id.progressbar) SmoothProgressBar progressBar;
+
+    @BindString(R.string.error_course_list) String errorMessageCourses;
+
     private RecyclerView.Adapter mAdapter;
 
     private ArrayList<Course> courses;
-    private SmoothProgressBar smoothProgressBar;
-
     /* If data is loaded */
     private boolean loaded;
 
@@ -84,25 +90,22 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        ButterKnife.bind(this, rootView);
         getActivity().setTitle(R.string.course_title);
 
-        smoothProgressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
-        initRecycleView(rootView);
+        initRecyclerView();
 
         // Hide progress bar if data is already loaded
         if (loaded) {
-            smoothProgressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
         } else {
-            smoothProgressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         return rootView;
     }
 
-    private void initRecycleView(View rootView) {
-        // Create RecycleView
-        // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-        mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+    private void initRecyclerView() {
         mainList.setVisibility(View.VISIBLE);
 
         // Create the LayoutManager that holds all the views
@@ -158,13 +161,11 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
             @Override
             public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
                 if (response.isSuccessful()) {
-                    if (smoothProgressBar != null) {
-                        smoothProgressBar.progressiveStop();
+                    if (progressBar != null) {
+                        progressBar.progressiveStop();
                     }
 
-                    courses.clear();
                     courses.addAll(response.body());
-
                     nextPage = PaginationUtils.getNextPageUrl(response.headers());
 
                     loaded = true;
@@ -175,11 +176,11 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
                 if (isAdded()) {
-                    if (smoothProgressBar != null){
-                        smoothProgressBar.progressiveStop();
+                    if (progressBar != null){
+                        progressBar.progressiveStop();
                     }
 
-                    mCallback.showSnackbar(getString(R.string.error_course_list), new View.OnClickListener() {
+                    mCallback.showSnackbar(errorMessageCourses, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             requestCourses();
