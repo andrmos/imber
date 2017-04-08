@@ -126,15 +126,15 @@ public class CourseListFragment extends Fragment implements CourseFragmentView {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                CourseFragment courseFragment = new CourseFragment();
-                transaction.replace(R.id.content_frame, courseFragment);
+                CourseDetailFragment courseDetailFragment = new CourseDetailFragment();
+                transaction.replace(R.id.content_frame, courseDetailFragment);
 
                 transaction.addToBackStack(null);
 
                 Bundle bundle = new Bundle();
                 String json = new Gson().toJson(courses.get(position));
                 bundle.putString("course", json);
-                courseFragment.setArguments(bundle);
+                courseDetailFragment.setArguments(bundle);
                 transaction.commit();
             }
         });

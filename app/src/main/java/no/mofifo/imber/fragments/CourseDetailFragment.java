@@ -38,7 +38,7 @@ import retrofit2.Callback;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CourseFragment extends Fragment {
+public class CourseDetailFragment extends Fragment {
 
     private static final String TAG = "CourseFragment";
 
@@ -71,7 +71,7 @@ public class CourseFragment extends Fragment {
         mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
-    public CourseFragment() {
+    public CourseDetailFragment() {
     }
 
     @Override
