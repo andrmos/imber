@@ -1,4 +1,4 @@
-package no.mofifo.imber.fragments;
+package no.mofifo.imber.course;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import no.mofifo.imber.adapters.CourseListRecyclerViewAdapter;
 import no.mofifo.imber.R;
 import no.mofifo.imber.course.CourseFragmentView;
+import no.mofifo.imber.fragments.CourseDetailFragment;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
 import no.mofifo.imber.listeners.ItemClickSupport;
 import no.mofifo.imber.listeners.MainActivityListener;
