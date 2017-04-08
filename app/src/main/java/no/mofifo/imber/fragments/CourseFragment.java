@@ -34,7 +34,7 @@ import retrofit2.Callback;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CourseListFragment extends Fragment implements CourseFragmentView {
+public class CourseFragment extends Fragment implements CourseFragmentView {
 
     private static final String TAG = "CourseListFragment";
 
@@ -51,7 +51,7 @@ public class CourseListFragment extends Fragment implements CourseFragmentView {
     private MittUibClient mittUibClient;
     private String nextPage;
 
-    public CourseListFragment() {}
+    public CourseFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
