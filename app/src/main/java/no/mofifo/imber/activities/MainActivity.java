@@ -32,7 +32,7 @@ import no.mofifo.imber.models.Course;
 import no.mofifo.imber.models.Profile;
 import no.mofifo.imber.retrofit.MittUibClient;
 
-import no.mofifo.imber.course.CourseFragment;
+import no.mofifo.imber.course.CoursesFragment;
 import no.mofifo.imber.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private void initCourseListFragment() {
-        CourseFragment fragment = new CourseFragment();
+        CoursesFragment fragment = new CoursesFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content_frame, fragment, "courseList");
         transaction.addToBackStack("courseList");
@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
     }
 
     private boolean atCourseList() {
-        CourseFragment courseFragment = (CourseFragment) getSupportFragmentManager().findFragmentByTag("courseList");
-        return courseFragment != null && courseFragment.isVisible();
+        CoursesFragment coursesFragment = (CoursesFragment) getSupportFragmentManager().findFragmentByTag("courseList");
+        return coursesFragment != null && coursesFragment.isVisible();
     }
 
     private void confirmExitToast() {
