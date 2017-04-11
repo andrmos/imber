@@ -1,7 +1,6 @@
 package no.mofifo.imber.injection;
 
 import android.app.Application;
-import android.content.Context;
 
 import javax.inject.Singleton;
 
@@ -23,7 +22,7 @@ public class AppModule {
 
     @Provides
     @Singleton
-    Context providesApplication() {
+    Application providesApplication() {
         return application;
     }
 }
