@@ -10,6 +10,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="${appName}"
         android:supportsRtl="true"
+        android:name=".ImberApplication"
         android:theme="@style/AppTheme">
 
         <activity
