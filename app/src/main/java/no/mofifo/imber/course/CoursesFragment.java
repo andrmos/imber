@@ -1,6 +1,7 @@
 package no.mofifo.imber.course;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +18,11 @@ import com.google.gson.Gson;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.adapters.CourseListRecyclerViewAdapter;
 import no.mofifo.imber.R;
+import no.mofifo.imber.data.MittUiBDataSource;
+import no.mofifo.imber.data.MittUibRepository;
 import no.mofifo.imber.fragments.CourseDetailFragment;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
 import no.mofifo.imber.listeners.ItemClickSupport;
@@ -30,6 +34,8 @@ import no.mofifo.imber.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
@@ -54,11 +60,18 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
     private boolean loaded;
 
     MainActivityListener mCallback;
-    private MittUibClient mittUibClient;
+
+    @Inject
+    MittUibClient mittUibClient;
+
     private String nextPage;
 
+    // TODO: Inject the presenter via dagger
     /** This fragments presenter */
-    private CoursesFragmentPresenter presenter;
+    CoursesFragmentPresenter presenter;
+
+    // TODO: Inject the repository via dagger
+    MittUiBDataSource repository;
 
     public CoursesFragment() {}
 
@@ -69,7 +82,7 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
         loaded = false;
         courses = new ArrayList<>();
 
-        presenter = new CoursesFragmentPresenter(this);
+        ((ImberApplication) getActivity().getApplication()).getApiComponent().inject(this);
 
         requestCourses();
     }
@@ -82,8 +95,6 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
         }catch (ClassCastException e){
             Log.i(TAG, "onAttach: " + e.toString());
         }
-
-        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
 
