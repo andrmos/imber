@@ -3,6 +3,7 @@ package no.mofifo.imber.injection;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.v7.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,7 +16,9 @@ import dagger.Module;
 import dagger.Provides;
 import hirondelle.date4j.DateTime;
 import no.mofifo.imber.R;
+import no.mofifo.imber.data.MittUibRepository;
 import no.mofifo.imber.retrofit.DateTimeDeserializer;
+import no.mofifo.imber.retrofit.MittUibClient;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,7 +39,8 @@ public class ApiModule {
     @Provides
     @Singleton
     SharedPreferences providesSharedPreferences(Application application) {
-        // TODO Change to use: PreferenceManager.getDefaultSharedPreferences(application); ?
+        // TODO Should migrate to using the default shared preferences, instead of having to specify a name path every time.
+//        return PreferenceManager.getDefaultSharedPreferences(application);
         return application.getSharedPreferences(application.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
     }
 
@@ -84,4 +88,9 @@ public class ApiModule {
         return retrofitBuilder.build();
     }
 
+    @Provides
+    @Singleton
+    MittUibClient provideMittUibClient(Retrofit retrofit) {
+        return retrofit.create(MittUibClient.class);
+    }
 }
