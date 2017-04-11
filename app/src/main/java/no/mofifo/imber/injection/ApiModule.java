@@ -93,4 +93,10 @@ public class ApiModule {
     MittUibClient provideMittUibClient(Retrofit retrofit) {
         return retrofit.create(MittUibClient.class);
     }
+
+    @Provides
+    @Singleton
+    MittUibRepository provideMittUibRepository(Retrofit retrofit) {
+        return new MittUibRepository(retrofit);
+    }
 }
