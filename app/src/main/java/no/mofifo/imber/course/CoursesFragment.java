@@ -21,6 +21,7 @@ import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.adapters.CourseListRecyclerViewAdapter;
 import no.mofifo.imber.R;
 import no.mofifo.imber.data.MittUibDataSource;
+import no.mofifo.imber.data.MittUibRepository;
 import no.mofifo.imber.fragments.CourseDetailFragment;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
 import no.mofifo.imber.listeners.ItemClickSupport;
@@ -58,17 +59,15 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
 
     MainActivityListener mCallback;
 
+    // TODO remove client as it will not be used any more
     @Inject
     MittUibClient mittUibClient;
 
     private String nextPage;
 
-    // TODO: Inject the presenter via dagger
+    // TODO Inject the presenter via dagger
     /** This fragments presenter */
     CoursesFragmentPresenter presenter;
-
-    // TODO: Inject the repository via dagger
-    MittUibDataSource repository;
 
     public CoursesFragment() {}
 
@@ -80,6 +79,10 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
         courses = new ArrayList<>();
 
         ((ImberApplication) getActivity().getApplication()).getApiComponent().inject(this);
+
+        // TODO Use dagger in this instantiations
+        // Manual dependency injection:
+        presenter = new CoursesFragmentPresenter(this, new MittUibRepository(mittUibClient));
 
         requestCourses();
     }
