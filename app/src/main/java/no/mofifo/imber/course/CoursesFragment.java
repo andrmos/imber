@@ -1,7 +1,6 @@
 package no.mofifo.imber.course;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,8 +20,7 @@ import butterknife.ButterKnife;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.adapters.CourseListRecyclerViewAdapter;
 import no.mofifo.imber.R;
-import no.mofifo.imber.data.MittUiBDataSource;
-import no.mofifo.imber.data.MittUibRepository;
+import no.mofifo.imber.data.MittUibDataSource;
 import no.mofifo.imber.fragments.CourseDetailFragment;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
 import no.mofifo.imber.listeners.ItemClickSupport;
@@ -30,7 +28,6 @@ import no.mofifo.imber.listeners.MainActivityListener;
 import no.mofifo.imber.models.Course;
 import no.mofifo.imber.retrofit.PaginationUtils;
 import no.mofifo.imber.retrofit.MittUibClient;
-import no.mofifo.imber.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +68,7 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
     CoursesFragmentPresenter presenter;
 
     // TODO: Inject the repository via dagger
-    MittUiBDataSource repository;
+    MittUibDataSource repository;
 
     public CoursesFragment() {}
 
