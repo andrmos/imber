@@ -85,13 +85,6 @@ public class CoursesFragment extends Fragment implements CoursesView {
     }
 
     @Override
-    public void displayCourses(List<Course> courses) {
-        // TODO courses object is not needed in view, only in adapter
-        this.courses.addAll(courses);
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
@@ -134,7 +127,7 @@ public class CoursesFragment extends Fragment implements CoursesView {
             public void onLoadMore(int page, int totalItemsCount) {
                 // If there is a next link
                 if (!nextPage.isEmpty()) {
-                    requestCourses();
+//                    requestCourses();
                 }
             }
         });
@@ -163,6 +156,18 @@ public class CoursesFragment extends Fragment implements CoursesView {
                 transaction.commit();
             }
         });
+    }
+
+    @Override
+    public void displayCourses(List<Course> courses) {
+        // TODO courses object is not needed in view, only in adapter
+        this.courses.addAll(courses);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void displayCoursesError() {
+
     }
 
     private void requestCourses() {
@@ -200,7 +205,7 @@ public class CoursesFragment extends Fragment implements CoursesView {
                     mCallback.showSnackbar(errorMessageCourses, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            requestCourses();
+//                            requestCourses();
                         }
                     });
                 }

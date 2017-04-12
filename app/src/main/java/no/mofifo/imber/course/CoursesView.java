@@ -18,7 +18,6 @@ public interface CoursesView {
 
     /**
      * Displays an error message in a snackbar with a given message.
-     * @param message The error message.
      */
-    void displayError(String message);
+    void displayCoursesError();
 }
