@@ -87,6 +87,11 @@ public class CoursesFragment extends Fragment implements CoursesView {
     }
 
     @Override
+    public void displayCourses(List<Course> courses) {
+
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
