@@ -2,6 +2,8 @@ package no.mofifo.imber.data;
 
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import no.mofifo.imber.models.Course;
 import no.mofifo.imber.retrofit.MittUibClient;
 import retrofit2.Call;
@@ -10,7 +12,7 @@ import retrofit2.Response;
 /**
  * Created by andre on 10.04.17.
  */
-
+@Singleton
 public class MittUibRepository implements MittUibDataSource {
 
     MittUibClient client;
