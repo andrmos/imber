@@ -50,7 +50,7 @@ public class CoursesFragment extends Fragment implements CoursesView {
 
     @BindString(R.string.error_course_list) String errorMessageCourses;
 
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.Adapter adapter;
 
     private ArrayList<Course> courses;
     /* If data is loaded */
@@ -82,13 +82,13 @@ public class CoursesFragment extends Fragment implements CoursesView {
         // TODO Use dagger in this instantiations
         // Manual dependency injection:
         presenter = new CoursesPresenter(this, new MittUibRepository(mittUibClient));
-
-        requestCourses();
     }
 
     @Override
     public void displayCourses(List<Course> courses) {
-
+        // TODO courses object is not needed in view, only in adapter
+        this.courses.addAll(courses);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -109,6 +109,8 @@ public class CoursesFragment extends Fragment implements CoursesView {
         getActivity().setTitle(R.string.course_title);
 
         initRecyclerView();
+
+        presenter.loadFavoriteCourses();
 
         // Hide progress bar if data is already loaded
         if (loaded) {
@@ -138,8 +140,8 @@ public class CoursesFragment extends Fragment implements CoursesView {
         });
 
         // Create adapter that binds the views with some content
-        mAdapter = new CourseListRecyclerViewAdapter(courses);
-        mainList.setAdapter(mAdapter);
+        adapter = new CourseListRecyclerViewAdapter(courses);
+        mainList.setAdapter(adapter);
 
         initOnClickListener();
     }
@@ -184,7 +186,7 @@ public class CoursesFragment extends Fragment implements CoursesView {
                     nextPage = PaginationUtils.getNextPageUrl(response.headers());
 
                     loaded = true;
-                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
+                    if (adapter != null) adapter.notifyDataSetChanged();
                 }
             }
 
