@@ -15,4 +15,10 @@ public interface CoursesView {
      * @param courses The courses to be displayed.
      */
     void displayCourses(List<Course> courses);
+
+    /**
+     * Displays an error message in a snackbar with a given message.
+     * @param message The error message.
+     */
+    void displayError(String message);
 }
