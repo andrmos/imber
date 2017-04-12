@@ -1,5 +1,7 @@
 package no.mofifo.imber.data;
 
+import java.util.List;
+
 import no.mofifo.imber.models.Course;
 import no.mofifo.imber.retrofit.MittUibClient;
 
@@ -16,8 +18,8 @@ public class MittUibRepository implements MittUibDataSource {
     }
 
     @Override
-    public void getCourses(Callback<Course> callback) {
-        // TODO Not yet implemented
+    public void getFavoriteCourses(Callback<List<Course>> callback) {
+        
     }
 
 }
