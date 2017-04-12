@@ -6,12 +6,12 @@ import no.mofifo.imber.data.MittUibDataSource;
  * Created by andre on 08.04.17.
  */
 
-public class CoursesFragmentPresenter {
+public class CoursesPresenter {
 
-    private CoursesFragmentView view;
+    private CoursesView view;
     private MittUibDataSource repository;
 
-    public CoursesFragmentPresenter(CoursesFragmentView view, MittUibDataSource repository) {
+    public CoursesPresenter(CoursesView view, MittUibDataSource repository) {
         this.view = view;
         this.repository = repository;
     }

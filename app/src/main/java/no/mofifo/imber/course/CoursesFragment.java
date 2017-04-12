@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.adapters.CourseListRecyclerViewAdapter;
 import no.mofifo.imber.R;
-import no.mofifo.imber.data.MittUibDataSource;
 import no.mofifo.imber.data.MittUibRepository;
 import no.mofifo.imber.fragments.CourseDetailFragment;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
@@ -42,7 +41,7 @@ import retrofit2.Callback;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CoursesFragment extends Fragment implements CoursesFragmentView {
+public class CoursesFragment extends Fragment implements CoursesView {
 
     private static final String TAG = "CourseListFragment";
 
@@ -67,7 +66,7 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
 
     // TODO Inject the presenter via dagger
     /** This fragments presenter */
-    CoursesFragmentPresenter presenter;
+    CoursesPresenter presenter;
 
     public CoursesFragment() {}
 
@@ -82,7 +81,7 @@ public class CoursesFragment extends Fragment implements CoursesFragmentView {
 
         // TODO Use dagger in this instantiations
         // Manual dependency injection:
-        presenter = new CoursesFragmentPresenter(this, new MittUibRepository(mittUibClient));
+        presenter = new CoursesPresenter(this, new MittUibRepository(mittUibClient));
 
         requestCourses();
     }
