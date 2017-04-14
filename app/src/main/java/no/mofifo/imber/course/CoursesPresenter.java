@@ -2,6 +2,8 @@ package no.mofifo.imber.course;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import no.mofifo.imber.data.MittUibDataSource;
 import no.mofifo.imber.models.Course;
 
@@ -14,6 +16,7 @@ public class CoursesPresenter {
     private CoursesView view;
     private MittUibDataSource repository;
 
+    @Inject
     public CoursesPresenter(CoursesView view, MittUibDataSource repository) {
         this.view = view;
         this.repository = repository;
@@ -28,7 +31,7 @@ public class CoursesPresenter {
 
             @Override
             public void onFailure() {
-                // TODO view.showError(message)
+                view.displayCoursesError();
             }
         });
     }

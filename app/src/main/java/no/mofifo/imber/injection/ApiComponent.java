@@ -3,7 +3,8 @@ package no.mofifo.imber.injection;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import no.mofifo.imber.course.CoursesFragment;
+import no.mofifo.imber.course.CoursesPresenterModule;
+import no.mofifo.imber.data.MittUibDataSource;
 
 /**
  * Dagger component defining which classes have access to the different dependencies in the modules.
@@ -11,9 +12,10 @@ import no.mofifo.imber.course.CoursesFragment;
  * Created by andre on 10.04.17.
  */
 @Singleton
-@Component(modules = {AppModule.class, ApiModule.class})
+@Component(modules = {AppModule.class, ApiModule.class, CoursesPresenterModule.class})
 public interface ApiComponent {
 
-    void inject(CoursesFragment coursesFragment);
+    // MittUibDataSource is used in provider in CoursesComponent, so it has to be declared here.
+    MittUibDataSource mittUibDataSource();
 
 }
