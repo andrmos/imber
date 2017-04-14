@@ -3,7 +3,6 @@ package no.mofifo.imber.injection;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +15,7 @@ import dagger.Module;
 import dagger.Provides;
 import hirondelle.date4j.DateTime;
 import no.mofifo.imber.R;
+import no.mofifo.imber.data.MittUibDataSource;
 import no.mofifo.imber.data.MittUibRepository;
 import no.mofifo.imber.retrofit.DateTimeDeserializer;
 import no.mofifo.imber.retrofit.MittUibClient;
@@ -92,6 +92,12 @@ public class ApiModule {
     @Singleton
     MittUibClient provideMittUibClient(Retrofit retrofit) {
         return retrofit.create(MittUibClient.class);
+    }
+
+    @Provides
+    @Singleton
+    MittUibDataSource provideMittUibDataSource(MittUibClient client) {
+        return new MittUibRepository(client);
     }
     
 }
