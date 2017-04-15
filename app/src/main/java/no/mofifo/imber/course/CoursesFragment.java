@@ -17,7 +17,6 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import no.mofifo.imber.ImberApplication;
-import no.mofifo.imber.adapters.CourseListRecyclerViewAdapter;
 import no.mofifo.imber.R;
 import no.mofifo.imber.fragments.CourseDetailFragment;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
@@ -101,7 +100,7 @@ public class CoursesFragment extends Fragment implements CoursesView {
         });
 
         // Create adapter that binds the views with some content
-        adapter = new CourseListRecyclerViewAdapter(courses);
+        adapter = new CoursesAdapter(courses);
         mainList.setAdapter(adapter);
 
         initOnClickListener();

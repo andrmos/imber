@@ -1,4 +1,4 @@
-package no.mofifo.imber.adapters;
+package no.mofifo.imber.course;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,11 +18,11 @@ import java.util.ArrayList;
  *
  * Created by André on 12.02.2016.
  */
-public class CourseListRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
+public class CoursesAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
     private ArrayList<Course> data;
 
-    public CourseListRecyclerViewAdapter(ArrayList<Course> data) {
+    public CoursesAdapter(ArrayList<Course> data) {
         this.data = data;
     }
 
