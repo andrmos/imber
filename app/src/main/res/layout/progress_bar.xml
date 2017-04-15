@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:layout_alignParentTop="true"
-        android:visibility="gone"
         app:spb_sections_count="4"
         app:spb_colors="@array/prgressbarColors"
         app:spb_speed="1.0"
@@ -20,6 +19,6 @@
         app:spb_mirror_mode="false"
         app:spb_progressiveStart_activated="false"
         app:spb_interpolator="spb_interpolator_acceleratedecelerate"
-        app:spb_progressiveStop_speed="1.3"/>
+        app:spb_progressiveStop_speed="1.5"/>
 
 </merge>
