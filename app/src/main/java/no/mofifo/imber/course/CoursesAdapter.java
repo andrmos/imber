@@ -11,6 +11,7 @@ import no.mofifo.imber.card_view_holders.GeneralViewHolder;
 import no.mofifo.imber.models.Course;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter for the RecyclerView which will hold the cards with titles of the different courses.
@@ -24,6 +25,18 @@ public class CoursesAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
     public CoursesAdapter(ArrayList<Course> courses) {
         this.courses = courses;
+    }
+
+    public void replaceCourses(ArrayList<Course> data) {
+        courses = data;
+    }
+
+    public void addCourses(ArrayList<Course> data) {
+        courses.addAll(data);
+    }
+
+    public Course getCourse(int position) {
+        return courses.get(position);
     }
 
     @Override
