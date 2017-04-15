@@ -78,6 +78,7 @@ public class CoursesFragment extends Fragment implements CoursesView {
                 .apiComponent(((ImberApplication) getActivity().getApplication()).getApiComponent())
                 .coursesPresenterModule(new CoursesPresenterModule(this)).build()
                 .inject(this);
+
     }
 
     @Override
@@ -102,11 +103,11 @@ public class CoursesFragment extends Fragment implements CoursesView {
         presenter.loadFavoriteCourses();
 
         // Hide progress bar if data is already loaded
-        if (loaded) {
-            progressBar.setVisibility(View.GONE);
-        } else {
-            progressBar.setVisibility(View.VISIBLE);
-        }
+//        if (loaded) {
+//            progressBar.setVisibility(View.GONE);
+//        } else {
+//            progressBar.setVisibility(View.VISIBLE);
+//        }
 
         return rootView;
     }
@@ -177,12 +178,12 @@ public class CoursesFragment extends Fragment implements CoursesView {
 
     @Override
     public void showLoading() {
-        
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        progressBar.progressiveStop();
     }
 
     private void requestCourses() {
