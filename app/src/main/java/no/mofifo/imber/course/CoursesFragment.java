@@ -47,32 +47,30 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
     @BindString(R.string.snackback_action_text)
     String retryButtonText;
 
-    private CoursesAdapter adapter;
-
-    private ArrayList<Course> courses;
-
-    /** This fragments presenter */
+    /* This fragments presenter */
     @Inject
     CoursesPresenter presenter;
+
+    /* Adapter binding content to the recycler view */
+    private CoursesAdapter adapter;
 
     public CoursesFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        courses = new ArrayList<>();
 
         DaggerCoursesComponent.builder()
                 .apiComponent(((ImberApplication) getActivity().getApplication()).getApiComponent())
                 .coursesPresenterModule(new CoursesPresenterModule(this)).build()
                 .inject(this);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         ButterKnife.bind(this, rootView);
+
         getActivity().setTitle(R.string.course_title);
 
         initRecyclerView();
@@ -100,7 +98,7 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
         });
 
         // Create adapter that binds the views with some content
-        adapter = new CoursesAdapter(courses);
+        adapter = new CoursesAdapter(new ArrayList<Course>());
         mainList.setAdapter(adapter);
         ItemClickSupport.addTo(mainList).setOnItemClickListener(this);
     }
@@ -128,9 +126,7 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
 
     @Override
     public void displayCourses(List<Course> courses) {
-        // TODO courses object is not needed in view, only in adapter
-        this.courses.addAll(courses);
-        adapter.notifyDataSetChanged();
+        adapter.addCourses(courses);
     }
 
     @Override
