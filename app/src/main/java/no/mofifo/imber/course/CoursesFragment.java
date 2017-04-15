@@ -52,7 +52,8 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
     CoursesPresenter presenter;
 
     /* Adapter binding content to the recycler view */
-    private CoursesAdapter adapter;
+    @Inject
+    CoursesAdapter adapter;
 
     public CoursesFragment() {}
 
@@ -97,8 +98,6 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
             }
         });
 
-        // Create adapter that binds the views with some content
-        adapter = new CoursesAdapter(new ArrayList<Course>());
         mainList.setAdapter(adapter);
         ItemClickSupport.addTo(mainList).setOnItemClickListener(this);
     }

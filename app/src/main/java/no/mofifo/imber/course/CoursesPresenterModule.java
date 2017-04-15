@@ -1,8 +1,11 @@
 package no.mofifo.imber.course;
 
+import java.util.ArrayList;
+
 import dagger.Module;
 import dagger.Provides;
 import no.mofifo.imber.injection.FragmentScoped;
+import no.mofifo.imber.models.Course;
 
 /**
  * Dagger module defining dependencies injectable within the fragment displaying a list of courses.
@@ -21,6 +24,12 @@ public class CoursesPresenterModule {
     @FragmentScoped
     CoursesView provideView() {
         return view;
+    }
+
+    @Provides
+    @FragmentScoped
+    CoursesAdapter provideCoursesAdapter() {
+        return new CoursesAdapter(new ArrayList<Course>());
     }
 
 }
