@@ -1,6 +1,5 @@
 package no.mofifo.imber.course;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -8,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +22,6 @@ import no.mofifo.imber.R;
 import no.mofifo.imber.fragments.CourseDetailFragment;
 import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
 import no.mofifo.imber.listeners.ItemClickSupport;
-import no.mofifo.imber.listeners.MainActivityListener;
 import no.mofifo.imber.models.Course;
 
 import java.util.ArrayList;
@@ -54,12 +51,6 @@ public class CoursesFragment extends Fragment implements CoursesView {
     private RecyclerView.Adapter adapter;
 
     private ArrayList<Course> courses;
-    /* If data is loaded */
-    private boolean loaded;
-
-    MainActivityListener mCallback;
-
-    private String nextPage;
 
     /** This fragments presenter */
     @Inject
@@ -70,8 +61,6 @@ public class CoursesFragment extends Fragment implements CoursesView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        nextPage = "";
-        loaded = false;
         courses = new ArrayList<>();
 
         DaggerCoursesComponent.builder()
@@ -82,17 +71,6 @@ public class CoursesFragment extends Fragment implements CoursesView {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mCallback = (MainActivityListener) context;
-        }catch (ClassCastException e){
-            Log.i(TAG, "onAttach: " + e.toString());
-        }
-    }
-
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         ButterKnife.bind(this, rootView);
@@ -101,13 +79,6 @@ public class CoursesFragment extends Fragment implements CoursesView {
         initRecyclerView();
 
         presenter.loadFavoriteCourses();
-
-        // Hide progress bar if data is already loaded
-//        if (loaded) {
-//            progressBar.setVisibility(View.GONE);
-//        } else {
-//            progressBar.setVisibility(View.VISIBLE);
-//        }
 
         return rootView;
     }
@@ -123,9 +94,9 @@ public class CoursesFragment extends Fragment implements CoursesView {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 // If there is a next link
-                if (!nextPage.isEmpty()) {
+//                if (!nextPage.isEmpty()) {
 //                    requestCourses();
-                }
+//                }
             }
         });
 
@@ -186,47 +157,4 @@ public class CoursesFragment extends Fragment implements CoursesView {
         progressBar.progressiveStop();
     }
 
-    private void requestCourses() {
-//        Call<List<Course>> call;
-//        boolean firstPage = nextPage.isEmpty();
-//        if (firstPage) {
-////            call = mittUibClient.getFavoriteCourses();
-//        } else {
-////            call = mittUibClient.getCoursesPagination(nextPage);
-//        }
-
-//        call.enqueue(new Callback<List<Course>>() {
-//            @Override
-//            public void onResponse(Call<List<Course>> call, retrofit2.Response<List<Course>> response) {
-//                if (response.isSuccessful()) {
-//                    if (progressBar != null) {
-//                        progressBar.progressiveStop();
-//                    }
-//
-//                    courses.addAll(response.body());
-//                    nextPage = PaginationUtils.getNextPageUrl(response.headers());
-//
-//                    loaded = true;
-//                    if (adapter != null) adapter.notifyDataSetChanged();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Course>> call, Throwable t) {
-//                if (isAdded()) {
-//                    if (progressBar != null){
-//                        progressBar.progressiveStop();
-//                    }
-//
-//                    mCallback.showSnackbar(coursesErrorMessage, new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-////                            requestCourses();
-//                        }
-//                    });
-//                }
-//            }
-//        });
-
-    }
 }
