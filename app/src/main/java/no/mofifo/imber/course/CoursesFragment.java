@@ -175,6 +175,16 @@ public class CoursesFragment extends Fragment implements CoursesView {
         }
     }
 
+    @Override
+    public void showLoading() {
+        
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
     private void requestCourses() {
 //        Call<List<Course>> call;
 //        boolean firstPage = nextPage.isEmpty();

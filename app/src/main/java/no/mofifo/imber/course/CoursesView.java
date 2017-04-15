@@ -20,4 +20,14 @@ public interface CoursesView {
      * Displays an error message in a snackbar with a given message.
      */
     void displayCoursesError();
+
+    /**
+     * Shows the loading indicator.
+     */
+    void showLoading();
+
+    /**
+     * Hides the loading indicator.
+     */
+    void hideLoading();
 }
