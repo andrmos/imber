@@ -30,9 +30,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
     public GeneralViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // course card
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_card, parent, false);
-        GeneralViewHolder holder = new CourseViewHolder(v);
-
-        return holder;
+        return new CourseViewHolder(v);
     }
 
 
