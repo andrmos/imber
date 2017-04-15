@@ -55,12 +55,12 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
     @Inject
     CoursesAdapter adapter;
 
-    public CoursesFragment() {}
+    public CoursesFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         DaggerCoursesComponent.builder()
                 .apiComponent(((ImberApplication) getActivity().getApplication()).getApiComponent())
                 .coursesPresenterModule(new CoursesPresenterModule(this)).build()
@@ -73,19 +73,19 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
         ButterKnife.bind(this, rootView);
 
         getActivity().setTitle(R.string.course_title);
-
         initRecyclerView();
 
+        // TODO View should be dumb. Replace with presenter.start() or similar
         presenter.loadFavoriteCourses();
-
         return rootView;
     }
 
+    // TODO Fix method
     private void initRecyclerView() {
         mainList.setVisibility(View.VISIBLE);
 
         // Create the LayoutManager that holds all the views
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mainList.setLayoutManager(mLayoutManager);
 
         mainList.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
@@ -110,16 +110,16 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
 
     @Override
     public void showCourseDetails(Course course) {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        CourseDetailFragment courseDetailFragment = new CourseDetailFragment();
-        transaction.replace(R.id.content_frame, courseDetailFragment);
-
-        transaction.addToBackStack(null);
-
         Bundle bundle = new Bundle();
         String json = new Gson().toJson(course);
         bundle.putString("course", json);
+
+        CourseDetailFragment courseDetailFragment = new CourseDetailFragment();
         courseDetailFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.content_frame, courseDetailFragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
@@ -130,16 +130,13 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
 
     @Override
     public void displayCoursesError() {
-        // TODO Is null checking needed?
-        if (getView() != null) {
-            Snackbar snackbar = Snackbar.make(getView(), coursesErrorMessage, Snackbar.LENGTH_LONG);
-            snackbar.setAction(retryButtonText, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    presenter.loadFavoriteCourses();
-                }
-            });
-        }
+        Snackbar snackbar = Snackbar.make(getView(), coursesErrorMessage, Snackbar.LENGTH_LONG);
+        snackbar.setAction(retryButtonText, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.loadFavoriteCourses();
+            }
+        });
     }
 
     @Override
@@ -151,5 +148,4 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
     public void hideLoading() {
         progressBar.progressiveStop();
     }
-
 }

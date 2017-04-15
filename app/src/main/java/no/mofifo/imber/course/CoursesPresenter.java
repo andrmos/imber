@@ -27,14 +27,18 @@ public class CoursesPresenter {
         repository.getFavoriteCourses(new MittUibDataSource.Callback<List<Course>>() {
             @Override
             public void onSuccess(List<Course> result) {
-                view.displayCourses(result);
-                view.hideLoading();
+                if (view.isAdded()) {
+                    view.displayCourses(result);
+                    view.hideLoading();
+                }
             }
 
             @Override
             public void onFailure() {
-                view.displayCoursesError();
-                view.hideLoading();
+                if (view.isAdded()) {
+                    view.displayCoursesError();
+                    view.hideLoading();
+                }
             }
         });
     }

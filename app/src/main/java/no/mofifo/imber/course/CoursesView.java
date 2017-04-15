@@ -36,4 +36,9 @@ public interface CoursesView {
      * @param course The course to show details for.
      */
     void showCourseDetails(Course course);
+
+    /**
+     * @return True if fragment is added to parent activity.
+     */
+    boolean isAdded();
 }
