@@ -20,10 +20,10 @@ import java.util.ArrayList;
  */
 public class CoursesAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
-    private ArrayList<Course> data;
+    private ArrayList<Course> courses;
 
-    public CoursesAdapter(ArrayList<Course> data) {
-        this.data = data;
+    public CoursesAdapter(ArrayList<Course> courses) {
+        this.courses = courses;
     }
 
     @Override
@@ -40,12 +40,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
     public void onBindViewHolder(GeneralViewHolder holder, int position) {
         // set text of text view in card
         CourseViewHolder courseHolder = (CourseViewHolder) holder;
-        courseHolder.course_code.setText(data.get(position).getCourseCode());
-        courseHolder.course_title.setText(data.get(position).getName());
+        courseHolder.course_code.setText(courses.get(position).getCourseCode());
+        courseHolder.course_title.setText(courses.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        return courses.size();
     }
 }
