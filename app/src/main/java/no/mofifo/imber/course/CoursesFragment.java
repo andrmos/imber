@@ -23,7 +23,6 @@ import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
 import no.mofifo.imber.listeners.ItemClickSupport;
 import no.mofifo.imber.models.Course;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -31,7 +30,8 @@ import javax.inject.Inject;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 /**
- * A placeholder fragment containing a simple view.
+ * Fragment containing a list of courses.
+ * Clicking on a course loads a new fragment with details of the clicked course.
  */
 public class CoursesFragment extends Fragment implements CoursesView, ItemClickSupport.OnItemClickListener {
 
