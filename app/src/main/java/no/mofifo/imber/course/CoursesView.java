@@ -30,4 +30,10 @@ public interface CoursesView {
      * Hides the loading indicator.
      */
     void hideLoading();
+
+    /**
+     * Changes view to CourseDetailFragment, with details about the specified course.
+     * @param course The course to show details for.
+     */
+    void showCourseDetails(Course course);
 }

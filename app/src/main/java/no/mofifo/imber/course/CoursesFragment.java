@@ -33,7 +33,7 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CoursesFragment extends Fragment implements CoursesView {
+public class CoursesFragment extends Fragment implements CoursesView, ItemClickSupport.OnItemClickListener {
 
     private static final String TAG = "CoursesFragment";
 
@@ -47,7 +47,7 @@ public class CoursesFragment extends Fragment implements CoursesView {
     @BindString(R.string.snackback_action_text)
     String retryButtonText;
 
-    private RecyclerView.Adapter adapter;
+    private CoursesAdapter adapter;
 
     private ArrayList<Course> courses;
 
@@ -102,27 +102,28 @@ public class CoursesFragment extends Fragment implements CoursesView {
         // Create adapter that binds the views with some content
         adapter = new CoursesAdapter(courses);
         mainList.setAdapter(adapter);
-
-        initOnClickListener();
+        ItemClickSupport.addTo(mainList).setOnItemClickListener(this);
     }
 
-    private void initOnClickListener() {
-        ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-            @Override
-            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                CourseDetailFragment courseDetailFragment = new CourseDetailFragment();
-                transaction.replace(R.id.content_frame, courseDetailFragment);
+    @Override
+    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+        Course clicked = adapter.getCourse(position);
+        presenter.onCourseClicked(clicked);
+    }
 
-                transaction.addToBackStack(null);
+    @Override
+    public void showCourseDetails(Course course) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        CourseDetailFragment courseDetailFragment = new CourseDetailFragment();
+        transaction.replace(R.id.content_frame, courseDetailFragment);
 
-                Bundle bundle = new Bundle();
-                String json = new Gson().toJson(courses.get(position));
-                bundle.putString("course", json);
-                courseDetailFragment.setArguments(bundle);
-                transaction.commit();
-            }
-        });
+        transaction.addToBackStack(null);
+
+        Bundle bundle = new Bundle();
+        String json = new Gson().toJson(course);
+        bundle.putString("course", json);
+        courseDetailFragment.setArguments(bundle);
+        transaction.commit();
     }
 
     @Override
