@@ -25,14 +25,14 @@ import hirondelle.date4j.DateTime;
  *
  * Created by André on 12.02.2016.
  */
-public class CourseRecyclerViewAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
+public class CourseDetailAdapter extends RecyclerView.Adapter<GeneralViewHolder> {
 
     private static final String TAG = "CourseAdapter";
 
     private ArrayList<Announcement> announcements;
     private ArrayList<CalendarEvent> agendas;
 
-    public CourseRecyclerViewAdapter(ArrayList<Announcement> announcements, ArrayList<CalendarEvent> agendas) {
+    public CourseDetailAdapter(ArrayList<Announcement> announcements, ArrayList<CalendarEvent> agendas) {
         this.announcements = announcements;
         this.agendas = agendas;
     }

@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
+import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
-import no.mofifo.imber.courseDetail.CourseRecyclerViewAdapter;
 import no.mofifo.imber.fragments.AnnouncementFragment;
 import no.mofifo.imber.fragments.FileBrowserFragment;
 import no.mofifo.imber.listeners.ItemClickSupport;
@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +47,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     private static final String TAG = "CourseFragment";
 
     private RecyclerView mainList;
-    private RecyclerView.Adapter mAdapter;
 
     private ArrayList<Announcement> announcements;
     private ArrayList<CalendarEvent> agendas;
@@ -59,6 +60,16 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     MainActivityListener mCallback;
     private MittUibClient mittUibClient;
+
+    /* This fragments presenter */
+    @Inject
+    CourseDetailPresenter presenter;
+
+    /* Adapter binding content to the recycler view */
+    @Inject
+    CourseDetailAdapter adapter;
+
+
 
     @Override
     public void onAttach(Context context) {
@@ -79,6 +90,11 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DaggerCourseDetailComponent.builder()
+                .apiComponent(((ImberApplication) getActivity().getApplication()).getApiComponent())
+                .courseDetailPresenterModule(new CourseDetailPresenterModule(this)).build()
+                .inject(this);
 
         announcements = new ArrayList<>();
         agendas = new ArrayList<>();
@@ -140,9 +156,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mainList.setLayoutManager(mLayoutManager);
 
-        // Create adapter that binds the views with some content
-        mAdapter = new CourseRecyclerViewAdapter(announcements, agendas);
-        mainList.setAdapter(mAdapter);
+        mainList.setAdapter(adapter);
 
         initOnClickListener();
     }

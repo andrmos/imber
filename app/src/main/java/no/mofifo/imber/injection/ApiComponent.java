@@ -3,6 +3,7 @@ package no.mofifo.imber.injection;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import no.mofifo.imber.courseDetail.CourseDetailPresenterModule;
 import no.mofifo.imber.courses.CoursesPresenterModule;
 import no.mofifo.imber.data.MittUibDataSource;
 
@@ -12,7 +13,7 @@ import no.mofifo.imber.data.MittUibDataSource;
  * Created by andre on 10.04.17.
  */
 @Singleton
-@Component(modules = {AppModule.class, ApiModule.class, CoursesPresenterModule.class})
+@Component(modules = {AppModule.class, ApiModule.class, CoursesPresenterModule.class, CourseDetailPresenterModule.class})
 public interface ApiComponent {
 
     // MittUibDataSource is used in provider in CoursesComponent, so it has to be declared here.
