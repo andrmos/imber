@@ -46,4 +46,8 @@ public class CoursesPresenter {
     public void onCourseClicked(Course course) {
         view.showCourseDetails(course);
     }
+
+    public void loadMore() {
+
+    }
 }

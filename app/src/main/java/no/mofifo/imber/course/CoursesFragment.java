@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hugo.weaving.DebugLog;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
 import no.mofifo.imber.fragments.CourseDetailFragment;
@@ -87,10 +88,14 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
         // Create the LayoutManager that holds all the views
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mainList.setLayoutManager(mLayoutManager);
-
         mainList.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @DebugLog
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
+
+                presenter.loadFavoriteCourses();
+
+
                 // If there is a next link
 //                if (!nextPage.isEmpty()) {
 //                    requestCourses();
