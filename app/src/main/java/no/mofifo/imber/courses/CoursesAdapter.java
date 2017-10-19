@@ -1,4 +1,4 @@
-package no.mofifo.imber.course;
+package no.mofifo.imber.courses;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +10,7 @@ import no.mofifo.imber.card_view_holders.CourseViewHolder;
 import no.mofifo.imber.card_view_holders.GeneralViewHolder;
 import no.mofifo.imber.models.Course;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * Adapter for the RecyclerView which will hold the cards with titles of the different courses.

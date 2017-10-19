@@ -1,4 +1,4 @@
-package no.mofifo.imber.course;
+package no.mofifo.imber.courses;
 
 import java.util.ArrayList;
 

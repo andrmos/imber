@@ -1,4 +1,4 @@
-package no.mofifo.imber.course;
+package no.mofifo.imber.courses;
 
 import dagger.Component;
 import no.mofifo.imber.injection.ApiComponent;

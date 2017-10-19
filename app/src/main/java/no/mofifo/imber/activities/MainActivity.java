@@ -32,7 +32,7 @@ import no.mofifo.imber.models.Course;
 import no.mofifo.imber.models.Profile;
 import no.mofifo.imber.retrofit.MittUibClient;
 
-import no.mofifo.imber.course.CoursesFragment;
+import no.mofifo.imber.courses.CoursesFragment;
 import no.mofifo.imber.retrofit.ServiceGenerator;
 
 import java.util.ArrayList;

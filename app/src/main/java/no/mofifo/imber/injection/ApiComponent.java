@@ -3,7 +3,7 @@ package no.mofifo.imber.injection;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import no.mofifo.imber.course.CoursesPresenterModule;
+import no.mofifo.imber.courses.CoursesPresenterModule;
 import no.mofifo.imber.data.MittUibDataSource;
 
 /**

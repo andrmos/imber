@@ -1,4 +1,4 @@
-package no.mofifo.imber.course;
+package no.mofifo.imber.courses;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
