@@ -16,11 +16,9 @@ import com.google.gson.Gson;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import hugo.weaving.DebugLog;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
 import no.mofifo.imber.fragments.CourseDetailFragment;
-import no.mofifo.imber.listeners.EndlessRecyclerViewScrollListener;
 import no.mofifo.imber.listeners.ItemClickSupport;
 import no.mofifo.imber.models.Course;
 
@@ -81,30 +79,16 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
         return rootView;
     }
 
-    // TODO Fix method
     private void initRecyclerView() {
         mainList.setVisibility(View.VISIBLE);
 
         // Create the LayoutManager that holds all the views
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mainList.setLayoutManager(mLayoutManager);
-        mainList.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
-            @DebugLog
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-
-                presenter.loadFavoriteCourses();
-
-
-                // If there is a next link
-//                if (!nextPage.isEmpty()) {
-//                    requestCourses();
-//                }
-            }
-        });
-
         mainList.setAdapter(adapter);
         ItemClickSupport.addTo(mainList).setOnItemClickListener(this);
+
+        // TODO: 19.10.17 Add loadMore listener
     }
 
     @Override
