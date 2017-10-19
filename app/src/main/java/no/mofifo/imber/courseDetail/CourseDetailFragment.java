@@ -40,7 +40,7 @@ import retrofit2.Callback;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CourseDetailFragment extends Fragment {
+public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     private static final String TAG = "CourseFragment";
 
@@ -356,5 +356,20 @@ public class CourseDetailFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void showLoading() {
+        
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void displayAnnouncements(List<Announcement> announcements) {
+
     }
 }
