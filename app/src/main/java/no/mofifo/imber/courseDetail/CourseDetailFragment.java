@@ -1,4 +1,4 @@
-package no.mofifo.imber.fragments;
+package no.mofifo.imber.courseDetail;
 
 
 import android.content.Context;
@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 
 import no.mofifo.imber.R;
-import no.mofifo.imber.adapters.CourseRecyclerViewAdapter;
+import no.mofifo.imber.courseDetail.CourseRecyclerViewAdapter;
+import no.mofifo.imber.fragments.AnnouncementFragment;
+import no.mofifo.imber.fragments.FileBrowserFragment;
 import no.mofifo.imber.listeners.ItemClickSupport;
 import no.mofifo.imber.listeners.MainActivityListener;
 import no.mofifo.imber.models.Announcement;

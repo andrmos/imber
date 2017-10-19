@@ -1,4 +1,4 @@
-package no.mofifo.imber.adapters;
+package no.mofifo.imber.courseDetail;
 
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;

@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
-import no.mofifo.imber.fragments.CourseDetailFragment;
+import no.mofifo.imber.courseDetail.CourseDetailFragment;
 import no.mofifo.imber.listeners.ItemClickSupport;
 import no.mofifo.imber.models.Course;
 
