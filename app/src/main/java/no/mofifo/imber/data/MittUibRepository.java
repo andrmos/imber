@@ -7,10 +7,12 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import no.mofifo.imber.models.Announcement;
 import no.mofifo.imber.models.Course;
 import no.mofifo.imber.retrofit.MittUibClient;
 import no.mofifo.imber.retrofit.PaginationUtils;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -24,7 +26,7 @@ public class MittUibRepository implements MittUibDataSource {
     /* The URLs to the next pages for calls */
     private HashMap<UUID, String> nextPageUrls;
 
-    // TODO Handle pagination for all calls.
+    // TODO: Handle pagination for all calls.
 
     @Inject
     public MittUibRepository(MittUibClient client) {
@@ -33,7 +35,7 @@ public class MittUibRepository implements MittUibDataSource {
     }
 
     @Override
-    public void getFavoriteCourses(final Callback<List<Course>> callback) {
+    public void loadFavoriteCourses(final Callback<List<Course>> callback) {
         Call<List<Course>> call = client.getFavoriteCourses();
         call.enqueue(new retrofit2.Callback<List<Course>>() {
             @Override
@@ -48,6 +50,27 @@ public class MittUibRepository implements MittUibDataSource {
 
             @Override
             public void onFailure(Call<List<Course>> call, Throwable t) {
+                callback.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void loadAnnouncements(int courseId, final Callback<List<Announcement>> callback) {
+        Call<List<Announcement>> call = client.getAnnouncements(courseId);
+        call.enqueue(new retrofit2.Callback<List<Announcement>>() {
+            @Override
+            public void onResponse(Call<List<Announcement>> call, Response<List<Announcement>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onFailure();
+                }
+                // TODO: Pagination
+            }
+
+            @Override
+            public void onFailure(Call<List<Announcement>> call, Throwable t) {
                 callback.onFailure();
             }
         });

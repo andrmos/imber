@@ -2,6 +2,7 @@ package no.mofifo.imber.data;
 
 import java.util.List;
 
+import no.mofifo.imber.models.Announcement;
 import no.mofifo.imber.models.Course;
 
 /**
@@ -17,5 +18,8 @@ public interface MittUibDataSource {
         void onFailure();
     }
 
-    void getFavoriteCourses(Callback<List<Course>> callback);
+    void loadFavoriteCourses(Callback<List<Course>> callback);
+
+    void loadAnnouncements(int courseId, Callback<List<Announcement>> callback);
+
 }
