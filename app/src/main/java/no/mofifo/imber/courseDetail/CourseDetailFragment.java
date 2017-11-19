@@ -4,18 +4,22 @@ package no.mofifo.imber.courseDetail;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
+import butterknife.BindString;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
 import no.mofifo.imber.fragments.AnnouncementFragment;
@@ -59,7 +63,13 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     MainActivityListener mCallback;
     private MittUibClient mittUibClient;
 
-    @BindView(R.id.progressbar)
+    @BindString(R.string.error_announcements_list)
+    String coursesErrorMessage;
+
+    @BindString(R.string.snackbar_retry_text)
+    String retryButtonText;
+
+    @BindView(R.id.progressBar)
     SmoothProgressBar progressBar;
 
     /* This fragments presenter */
@@ -69,7 +79,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     /* Adapter binding content to the recycler view */
     @Inject
     CourseDetailAdapter adapter;
-
 
 
     @Override
@@ -119,10 +128,13 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_course, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        ButterKnife.bind(this, rootView);
         // Set toolbar title to course name
 //        getActivity().setTitle(course.getTrimmedName());
 //        initRecycleView(rootView);
+
+        presenter.loadAnnouncements();
 
         // Hide progress bar if data is already loaded
 //        if (isLoaded()) {
@@ -218,7 +230,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
                     } else {
                         progressBar.progressiveStop();
-                        mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
+                        mCallback.showSnackbar(getString(R.string.error_announcements_list), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 requestAnnouncements(course_id);
@@ -233,7 +245,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
                 if (isAdded()) {
                     progressBar.progressiveStop();
-                    mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
+                    mCallback.showSnackbar(getString(R.string.error_announcements_list), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             requestAnnouncements(course_id);
@@ -252,6 +264,17 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
             if (!loaded[i]) return false;
         }
         return true;
+    }
+
+    @Override
+    public void displayAnnouncementsError() {
+        Snackbar snackbar = Snackbar.make(getView(), coursesErrorMessage, Snackbar.LENGTH_LONG);
+        snackbar.setAction(retryButtonText, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.loadAnnouncements();
+            }
+        });
     }
 
     private void requestAgendas() {
@@ -383,7 +406,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @Override
     public void hideLoading() {
-        progressBar.setVisibility(View.GONE);
+        progressBar.progressiveStop();
     }
 
     @Override
