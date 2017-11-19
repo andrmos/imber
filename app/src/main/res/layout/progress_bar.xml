@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:layout_alignParentTop="true"
+        android:visibility="gone"
         app:spb_sections_count="4"
         app:spb_colors="@array/prgressbarColors"
         app:spb_speed="1.0"
