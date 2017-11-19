@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 
+import butterknife.BindView;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
 import no.mofifo.imber.fragments.AnnouncementFragment;
@@ -25,7 +26,6 @@ import no.mofifo.imber.models.Announcement;
 import no.mofifo.imber.models.CalendarEvent;
 import no.mofifo.imber.models.Course;
 import no.mofifo.imber.retrofit.MittUibClient;
-import no.mofifo.imber.retrofit.ServiceGenerator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -51,8 +51,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     private ArrayList<Announcement> announcements;
     private ArrayList<CalendarEvent> agendas;
 
-    private SmoothProgressBar progressbar;
-
     private Course course;
 
     /* If data is loaded */
@@ -60,6 +58,9 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     MainActivityListener mCallback;
     private MittUibClient mittUibClient;
+
+    @BindView(R.id.progressbar)
+    SmoothProgressBar progressBar;
 
     /* This fragments presenter */
     @Inject
@@ -74,14 +75,14 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        try {
-            mCallback = (MainActivityListener) context;
-        } catch (ClassCastException e) {
-            //Do nothing
-        }
-
-        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
+//
+//        try {
+//            mCallback = (MainActivityListener) context;
+//        } catch (ClassCastException e) {
+//            //Do nothing
+//        }
+//
+//        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
     }
 
     public CourseDetailFragment() {
@@ -96,37 +97,40 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
                 .courseDetailPresenterModule(new CourseDetailPresenterModule(this)).build()
                 .inject(this);
 
-        announcements = new ArrayList<>();
-        agendas = new ArrayList<>();
-        loaded = new boolean[3];
 
-        if (getArguments() != null) {
-            if (getArguments().containsKey("course")) {
-                String json = getArguments().getString("course");
-                course = new Gson().fromJson(json, Course.class);
-            }
-        }
+//        TODO:
+//          - presenter.loadAnnouncements()
+//          - presenter.loadEvents()
 
-        requestAnnouncements(course.getId());
-        requestAgendas();
+//        announcements = new ArrayList<>();
+//        agendas = new ArrayList<>();
+//        loaded = new boolean[3];
+//
+//        if (getArguments() != null) {
+//            if (getArguments().containsKey("course")) {
+//                String json = getArguments().getString("course");
+//                course = new Gson().fromJson(json, Course.class);
+//            }
+//        }
+//
+//        requestAnnouncements(course.getId());
+//        requestAgendas();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_course, container, false);
         // Set toolbar title to course name
-        getActivity().setTitle(course.getTrimmedName());
-
-        progressbar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
-        initRecycleView(rootView);
+//        getActivity().setTitle(course.getTrimmedName());
+//        initRecycleView(rootView);
 
         // Hide progress bar if data is already loaded
-        if (isLoaded()) {
-            progressbar.setVisibility(View.GONE);
-            mainList.setVisibility(View.VISIBLE);
-        } else {
-            progressbar.setVisibility(View.VISIBLE);
-        }
+//        if (isLoaded()) {
+//            progressBar.setVisibility(View.GONE);
+//            mainList.setVisibility(View.VISIBLE);
+//        } else {
+//            progressBar.setVisibility(View.VISIBLE);
+//        }
 
         return rootView;
     }
@@ -209,11 +213,11 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
                         if (isLoaded()) {
                             mainList.setVisibility(View.VISIBLE);
-                            progressbar.progressiveStop();
+                            progressBar.progressiveStop();
                         }
 
                     } else {
-                        progressbar.progressiveStop();
+                        progressBar.progressiveStop();
                         mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -228,7 +232,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
                 if (isAdded()) {
-                    progressbar.progressiveStop();
+                    progressBar.progressiveStop();
                     mCallback.showSnackbar(getString(R.string.error_requesting_announcements), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -284,7 +288,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
                         if (isLoaded()) {
                             mainList.setVisibility(View.VISIBLE);
-                            progressbar.progressiveStop();
+                            progressBar.progressiveStop();
                         }
 
                     } else {
@@ -344,10 +348,10 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
                         if (isLoaded()) {
                             mainList.setVisibility(View.VISIBLE);
-                            progressbar.progressiveStop();
+                            progressBar.progressiveStop();
                         }
                     } else {
-                        progressbar.progressiveStop();
+                        progressBar.progressiveStop();
                         mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -374,12 +378,12 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @Override
     public void showLoading() {
-        
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
