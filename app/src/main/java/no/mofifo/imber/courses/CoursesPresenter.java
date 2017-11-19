@@ -11,20 +11,20 @@ import no.mofifo.imber.models.Course;
  * Created by andre on 08.04.17.
  */
 
-public class CoursesPresenter {
+class CoursesPresenter {
 
     private CoursesView view;
     private MittUibDataSource repository;
 
     @Inject
-    public CoursesPresenter(CoursesView view, MittUibDataSource repository) {
+    CoursesPresenter(CoursesView view, MittUibDataSource repository) {
         this.view = view;
         this.repository = repository;
     }
 
-    public void loadFavoriteCourses() {
+    void loadFavoriteCourses() {
         view.showLoading();
-        repository.getFavoriteCourses(new MittUibDataSource.Callback<List<Course>>() {
+        repository.loadFavoriteCourses(new MittUibDataSource.Callback<List<Course>>() {
             @Override
             public void onSuccess(List<Course> result) {
                 if (view.isAdded()) {
@@ -43,11 +43,11 @@ public class CoursesPresenter {
         });
     }
 
-    public void onCourseClicked(Course course) {
+    void onCourseClicked(Course course) {
         view.showCourseDetails(course);
     }
 
-    public void loadMore() {
+    void loadMore() {
 
     }
 }
