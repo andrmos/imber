@@ -80,20 +80,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     @Inject
     CourseDetailAdapter adapter;
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//
-//        try {
-//            mCallback = (MainActivityListener) context;
-//        } catch (ClassCastException e) {
-//            //Do nothing
-//        }
-//
-//        mittUibClient = ServiceGenerator.createService(MittUibClient.class, context);
-    }
-
     public CourseDetailFragment() {
     }
 
@@ -130,15 +116,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 //        initRecycleView(rootView);
 
         presenter.loadAnnouncements();
-
-        // Hide progress bar if data is already loaded
-//        if (isLoaded()) {
-//            progressBar.setVisibility(View.GONE);
-//            mainList.setVisibility(View.VISIBLE);
-//        } else {
-//            progressBar.setVisibility(View.VISIBLE);
-//        }
-
         return rootView;
     }
 
@@ -406,6 +383,5 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @Override
     public void displayAnnouncements(List<Announcement> announcements) {
-        Log.i(TAG, "displayAnnouncements: " + announcements.get(0).getTitle());
     }
 }
