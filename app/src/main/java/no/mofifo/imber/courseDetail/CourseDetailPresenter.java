@@ -59,6 +59,11 @@ public class CourseDetailPresenter {
         });
     }
 
+    void onCreateView() {
+        view.setTitle(course.getTrimmedName());
+        this.loadAnnouncements();
+    }
+
     void loadEvents() {
 
     }

@@ -111,12 +111,14 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         ButterKnife.bind(this, rootView);
-        // Set toolbar title to course name
-//        getActivity().setTitle(course.getTrimmedName());
+        presenter.onCreateView();
 //        initRecycleView(rootView);
-
-        presenter.loadAnnouncements();
         return rootView;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        getActivity().setTitle(title);
     }
 
     private void loadFileBrowserFragment() {

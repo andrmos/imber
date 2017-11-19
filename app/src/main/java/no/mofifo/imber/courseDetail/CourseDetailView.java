@@ -20,4 +20,6 @@ public interface CourseDetailView {
 
     boolean isAdded();
 
+    void setTitle(String title);
+
 }
