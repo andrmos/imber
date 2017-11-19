@@ -16,6 +16,7 @@ import no.mofifo.imber.models.Announcement;
 import no.mofifo.imber.models.CalendarEvent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import hirondelle.date4j.DateTime;
 
@@ -40,6 +41,12 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<GeneralViewHolder>
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public void addAnnouncements(List<Announcement> data) {
+        int oldAmount = announcements.size();
+        announcements.addAll(data);
+        notifyItemRangeInserted(oldAmount, data.size());
     }
 
     @Override

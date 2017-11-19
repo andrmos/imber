@@ -1,7 +1,6 @@
 package no.mofifo.imber.courseDetail;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -50,18 +49,11 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     private static final String TAG = "CourseFragment";
 
-    private RecyclerView mainList;
-
-    private ArrayList<Announcement> announcements;
-    private ArrayList<CalendarEvent> agendas;
-
-    private Course course;
-
-    /* If data is loaded */
-    private boolean[] loaded;
-
+    // TODO: 19.11.17 Init in onAttach
     MainActivityListener mCallback;
-    private MittUibClient mittUibClient;
+    
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
     @BindString(R.string.error_announcements_list)
     String coursesErrorMessage;
@@ -93,18 +85,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
                 .inject(this);
 
         presenter.initialize(getArguments());
-
-//        TODO:
-//          - presenter.loadAnnouncements()
-//          - presenter.loadEvents()
-
-//        announcements = new ArrayList<>();
-//        agendas = new ArrayList<>();
-//        loaded = new boolean[3];
-//
-//
-//        requestAnnouncements(course.getId());
-//        requestAgendas();
     }
 
     @Override
@@ -112,7 +92,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         ButterKnife.bind(this, rootView);
         presenter.onCreateView();
-//        initRecycleView(rootView);
         return rootView;
     }
 
@@ -136,96 +115,44 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
         transaction.commit();
     }
 
-    private void initRecycleView(View rootView) {
-        // Create RecycleView
-        // findViewById() belongs to Activity, so need to access it from the root view of the fragment
-        mainList = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mainList.setVisibility(View.GONE);
-
-        // Create the LayoutManager that holds all the views
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mainList.setLayoutManager(mLayoutManager);
-
-        mainList.setAdapter(adapter);
-
+    @Override
+    public void initRecyclerView() {
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
         initOnClickListener();
     }
 
+    // TODO: Refactor into several methods
     private void initOnClickListener() {
-        ItemClickSupport.addTo(mainList).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
 
-                if (position == 0) {
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    AnnouncementFragment announcementFragment = new AnnouncementFragment();
-                    transaction.replace(R.id.content_frame, announcementFragment);
-                    transaction.addToBackStack(null);
-
-                    Bundle args = new Bundle();
-                    args.putString("courseCode", course.getCourseCode());
-                    args.putInt("courseId", course.getId());
-                    announcementFragment.setArguments(args);
-
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-
-                } else if (position == 1) {
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-                    mCallback.initCalendar();
-
-                } else if (position == 2) {
-                    // Clicked file browser card
-                    loadFileBrowserFragment();
-
-                }
-            }
-        });
-    }
-
-    private void requestAnnouncements(final int course_id) {
-
-        Call<List<Announcement>> call = mittUibClient.getAnnouncements(course_id);
-        call.enqueue(new Callback<List<Announcement>>() {
-            @Override
-            public void onResponse(Call<List<Announcement>> call, retrofit2.Response<List<Announcement>> response) {
-
-                if (isAdded()) {
-                    if (response.isSuccessful()) {
-                        announcements.addAll(response.body());
-                        loaded[0] = true;
-
-                        if (isLoaded()) {
-                            mainList.setVisibility(View.VISIBLE);
-                            progressBar.progressiveStop();
-                        }
-
-                    } else {
-                        progressBar.progressiveStop();
-                        mCallback.showSnackbar(getString(R.string.error_announcements_list), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                requestAnnouncements(course_id);
-                            }
-                        });
-                    }
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Announcement>> call, Throwable t) {
-                if (isAdded()) {
-                    progressBar.progressiveStop();
-                    mCallback.showSnackbar(getString(R.string.error_announcements_list), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            requestAnnouncements(course_id);
-                        }
-                    });
-                }
+                Log.i(TAG, "onItemClicked");
+//                if (position == 0) {
+//                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//                    AnnouncementFragment announcementFragment = new AnnouncementFragment();
+//                    transaction.replace(R.id.content_frame, announcementFragment);
+//                    transaction.addToBackStack(null);
+//
+//                    Bundle args = new Bundle();
+//                    args.putString("courseCode", course.getCourseCode());
+//                    args.putInt("courseId", course.getId());
+//                    announcementFragment.setArguments(args);
+//
+//                    transaction.addToBackStack(null);
+//                    transaction.commit();
+//
+//                } else if (position == 1) {
+//                    FragmentManager fm = getActivity().getSupportFragmentManager();
+//                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                    mCallback.initCalendar();
+//
+//                } else if (position == 2) {
+//                    // Clicked file browser card
+//                    loadFileBrowserFragment();
+//                }
             }
         });
     }
@@ -276,15 +203,15 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
                 if (isAdded()) {
                     if (response.isSuccessful()) {
-                        agendas.clear();
-                        agendas.addAll(response.body());
+//                        agendas.clear();
+//                        agendas.addAll(response.body());
 
                         loaded[1] = true;
 
                         requestAssignments();
 
                         if (isLoaded()) {
-                            mainList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
                             progressBar.progressiveStop();
                         }
 
@@ -339,12 +266,12 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
                 if (isAdded()) {
                     if (response.isSuccessful()) {
 
-                        agendas.addAll(response.body());
+//                        agendas.addAll(response.body());
 
                         loaded[2] = true;
 
                         if (isLoaded()) {
-                            mainList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.VISIBLE);
                             progressBar.progressiveStop();
                         }
                     } else {
@@ -385,5 +312,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @Override
     public void displayAnnouncements(List<Announcement> announcements) {
+        adapter.addAnnouncements(announcements);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 }

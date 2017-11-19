@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,6 +40,7 @@ public class CourseDetailPresenter {
     }
 
     void loadAnnouncements() {
+        // TODO: show when all is loaded?
         view.showLoading();
         repository.loadAnnouncements(course.getId(), new MittUibDataSource.Callback<List<Announcement>>() {
             @Override
@@ -61,6 +63,7 @@ public class CourseDetailPresenter {
 
     void onCreateView() {
         view.setTitle(course.getTrimmedName());
+        view.initRecyclerView();
         this.loadAnnouncements();
     }
 

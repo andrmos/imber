@@ -22,4 +22,6 @@ public interface CourseDetailView {
 
     void setTitle(String title);
 
+    void initRecyclerView();
+
 }
