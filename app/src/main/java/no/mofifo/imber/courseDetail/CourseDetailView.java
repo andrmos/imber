@@ -15,4 +15,9 @@ public interface CourseDetailView {
     void hideLoading();
 
     void displayAnnouncements(List<Announcement> announcements);
+
+    void displayAnnouncementsError();
+
+    boolean isAdded();
+
 }
