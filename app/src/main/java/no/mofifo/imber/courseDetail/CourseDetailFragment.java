@@ -106,6 +106,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
                 .courseDetailPresenterModule(new CourseDetailPresenterModule(this)).build()
                 .inject(this);
 
+        presenter.initialize(getArguments());
 
 //        TODO:
 //          - presenter.loadAnnouncements()
@@ -115,12 +116,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 //        agendas = new ArrayList<>();
 //        loaded = new boolean[3];
 //
-//        if (getArguments() != null) {
-//            if (getArguments().containsKey("course")) {
-//                String json = getArguments().getString("course");
-//                course = new Gson().fromJson(json, Course.class);
-//            }
-//        }
 //
 //        requestAnnouncements(course.getId());
 //        requestAgendas();
@@ -411,6 +406,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @Override
     public void displayAnnouncements(List<Announcement> announcements) {
-
+        Log.i(TAG, "displayAnnouncements: " + announcements.get(0).getTitle());
     }
 }
