@@ -3,9 +3,9 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-        android:id="@+id/progressbar"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:indeterminate="true"

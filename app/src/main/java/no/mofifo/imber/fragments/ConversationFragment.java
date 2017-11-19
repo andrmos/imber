@@ -82,7 +82,7 @@ public class ConversationFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
         getActivity().setTitle(R.string.inbox_title);
 
-        progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+        progressbar =  (SmoothProgressBar) rootView.findViewById(R.id.progressBar);
         initRecyclerView(rootView);
         if (loaded) {
             progressbar.setVisibility(View.GONE);
@@ -138,7 +138,7 @@ public class ConversationFragment extends Fragment {
     private void showSnackbar() {
         Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
         snackbar.setDuration(4000);
-        snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
+        snackbar.setAction(getString(R.string.snackbar_retry_text), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requestConversations();

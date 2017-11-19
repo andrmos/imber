@@ -38,12 +38,12 @@ public class CoursesFragment extends Fragment implements CoursesView, ItemClickS
 
     @BindView(R.id.recycler_view)
     RecyclerView mainList;
-    @BindView(R.id.progressbar)
+    @BindView(R.id.progressBar)
     SmoothProgressBar progressBar;
 
     @BindString(R.string.error_course_list)
     String coursesErrorMessage;
-    @BindString(R.string.snackback_action_text)
+    @BindString(R.string.snackbar_retry_text)
     String retryButtonText;
 
     /* This fragments presenter */

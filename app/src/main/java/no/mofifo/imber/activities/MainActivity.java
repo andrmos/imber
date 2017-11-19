@@ -321,7 +321,7 @@ public class MainActivity extends AppCompatActivity implements OnNavigationItemS
 
         if(listener != null) {
             snackbar.setActionTextColor(ContextCompat.getColor(this, R.color.colorAccent));
-            snackbar.setAction(getString(R.string.snackback_action_text), listener);
+            snackbar.setAction(getString(R.string.snackbar_retry_text), listener);
         }
 
         if (!snackbar.isShown()) {

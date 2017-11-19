@@ -168,7 +168,7 @@ public class ChooseRecipientFragment extends Fragment {
         initCourseSpinner();
         initRecycleView();
 
-        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressBar);
         if (loaded) {
             progressBar.setVisibility(View.GONE);
         } else {

@@ -316,7 +316,7 @@ public class FileBrowserFragment extends Fragment implements ActivityCompat.OnRe
         View rootView = inflater.inflate(R.layout.fragment_file_browser, container, false);
         getActivity().setTitle(R.string.btn_file_browser);
 
-        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressBar);
         if (filesLoaded || foldersLoaded) {
             progressBar.setVisibility(View.GONE);
         } else {

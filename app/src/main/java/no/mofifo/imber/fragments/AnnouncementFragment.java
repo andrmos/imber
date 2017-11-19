@@ -57,7 +57,7 @@ public class AnnouncementFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+        progressBar = (SmoothProgressBar) rootView.findViewById(R.id.progressBar);
         // Hide progress bar if data is already loaded
         if (loaded) {
             progressBar.setVisibility(View.GONE);

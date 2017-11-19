@@ -82,7 +82,7 @@ public class SingleConversationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_conversation, container, false);
 
-        progressbar = (SmoothProgressBar) rootView.findViewById(R.id.progressbar);
+        progressbar = (SmoothProgressBar) rootView.findViewById(R.id.progressBar);
         initRecycleView();
         initFabButton();
 
@@ -143,7 +143,7 @@ public class SingleConversationFragment extends Fragment {
         progressbar.progressiveStop();
         Snackbar snackbar = Snackbar.make(rootView.findViewById(R.id.coordinatorLayout), getString(R.string.error_conversation), Snackbar.LENGTH_LONG);
         snackbar.setDuration(4000); // Gives false syntax error
-        snackbar.setAction(getString(R.string.snackback_action_text), new View.OnClickListener() {
+        snackbar.setAction(getString(R.string.snackbar_retry_text), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 requestSingleConversation();
