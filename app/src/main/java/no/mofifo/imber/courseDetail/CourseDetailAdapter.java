@@ -31,11 +31,11 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<GeneralViewHolder>
     private static final String TAG = "CourseAdapter";
 
     private ArrayList<Announcement> announcements;
-    private ArrayList<CalendarEvent> agendas;
+    private ArrayList<CalendarEvent> events;
 
-    public CourseDetailAdapter(ArrayList<Announcement> announcements, ArrayList<CalendarEvent> agendas) {
+    public CourseDetailAdapter(ArrayList<Announcement> announcements, ArrayList<CalendarEvent> events) {
         this.announcements = announcements;
-        this.agendas = agendas;
+        this.events = events;
     }
 
     @Override
@@ -69,10 +69,10 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<GeneralViewHolder>
             }
             holder = new AnnouncementsViewHolder(v);
 
-        } else if (viewType == 1) { // agendas card
-            if(agendas.size() == 0) {
+        } else if (viewType == 1) { // events card
+            if(events.size() == 0) {
 
-                //Inflate no agendas picture
+                //Inflate no events picture
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.no_agenda,parent,false);
                 TextView imberLogo = (TextView) v.findViewById(R.id.imberLogo);
                 Typeface tf = Typeface.createFromAsset(parent.getContext().getAssets(), "fonts/Pattaya-Regular.ttf");
@@ -98,21 +98,21 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<GeneralViewHolder>
         if(getItemViewType(position) == 0) {
             setAnnouncements(holder);
         } else if (getItemViewType(position) == 1){
-            setAgendas(holder);
+            setEvents(holder);
         }
     }
 
-    private void setAgendas(GeneralViewHolder holder) {
+    private void setEvents(GeneralViewHolder holder) {
         AgendasViewHolder agendasViewHolder = (AgendasViewHolder) holder;
 
-        if (agendas.size() >= 1) {
-            agendasViewHolder.agenda1.setText(getEvent(0));
+        if (events.size() >= 1) {
+            agendasViewHolder.event1.setText(getEvent(0));
 
-            if (agendas.size() >= 2) {
-                agendasViewHolder.agenda2.setText(getEvent(1));
+            if (events.size() >= 2) {
+                agendasViewHolder.event2.setText(getEvent(1));
 
-                if (agendas.size() >= 3) {
-                    agendasViewHolder.agenda3.setText(getEvent(2));
+                if (events.size() >= 3) {
+                    agendasViewHolder.event3.setText(getEvent(2));
                 }else{
                     agendasViewHolder.dividerAgenda2.setVisibility(View.GONE);
                 }
@@ -130,10 +130,10 @@ public class CourseDetailAdapter extends RecyclerView.Adapter<GeneralViewHolder>
      * @return
      */
     private String getEvent(int i) {
-        DateTime start = agendas.get(i).getStartDate();
-        DateTime end = agendas.get(i).getEndDate();
+        DateTime start = events.get(i).getStartDate();
+        DateTime end = events.get(i).getEndDate();
 
-        String summary = agendas.get(i).getTrimmedTitle() + " ";
+        String summary = events.get(i).getTrimmedTitle() + " ";
 
         //Gives time two digit representation
         summary += start.getDay() + ".";

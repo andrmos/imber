@@ -13,18 +13,18 @@ import no.mofifo.imber.R;
 public class AgendasViewHolder extends GeneralViewHolder {
     // each data item is just a string
     public TextView title;
-    public TextView agenda1;
-    public TextView agenda2;
-    public TextView agenda3;
+    public TextView event1;
+    public TextView event2;
+    public TextView event3;
     public View dividerAgenda1;
     public View dividerAgenda2;
 
     public AgendasViewHolder(View v) {
         super(v);
         title = (TextView) v.findViewById(R.id.agendas_title);
-        agenda1 = (TextView) v.findViewById(R.id.agenda1);
-        agenda2 = (TextView) v.findViewById(R.id.agenda2);
-        agenda3 = (TextView) v.findViewById(R.id.agenda3);
+        event1 = (TextView) v.findViewById(R.id.agenda1);
+        event2 = (TextView) v.findViewById(R.id.agenda2);
+        event3 = (TextView) v.findViewById(R.id.agenda3);
         dividerAgenda1 = v.findViewById(R.id.dividerAgenda1);
         dividerAgenda2 = v.findViewById(R.id.dividerAgenda2);
     }

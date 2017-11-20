@@ -56,7 +56,7 @@
     <string name="error_sending_message">Kunne ikke sende melding</string>
     <string name="error_requesting_calendar">Kunne ikke laste kalender</string>
     <string name="error_requesting_assignments">Kunne ikke laste innleveringer</string>
-    <string name="error_requesting_agendas">Kunne ikke laste hendelser</string>
+    <string name="error_requesting_events">Kunne ikke laste hendelser</string>
     <string name="error_announcements_list">Kunne ikke laste kunngjøringer</string>
     <string name="error_invalid_access_token">Nøkkelen er ikke gyldig</string>
     <string name="error_getting_files">Kunne ikke laste filer</string>

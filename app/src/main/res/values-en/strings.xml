@@ -28,7 +28,7 @@
     <string name="error_loading_recipients">Couldn\'t load recipients</string>
     <string name="error_profile">Couldn\'t load profile</string>
     <string name="error_removing_course">Couldn\'t remove course</string>
-    <string name="error_requesting_agendas">Couldn\'t load events</string>
+    <string name="error_requesting_events">Couldn\'t load events</string>
     <string name="error_announcements_list">Couldn\'t load announcements</string>
     <string name="error_requesting_assignments">Couldn\'t load assignments</string>
     <string name="error_requesting_calendar">Couldn\'t load calendar</string>
