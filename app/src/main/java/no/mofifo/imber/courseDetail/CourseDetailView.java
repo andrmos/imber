@@ -27,4 +27,6 @@ interface CourseDetailView {
 
     void displayEventsError();
 
+    void showAnnouncementsUi(int courseId, String courseCode);
+
 }

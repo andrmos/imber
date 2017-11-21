@@ -74,6 +74,10 @@ class CourseDetailPresenter {
         });
     }
 
+    void showAnnouncements() {
+        view.showAnnouncementsUi(course.getId(), course.getCourseCode());
+    }
+
     void loadEvents() {
         view.showLoading();
 
@@ -134,5 +138,4 @@ class CourseDetailPresenter {
         }
         return eventTitles;
     }
-
 }

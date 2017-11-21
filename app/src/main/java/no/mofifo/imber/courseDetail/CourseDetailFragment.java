@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
+import no.mofifo.imber.fragments.AnnouncementFragment;
 import no.mofifo.imber.listeners.MainActivityListener;
 
 import java.util.List;
@@ -144,14 +146,34 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @OnClick(R.id.announcement_card)
     public void onClickAnnouncementCard() {
+        presenter.showAnnouncements();
+    }
+
+    @Override
+    public void showAnnouncementsUi(int courseId, String courseCode) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        AnnouncementFragment announcementFragment = new AnnouncementFragment();
+        transaction.replace(R.id.content_frame, announcementFragment);
+        transaction.addToBackStack(null);
+
+        Bundle args = new Bundle();
+        args.putInt("courseId", courseId);
+        args.putString("courseCode", courseCode);
+        announcementFragment.setArguments(args);
+
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @OnClick(R.id.events_card)
     public void onClickEventsCard() {
+//                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                    mCallback.initCalendar();
     }
 
     @OnClick(R.id.files_card)
     public void onClickFilesCard() {
+//                    loadFileBrowserFragment();
     }
 
 }
@@ -171,38 +193,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 //        transaction.commit();
 //    }
 
-//    private void initOnClickListener() {
-//        ItemClickSupport.addTo(recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-//            @Override
-//            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-
-//                Log.i(TAG, "onItemClicked");
-//                if (position == 0) {
-//                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//                    AnnouncementFragment announcementFragment = new AnnouncementFragment();
-//                    transaction.replace(R.id.content_frame, announcementFragment);
-//                    transaction.addToBackStack(null);
-//
-//                    Bundle args = new Bundle();
-//                    args.putString("courseCode", course.getCourseCode());
-//                    args.putInt("courseId", course.getId());
-//                    announcementFragment.setArguments(args);
-//
-//                    transaction.addToBackStack(null);
-//                    transaction.commit();
-//
-//                } else if (position == 1) {
-//                    FragmentManager fm = getActivity().getSupportFragmentManager();
-//                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                    mCallback.initCalendar();
-//
-//                } else if (position == 2) {
-//                    // Clicked file browser card
-//                    loadFileBrowserFragment();
-//                }
-//            }
-//        });
-//    }
 
     /**
      * @return Returns true if all data is loaded
