@@ -59,7 +59,8 @@ class CourseDetailPresenter {
             @Override
             public void onSuccess(List<Announcement> result) {
                 if (view.isAdded()) {
-                    view.displayAnnouncements(result);
+                    ArrayList<String> announcementTitles = toNonNullAnnouncementTitles(result);
+                    view.displayAnnouncements(announcementTitles);
                     view.hideLoading();
                 }
             }
@@ -97,6 +98,7 @@ class CourseDetailPresenter {
             @Override
             public void onSuccess(List<CalendarEvent> result) {
                 if (view.isAdded()) {
+                    // TODO: 21.11.17 If result is empty
                     ArrayList<String> eventTitles = toNonNullEventTitles(result);
                     view.displayEvents(eventTitles);
                     view.hideLoading();
@@ -110,6 +112,17 @@ class CourseDetailPresenter {
                 }
             }
         });
+    }
+
+    private ArrayList<String> toNonNullAnnouncementTitles(List<Announcement> announcements) {
+        ArrayList<String> announcementTitles = new ArrayList<>();
+        announcementTitles.add("");
+        announcementTitles.add("");
+        announcementTitles.add("");
+        for (int i = 0; i < announcements.size(); i++) {
+            announcementTitles.set(i, announcements.get(i).getTitle());
+        }
+        return announcementTitles;
     }
 
     private ArrayList<String> toNonNullEventTitles(List<CalendarEvent> events) {

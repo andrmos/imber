@@ -307,9 +307,9 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     }
 
     @Override
-    public void displayAnnouncements(List<Announcement> announcements) {
-        announcement1.setText(announcements.get(0).getTitle());
-        announcement2.setText(announcements.get(1).getTitle());
-        announcement3.setText(announcements.get(2).getTitle());
+    public void displayAnnouncements(@NonNull List<String> announcementTitles) {
+        announcement1.setText(announcementTitles.get(0));
+        announcement2.setText(announcementTitles.get(1));
+        announcement3.setText(announcementTitles.get(2));
     }
 }
