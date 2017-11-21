@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
 import no.mofifo.imber.listeners.MainActivityListener;
@@ -139,6 +141,19 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     public void hideLoading() {
         progressBar.progressiveStop();
     }
+
+    @OnClick(R.id.announcement_card)
+    public void onClickAnnouncementCard() {
+    }
+
+    @OnClick(R.id.events_card)
+    public void onClickEventsCard() {
+    }
+
+    @OnClick(R.id.files_card)
+    public void onClickFilesCard() {
+    }
+
 }
 
 //    private void loadFileBrowserFragment() {
