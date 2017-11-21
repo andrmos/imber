@@ -25,7 +25,7 @@ interface CourseDetailView {
 
     void initRecyclerView();
 
-    void displayEvents(List<CalendarEvent> result);
+    void displayEvents(List<CalendarEvent> events);
 
     void displayEventsError();
 
