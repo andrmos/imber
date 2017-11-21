@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/agendas_title"
+                android:id="@+id/events_card_title"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/announcement_title_height"
                 android:layout_marginTop="@dimen/fab_margin"

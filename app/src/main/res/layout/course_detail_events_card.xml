@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/agendas_title"
+                android:id="@+id/events_card_title"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/announcement_title_height"
                 android:layout_marginTop="@dimen/fab_margin"
@@ -39,7 +39,7 @@
                 android:background="?android:attr/listDivider"/>
 
             <TextView
-                android:id="@+id/agenda1"
+                android:id="@+id/event1"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/announcement_height"
                 android:layout_marginTop="@dimen/announcement_pad_top"
@@ -48,7 +48,7 @@
                 android:maxLines="1"/>
 
             <View
-                android:id="@+id/dividerAgenda1"
+                android:id="@+id/dividerEvent1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="@dimen/fab_margin"
@@ -56,7 +56,7 @@
                 android:background="?android:attr/listDivider"/>
 
             <TextView
-                android:id="@+id/agenda2"
+                android:id="@+id/event2"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/announcement_height"
                 android:layout_marginTop="@dimen/announcement_pad_top"
@@ -65,7 +65,7 @@
                 android:maxLines="1"/>
 
             <View
-                android:id="@+id/dividerAgenda2"
+                android:id="@+id/dividerEvent2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="@dimen/fab_margin"
@@ -73,7 +73,7 @@
                 android:background="?android:attr/listDivider"/>
 
             <TextView
-                android:id="@+id/agenda3"
+                android:id="@+id/event3"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/announcement_height"
                 android:layout_marginTop="@dimen/announcement_pad_top"

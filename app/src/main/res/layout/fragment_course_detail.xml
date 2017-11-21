@@ -9,7 +9,7 @@
 
     <include layout="@layout/announcements_card"/>
 
-    <include layout="@layout/agendas_card"/>
+    <include layout="@layout/course_detail_events_card"/>
 
     <include layout="@layout/file_browser_card"/>
 
