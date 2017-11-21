@@ -5,42 +5,25 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.gson.Gson;
+import android.widget.TextView;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
-import no.mofifo.imber.fragments.AnnouncementFragment;
-import no.mofifo.imber.fragments.FileBrowserFragment;
-import no.mofifo.imber.listeners.ItemClickSupport;
 import no.mofifo.imber.listeners.MainActivityListener;
 import no.mofifo.imber.models.Announcement;
 import no.mofifo.imber.models.CalendarEvent;
-import no.mofifo.imber.models.Course;
-import no.mofifo.imber.retrofit.MittUibClient;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,9 +34,15 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     // TODO: 19.11.17 Init in onAttach
     MainActivityListener mCallback;
-    
-    @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+
+    @BindView(R.id.announcement1)
+    TextView announcement1;
+
+    @BindView(R.id.announcement2)
+    TextView announcement2;
+
+    @BindView(R.id.announcement3)
+    TextView announcement3;
 
     @BindString(R.string.error_announcements_list)
     String coursesErrorMessage;
@@ -67,10 +56,6 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     /* This fragments presenter */
     @Inject
     CourseDetailPresenter presenter;
-
-    /* Adapter binding content to the recycler view */
-    @Inject
-    CourseDetailAdapter adapter;
 
     public CourseDetailFragment() {
     }
@@ -89,7 +74,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_course_detail, container, false);
         ButterKnife.bind(this, rootView);
         presenter.onCreateView();
         return rootView;
@@ -312,7 +297,8 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @Override
     public void displayAnnouncements(List<Announcement> announcements) {
-        adapter.addAnnouncements(announcements);
-        recyclerView.setVisibility(View.VISIBLE);
+        announcement1.setText(announcements.get(0).getTitle());
+        announcement2.setText(announcements.get(1).getTitle());
+        announcement3.setText(announcements.get(2).getTitle());
     }
 }
