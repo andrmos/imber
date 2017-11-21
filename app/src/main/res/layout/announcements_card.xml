@@ -1,90 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/card_margin"
-        android:layout_marginLeft="@dimen/card_margin"
-        android:layout_marginRight="@dimen/card_margin"
-        card_view:cardBackgroundColor="@color/cardview_light_background"
-        card_view:cardElevation="2dp"
-        card_view:cardUseCompatPadding="true">
-
-        <LinearLayout
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/card_margin"
+            android:layout_marginLeft="@dimen/card_margin"
+            android:layout_marginRight="@dimen/card_margin"
+            card_view:cardBackgroundColor="@color/cardview_light_background"
+            card_view:cardElevation="2dp"
+            card_view:cardUseCompatPadding="true">
 
-            <TextView
-                android:id="@+id/announcements_title"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/announcement_title_height"
-                android:layout_marginTop="@dimen/fab_margin"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:textSize="@dimen/title_textSize"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                android:text="@string/announcements_title"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:background="?android:attr/listDivider"/>
+                <TextView
+                    android:id="@+id/announcements_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/announcement_title_height"
+                    android:layout_marginTop="@dimen/fab_margin"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:textSize="@dimen/title_textSize"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:text="@string/announcements_title"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:background="?android:attr/listDivider"/>
 
 
-            <TextView
-                android:id="@+id/announcement1"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/announcement_height"
-                android:layout_marginTop="@dimen/announcement_pad_top"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:maxLines="1"/>
+                <TextView
+                    android:id="@+id/announcement1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/announcement_height"
+                    android:layout_marginTop="@dimen/announcement_pad_top"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:maxLines="1"/>
 
-            <View
-                android:id="@+id/dividerAnn1"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:background="?android:attr/listDivider"/>
+                <View
+                    android:id="@+id/dividerAnn1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:background="?android:attr/listDivider"/>
 
-            <TextView
-                android:id="@+id/announcement2"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/announcement_height"
-                android:layout_marginTop="@dimen/announcement_pad_top"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:maxLines="1"/>
+                <TextView
+                    android:id="@+id/announcement2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/announcement_height"
+                    android:layout_marginTop="@dimen/announcement_pad_top"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:maxLines="1"/>
 
-            <View
-                android:id="@+id/dividerAnn2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:background="?android:attr/listDivider"/>
+                <View
+                    android:id="@+id/dividerAnn2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:background="?android:attr/listDivider"/>
 
-            <TextView
-                android:id="@+id/announcement3"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/announcement_height"
-                android:layout_marginTop="@dimen/announcement_pad_top"
-                android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_marginLeft="@dimen/fab_margin"
-                android:layout_marginRight="@dimen/fab_margin"
-                android:maxLines="1"/>
+                <TextView
+                    android:id="@+id/announcement3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/announcement_height"
+                    android:layout_marginTop="@dimen/announcement_pad_top"
+                    android:layout_marginBottom="@dimen/fab_margin"
+                    android:layout_marginLeft="@dimen/fab_margin"
+                    android:layout_marginRight="@dimen/fab_margin"
+                    android:maxLines="1"/>
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
 
-</LinearLayout>
+    </LinearLayout>
+</merge>
