@@ -97,14 +97,7 @@ class CourseDetailPresenter {
             @Override
             public void onSuccess(List<CalendarEvent> result) {
                 if (view.isAdded()) {
-                    ArrayList<String> eventTitles = new ArrayList<>();
-                    eventTitles.add("");
-                    eventTitles.add("");
-                    eventTitles.add("");
-                    for (int i = 0; i < result.size(); i++) {
-                        eventTitles.set(i, result.get(i).getTitle());
-                    }
-
+                    ArrayList<String> eventTitles = toNonNullEventTitles(result);
                     view.displayEvents(eventTitles);
                     view.hideLoading();
                 }
@@ -117,6 +110,17 @@ class CourseDetailPresenter {
                 }
             }
         });
+    }
+
+    private ArrayList<String> toNonNullEventTitles(List<CalendarEvent> events) {
+        ArrayList<String> eventTitles = new ArrayList<>();
+        eventTitles.add("");
+        eventTitles.add("");
+        eventTitles.add("");
+        for (int i = 0; i < events.size(); i++) {
+            eventTitles.set(i, events.get(i).getTitle());
+        }
+        return eventTitles;
     }
 
 }
