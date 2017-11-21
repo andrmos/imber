@@ -8,11 +8,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import no.mofifo.imber.models.Announcement;
+import no.mofifo.imber.models.CalendarEvent;
 import no.mofifo.imber.models.Course;
 import no.mofifo.imber.retrofit.MittUibClient;
 import no.mofifo.imber.retrofit.PaginationUtils;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
@@ -71,6 +71,33 @@ public class MittUibRepository implements MittUibDataSource {
 
             @Override
             public void onFailure(Call<List<Announcement>> call, Throwable t) {
+                callback.onFailure();
+            }
+        });
+    }
+
+    @Override
+    public void loadEvents(String startDate,
+                           String endDate,
+                           List<String> contextCodes,
+                           List<String> excludes,
+                           String eventType,
+                           int perPage,
+                           final Callback<List<CalendarEvent>> callback) {
+        Call<List<CalendarEvent>> call = client.getEvents(startDate, endDate, contextCodes, excludes, eventType, perPage);
+        call.enqueue(new retrofit2.Callback<List<CalendarEvent>>() {
+            @Override
+            public void onResponse(Call<List<CalendarEvent>> call, Response<List<CalendarEvent>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onFailure();
+                }
+                // TODO: Pagination
+            }
+
+            @Override
+            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
                 callback.onFailure();
             }
         });
