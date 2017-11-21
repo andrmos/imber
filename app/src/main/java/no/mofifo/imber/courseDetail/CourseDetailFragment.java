@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,6 +22,7 @@ import butterknife.OnClick;
 import no.mofifo.imber.ImberApplication;
 import no.mofifo.imber.R;
 import no.mofifo.imber.fragments.AnnouncementFragment;
+import no.mofifo.imber.fragments.FileBrowserFragment;
 import no.mofifo.imber.listeners.MainActivityListener;
 
 import java.util.List;
@@ -27,6 +30,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import no.mofifo.imber.models.Course;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -173,26 +177,25 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @OnClick(R.id.files_card)
     public void onClickFilesCard() {
-//                    loadFileBrowserFragment();
+        presenter.showFiles();
     }
 
+    @Override
+    public void showFilesUi(Course course) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        FileBrowserFragment fileBrowserFragment = new FileBrowserFragment();
+        transaction.replace(R.id.content_frame, fileBrowserFragment);
+        transaction.addToBackStack(null);
+
+        Bundle args = new Bundle();
+        String json = new Gson().toJson(course);
+        args.putString("course", json);
+        fileBrowserFragment.setArguments(args);
+
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 }
-
-//    private void loadFileBrowserFragment() {
-//        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//        FileBrowserFragment fileBrowserFragment = new FileBrowserFragment();
-//        transaction.replace(R.id.content_frame, fileBrowserFragment);
-//        transaction.addToBackStack(null);
-//
-//        Bundle args = new Bundle();
-//        String json = new Gson().toJson(course);
-//        args.putString("course", json);
-//        fileBrowserFragment.setArguments(args);
-//
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
-
 
     /**
      * @return Returns true if all data is loaded

@@ -138,4 +138,8 @@ class CourseDetailPresenter {
         }
         return eventTitles;
     }
+
+    void showFiles() {
+        view.showFilesUi(course);
+    }
 }
