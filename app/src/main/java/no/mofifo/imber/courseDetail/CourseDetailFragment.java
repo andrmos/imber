@@ -44,6 +44,15 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     @BindView(R.id.announcement3)
     TextView announcement3;
 
+    @BindView(R.id.event1)
+    TextView event1;
+
+    @BindView(R.id.event2)
+    TextView event2;
+
+    @BindView(R.id.event3)
+    TextView event3;
+
     @BindString(R.string.error_announcements_list)
     String coursesErrorMessage;
 
@@ -224,6 +233,11 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
             }
         });
 
+    @Override
+    public void displayEvents(List<CalendarEvent> events) {
+        event1.setText(events.get(0).getTitle());
+        event2.setText(events.get(1).getTitle());
+        event3.setText(events.get(2).getTitle());
     }
 
     private void requestAssignments() {
@@ -271,16 +285,12 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
                 }
             }
 
+    @Override
+    public void displayEventsError() {
+        mCallback.showSnackbar(getString(R.string.error_requesting_events), new View.OnClickListener() {
             @Override
-            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
-                if (isAdded()) {
-                    mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            requestAssignments();
-                        }
-                    });
-                }
+            public void onClick(View v) {
+                presenter.loadEvents();
             }
         });
     }
