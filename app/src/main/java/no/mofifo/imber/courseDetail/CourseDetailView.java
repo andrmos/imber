@@ -15,15 +15,13 @@ interface CourseDetailView {
 
     void hideLoading();
 
-    void displayAnnouncements(List<Announcement> announcements);
+    void displayAnnouncements(List<String> announcementTitles);
 
     void displayAnnouncementsError();
 
     boolean isAdded();
 
     void setTitle(String title);
-
-    void initRecyclerView();
 
     void displayEvents(List<String> eventTitles);
 
