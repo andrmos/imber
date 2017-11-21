@@ -1,13 +1,14 @@
 package no.mofifo.imber.courseDetail;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     CourseDetailPresenter presenter;
 
     // TODO: 19.11.17 Init in onAttach
-    MainActivityListener mCallback;
+    MainActivityListener callback;
 
     @BindView(R.id.progressBar)
     SmoothProgressBar progressBar;
@@ -96,6 +97,16 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            callback = (MainActivityListener) context;
+        } catch (ClassCastException e) {
+            //Do nothing
+        }
+    }
+
+    @Override
     public void setTitle(String title) {
         getActivity().setTitle(title);
     }
@@ -129,7 +140,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
     @Override
     public void displayEventsError() {
         // TODO: 21.11.17 Verify
-        mCallback.showSnackbar(getString(R.string.error_requesting_events), new View.OnClickListener() {
+        callback.showSnackbar(getString(R.string.error_requesting_events), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 presenter.loadEvents();
@@ -171,8 +182,14 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 
     @OnClick(R.id.events_card)
     public void onClickEventsCard() {
-//                    fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-//                    mCallback.initCalendar();
+        presenter.showCalendar();
+    }
+
+    @Override
+    public void showCalendarUi() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        callback.initCalendar();
     }
 
     @OnClick(R.id.files_card)
@@ -242,7 +259,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 //                        }
 //                    } else {
 //                        progressBar.progressiveStop();
-//                        mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+//                        callback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View v) {
 //                                requestAssignments();
@@ -255,7 +272,7 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
 //            @Override
 //            public void onFailure(Call<List<CalendarEvent>> call, Throwable t) {
 //                if (isAdded()) {
-//                    mCallback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
+//                    callback.showSnackbar(getString(R.string.error_requesting_assignments), new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View v) {
 //                            requestAssignments();

@@ -32,4 +32,5 @@ interface CourseDetailView {
 
     void showFilesUi(Course course);
 
+    void showCalendarUi();
 }

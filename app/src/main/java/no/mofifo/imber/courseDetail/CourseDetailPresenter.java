@@ -142,4 +142,8 @@ class CourseDetailPresenter {
     void showFiles() {
         view.showFilesUi(course);
     }
+
+    void showCalendar() {
+        view.showCalendarUi();
+    }
 }
