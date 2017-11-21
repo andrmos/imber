@@ -47,7 +47,6 @@ class CourseDetailPresenter {
 
     void onCreateView() {
         view.setTitle(course.getTrimmedName());
-        view.initRecyclerView();
         this.loadAnnouncements();
         this.loadEvents();
     }
@@ -119,7 +118,7 @@ class CourseDetailPresenter {
         announcementTitles.add("");
         announcementTitles.add("");
         announcementTitles.add("");
-        for (int i = 0; i < announcements.size(); i++) {
+        for (int i = 0; i < announcements.size() && i < 3; i++) {
             announcementTitles.set(i, announcements.get(i).getTitle());
         }
         return announcementTitles;
@@ -130,7 +129,7 @@ class CourseDetailPresenter {
         eventTitles.add("");
         eventTitles.add("");
         eventTitles.add("");
-        for (int i = 0; i < events.size(); i++) {
+        for (int i = 0; i < events.size() && i < 3; i++) {
             eventTitles.set(i, events.get(i).getTitle());
         }
         return eventTitles;
