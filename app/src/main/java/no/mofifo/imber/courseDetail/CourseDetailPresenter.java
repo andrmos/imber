@@ -97,7 +97,15 @@ class CourseDetailPresenter {
             @Override
             public void onSuccess(List<CalendarEvent> result) {
                 if (view.isAdded()) {
-                    view.displayEvents(result);
+                    ArrayList<String> eventTitles = new ArrayList<>();
+                    eventTitles.add("");
+                    eventTitles.add("");
+                    eventTitles.add("");
+                    for (int i = 0; i < result.size(); i++) {
+                        eventTitles.set(i, result.get(i).getTitle());
+                    }
+
+                    view.displayEvents(eventTitles);
                     view.hideLoading();
                 }
             }

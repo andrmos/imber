@@ -2,6 +2,7 @@ package no.mofifo.imber.courseDetail;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -234,10 +235,10 @@ public class CourseDetailFragment extends Fragment implements CourseDetailView {
         });
 
     @Override
-    public void displayEvents(List<CalendarEvent> events) {
-        event1.setText(events.get(0).getTitle());
-        event2.setText(events.get(1).getTitle());
-        event3.setText(events.get(2).getTitle());
+    public void displayEvents(@NonNull List<String> eventTitles) {
+        event1.setText(eventTitles.get(0));
+        event2.setText(eventTitles.get(1));
+        event3.setText(eventTitles.get(2));
     }
 
     private void requestAssignments() {
